@@ -50,7 +50,7 @@
                   :config="{uploader: {insertImageAsBase64URI: true}, askBeforePasteFromWord: false, minHeight:350}"
                 ></jodit-vue>
               </div>
-
+              {{ WordCount}}
               <v-textarea
                 label="Notas Finais"
                 auto-grow
@@ -240,6 +240,10 @@ export default {
 
   computed: {
     ...mapState(['usuario']),
+
+    WordCount() {
+      return this.capitulo.conteudo.split(' ').length
+    },
   },
 
   watch: {

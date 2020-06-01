@@ -22,6 +22,7 @@
               label="Título"
               @input="ObraId"
             ></v-text-field>
+
             <v-file-input
               small-chips
               v-model="imagemObra"
@@ -46,6 +47,16 @@
         </v-row>
         <v-row>
           <v-col cols="6">
+            <v-autocomplete
+              v-model="select"
+              :loading="loading"
+              :items="items"
+              :search-input.sync="searchA"
+              cache-items
+              outlined
+              dense
+              label="Co-Autor"
+            ></v-autocomplete>
             <v-select
               v-model="obra.categoriaId"
               :items="categorias"
@@ -67,6 +78,9 @@
               outlined
               color="purple darken-4"
             ></v-autocomplete>
+          </v-col>
+
+          <v-col cols="6">
             <v-select
               v-model="obra.classificacao"
               :items="classificacao"
@@ -77,9 +91,6 @@
               outlined
               color="purple darken-4"
             ></v-select>
-          </v-col>
-
-          <v-col cols="6">
             <v-autocomplete
               v-model="obra.fandonsId"
               cache-items
@@ -228,6 +239,7 @@ export default {
       universos: [],
       caracteristicas: [],
       avisos: [],
+      coautor: [],
       classificacao: [
         { nome: 'Livre', cod: 'livre' },
         { nome: 'Acima de 10 Anos', cod: '10+' },
@@ -237,6 +249,72 @@ export default {
         { nome: 'Acima de 18 Anos', cod: '18+' },
       ],
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
+
+      loading: false,
+      items: [],
+      searchA: null,
+      select: null,
+      states: [
+        'Alabama',
+        'Alaska',
+        'American Samoa',
+        'Arizona',
+        'Arkansas',
+        'California',
+        'Colorado',
+        'Connecticut',
+        'Delaware',
+        'District of Columbia',
+        'Federated States of Micronesia',
+        'Florida',
+        'Georgia',
+        'Guam',
+        'Hawaii',
+        'Idaho',
+        'Illinois',
+        'Indiana',
+        'Iowa',
+        'Kansas',
+        'Kentucky',
+        'Louisiana',
+        'Maine',
+        'Marshall Islands',
+        'Maryland',
+        'Massachusetts',
+        'Michigan',
+        'Minnesota',
+        'Mississippi',
+        'Missouri',
+        'Montana',
+        'Nebraska',
+        'Nevada',
+        'New Hampshire',
+        'New Jersey',
+        'New Mexico',
+        'New York',
+        'North Carolina',
+        'North Dakota',
+        'Northern Mariana Islands',
+        'Ohio',
+        'Oklahoma',
+        'Oregon',
+        'Palau',
+        'Pennsylvania',
+        'Puerto Rico',
+        'Rhode Island',
+        'South Carolina',
+        'South Dakota',
+        'Tennessee',
+        'Texas',
+        'Utah',
+        'Vermont',
+        'Virgin Island',
+        'Virginia',
+        'Washington',
+        'West Virginia',
+        'Wisconsin',
+        'Wyoming',
+      ],
     }
   },
 
@@ -320,14 +398,31 @@ export default {
         this.avisos = res.data
       })
     },
+
+    getCoautor() {
+      const url = ` ${baseApiUrl}/Coautor`
+      axios(url).then(res => {
+        this.coautor = res.data
+      })
+    },
+
+    querySelections(v) {
+      this.loading = true
+      // Simulated ajax query
+      setTimeout(() => {
+        this.items = this.states.filter(e => {
+          return e.toLowerCase().indexOf((v || '').toLowerCase()) > -1
+        })
+        this.loading = false
+      }, 500)
+    },
   },
 
-  // methods: {
-  //   remove(item) {
-  //     const index = this.selectedCateg.indexOf(item.name);
-  //     if (index >= 0) this.selectedCateg.splice(index, 1);
-  //   }
-  // },
+  watch: {
+    searchA(val) {
+      val && val !== this.select && this.querySelections(val)
+    },
+  },
 
   computed: {
     list() {
@@ -354,6 +449,7 @@ export default {
     this.getShipps()
     this.getCaracteristicas()
     this.getAvisos()
+    this.getCoautor()
   },
 }
 </script>

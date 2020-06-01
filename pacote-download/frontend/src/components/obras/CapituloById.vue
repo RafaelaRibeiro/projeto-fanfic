@@ -26,10 +26,10 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mb-12" justify="center">
-        <v-col cols="10">
+      <v-row class="mb-12" >
+        <v-col cols="11">
           <v-card flat>
-            <h5 class="font-weight-light mb-4">
+            <h5 class="font-weight-light mb-7">
               <i>Capitulo {{capitulo.numero}} - {{capitulo.nome}}</i>
             </h5>
           </v-card>

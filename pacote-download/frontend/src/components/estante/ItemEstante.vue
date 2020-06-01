@@ -16,7 +16,7 @@
         <v-card-title>
           <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
             {{item.nome}}
-            {{item.obraId}}
+           
           </router-link>
         </v-card-title>
         <v-card-text class="d-flex flex-column font-weight-regular text--primary">

@@ -14,12 +14,12 @@
           <v-icon>mdi-apps</v-icon>
         </v-btn>
 
-        <v-btn icon class="mr-3">
+        <!-- <v-btn icon class="mr-3">
           <v-badge color="error" overlap>
             <template slot="badge">{{ notifications.length }}</template>
             <v-icon color="tertiary">mdi-bell</v-icon>
           </v-badge>
-        </v-btn>
+        </v-btn> -->
 
           
       </v-flex>

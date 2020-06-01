@@ -90,7 +90,11 @@ module.exports = (app) => {
     app
       .db("capitulos")
       .join("obras", "capitulos.obraId", "obras.id")
-      .select("capitulos.numero", "capitulos.nome", "capitulos.obraId")
+      .select(
+        app.db.raw(
+          "capitulos.numero, capitulos.nome, capitulos.obraId,  ROUND ((LENGTH(CONVERT(capitulos.conteudo USING utf8)) - LENGTH( REPLACE (CONVERT(capitulos.conteudo USING utf8), ' ','') ) ) / LENGTH(' ')) + 1 as contador"
+        )
+      )
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
       .orderBy("capitulos.numero", "asc")
       .then((capitulo) => res.json(capitulo))

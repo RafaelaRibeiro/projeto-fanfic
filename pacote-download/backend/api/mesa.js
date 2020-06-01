@@ -39,6 +39,16 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const getCoautor = (req, res) => {
+    app
+      .db("usuarios")
+      .select("user")
+      .where({ autor: true })
+      .orderBy("nome", "asc")
+      .then((user) => res.json(user))
+      .catch((err) => res.status(500).send());
+  };
+
   const getUltimaObra = (req, res) => {
     const query = app
       .db("obras")
@@ -164,5 +174,6 @@ module.exports = (app) => {
     saveCapitulo,
     getUltimoCapitulo,
     upload,
+    getCoautor,
   };
 };

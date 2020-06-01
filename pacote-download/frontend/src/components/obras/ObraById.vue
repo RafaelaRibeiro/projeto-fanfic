@@ -88,16 +88,16 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="9">
           <v-card flat>
             <v-card-title>Índice</v-card-title>
-            <v-list>
-              <v-list-item v-for="capitulo in capitulos" :key="capitulo.numero">
+            <v-list  class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
+              <v-list-item link>
                 <v-list-item-content>
                   <v-list-item-title>
                     <router-link
                       :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId , numero:capitulo.numero} }"
-                    >{{capitulo.nome}} {{ capitulo.obraId}} {{capitulo.numero}}</router-link>
+                    >{{capitulo.numero}} - {{capitulo.nome}}</router-link>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>

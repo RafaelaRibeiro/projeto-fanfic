@@ -41,9 +41,15 @@ module.exports = (app) => {
     app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
+      .join("capitulos", "obras.id", "capitulos.obraId")
       .column("obras.nome", { obraId: "obras.id" })
       .select()
-      .where({ user: req.params.user, publica: true })
+      .where({
+        user: req.params.user,
+        "obras.publica": true,
+        "capitulos.publica": true,
+      })
+      .groupBy("obras.id")
       .orderBy("obras.id", "desc")
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));

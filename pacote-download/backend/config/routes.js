@@ -79,6 +79,7 @@ module.exports = (app) => {
   );
 
   app.route("/mesa/:id").get(app.api.mesa.getById);
+  app.route("/Coautor").get(app.api.mesa.getCoautor);
 
   app.route("/:user/mesa/obraspublicas").get(app.api.mesa.getObrasPublicas);
 
