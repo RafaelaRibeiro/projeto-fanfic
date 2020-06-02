@@ -33,7 +33,9 @@ module.exports = (app) => {
   const getById = (req, res) => {
     app
       .db("obras")
-      .where({ id: req.params.id })
+      .join("usuarios", "obras.autor", "usuarios.id")
+      .select("obras.*")
+      .where({ "obras.id": req.params.id, "usuarios.user": req.params.user })
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));

@@ -71,7 +71,7 @@
       <v-col>
         <template>
           <v-card flat>
-            <v-tabs v-model="tab" fixed-tabs background-color="indigo darken-3" dark>
+            <v-tabs v-model="tab" fixed-tabs background-color="purple darken-4" dark>
               <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>
             </v-tabs>
 

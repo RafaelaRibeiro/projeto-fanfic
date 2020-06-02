@@ -71,6 +71,7 @@ module.exports = (app) => {
   //Minha Mesa - Obra
 
   app.route("/:user/mesa/adicionarobra").post(app.api.mesa.save);
+  app.route("/:user/mesa/editarobra/:id").put(app.api.mesa.save);
 
   app.post(
     "/upload/:id",
@@ -78,7 +79,7 @@ module.exports = (app) => {
     app.api.mesa.upload
   );
 
-  app.route("/mesa/:id").get(app.api.mesa.getById);
+  app.route("/:user/mesa/:id").get(app.api.mesa.getById);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
 
   app.route("/:user/mesa/obraspublicas").get(app.api.mesa.getObrasPublicas);
