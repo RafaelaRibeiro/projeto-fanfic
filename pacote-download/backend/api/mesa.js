@@ -107,6 +107,18 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send());
   };
 
+  const getAvisosByObra = (req, res) => {
+    app
+      .db("avisos")
+      .join("obras")
+      .select("avisos.*")
+      .whereRaw("FIND_IN_SET(avisos.id, obras.avisosId)")
+      .where({ "obras.id": req.params.obraId, "obras.publica": true })
+      .orderBy("avisos.nome", "asc")
+      .then((aviso) => res.json(aviso))
+      .catch((err) => res.status(500).send(err));
+  };
+
   //Capitulos
 
   const saveCapitulo = (req, res) => {
@@ -177,5 +189,6 @@ module.exports = (app) => {
     getUltimoCapitulo,
     upload,
     getCoautor,
+    getAvisosByObra,
   };
 };

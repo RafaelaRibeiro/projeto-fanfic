@@ -72,6 +72,7 @@ module.exports = (app) => {
 
   app.route("/:user/mesa/adicionarobra").post(app.api.mesa.save);
   app.route("/:user/mesa/editarobra/:id").put(app.api.mesa.save);
+  app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
   app.post(
     "/upload/:id",

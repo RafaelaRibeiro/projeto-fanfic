@@ -54,7 +54,7 @@ const routes = [
 
   {
     name: 'EditarObra',
-    path: '/:user/mesa/editarobra/:id',
+    path: '/mesa/editarobra/:id',
     component: EditarObra,
   },
 
