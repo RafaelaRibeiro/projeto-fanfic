@@ -196,7 +196,7 @@
         <v-row>
           <v-col cols="12" class="text-center">
             <v-btn dark class="ma-3" color="green darken-4" @click="salvarObra">Salvar</v-btn>
-            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>
+            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>                      
           </v-col>
         </v-row>
       </v-col>
@@ -210,6 +210,7 @@ import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import moment from 'moment'
 export default {
+  name: 'EditarObra', 
   data() {
     return {
       selectedCateg: [],

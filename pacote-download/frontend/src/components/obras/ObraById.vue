@@ -73,7 +73,9 @@
                   v-for="universo in universos"
                   :key="universo.id"
                 >
-                  <a>{{universo.nome}}</a>
+                <v-chip small>
+                      <a>{{universo.nome}}</a>
+                </v-chip>
                 </p>
               </div>
 
