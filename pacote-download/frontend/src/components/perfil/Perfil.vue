@@ -70,32 +70,58 @@
     <v-row>
       <v-col>
         <template>
-          <v-card flat>
-            <v-tabs v-model="tab" fixed-tabs background-color="purple darken-4" dark>
-              <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>
-            </v-tabs>
+          <v-tabs
+            v-model="tab"
+            fixed-tabs
+            active-class=" bg-primary font-weight-bold text-white shadow p-3 mb-2 rounded "
+          >
+            <v-tabs-slider color="white"></v-tabs-slider>
+            <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>
+          </v-tabs>
 
-            <v-tabs-items v-model="tab">
-              <v-tab-item :transition="false" :reverse-transition="false">
-                <div v-for="usuario in usuarios" :key="usuario.id">
-                  <Sobre v-if="editar" :usuario="usuario"></Sobre>
-                  <PerfilEditar v-else :usuario="usuario"></PerfilEditar>
-                </div>
-              </v-tab-item>
-              <v-tab-item :transition="false" :reverse-transition="false">
-                <EstantePerfil />
-              </v-tab-item>
-              <v-tab-item :transition="false" :reverse-transition="false">
-                <ObrasPerfil />
-              </v-tab-item>
-              <v-tab-item :transition="false" :reverse-transition="false">
-                <Sugestoes />
-              </v-tab-item>
-              <v-tab-item :transition="false" :reverse-transition="false">
-                <Conexoes />
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
+          <v-tabs-items v-model="tab">
+            <v-tab-item :transition="false" :reverse-transition="false">
+              <div v-for="usuario in usuarios" :key="usuario.id">
+                <Sobre v-if="editar" :usuario="usuario"></Sobre>
+                <PerfilEditar v-else :usuario="usuario"></PerfilEditar>
+              </div>
+            </v-tab-item>
+            <v-tab-item :transition="false" :reverse-transition="false">
+              <EstantePerfil />
+            </v-tab-item>
+            <v-tab-item :transition="false" :reverse-transition="false">
+              <ObrasPerfil />
+            </v-tab-item>
+            <v-tab-item :transition="false" :reverse-transition="false">
+              <Sugestoes />
+            </v-tab-item>
+            <v-tab-item :transition="false" :reverse-transition="false">
+              <Conexoes />
+            </v-tab-item>
+          </v-tabs-items>
+
+          <!-- <b-tabs v-model="tabIndex" pills card justified no-fade>
+            <b-tab title="Sobre" :title-link-class="linkClass(0)">
+              <div v-for="usuario in usuarios" :key="usuario.id">
+                <Sobre v-if="editar" :usuario="usuario"></Sobre>
+                <PerfilEditar v-else :usuario="usuario"></PerfilEditar>
+              </div>
+            </b-tab>
+
+            <b-tab title="Estante" :title-link-class="linkClass(1)">
+              <EstantePerfil />
+            </b-tab>
+
+            <b-tab title="Obras" :title-link-class="linkClass(2)">
+              <ObrasPerfil />
+            </b-tab>
+            <b-tab title="Sugestoes" :title-link-class="linkClass(3)">
+              <Sugestoes />
+            </b-tab>
+            <b-tab title="Conexoes" :title-link-class="linkClass(4)">
+              <Conexoes />
+            </b-tab>
+          </b-tabs>-->
         </template>
       </v-col>
     </v-row>
@@ -126,6 +152,7 @@ export default {
 
   data() {
     return {
+      tabIndex: 0,
       tab: null,
       dialog: false,
       usuarios: {},
@@ -157,6 +184,14 @@ export default {
     editarPerfil() {
       this.overlay = !this.overlay
       this.editar = !this.editar
+    },
+
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ['bg-primary', 'h6 font-weight-bold text-white shadow p-3 mb-5 bg-white rounded']
+      } else {
+        return ['bg-light', 'h6 font-weight-bold shadow p-3 mb-5 bg-white rounded ']
+      }
     },
   },
 
