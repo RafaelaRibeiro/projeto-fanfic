@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="11">
           <v-card flat height="100px">
-            <h1 class="display-1 font-weight-light">
+            <h1 class="display-1 font-weight-light" id="top">
               <i>
                 Obra -
                 <router-link
@@ -26,7 +26,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mb-12" >
+      <v-row class="mb-12">
         <v-col cols="11">
           <v-card flat>
             <h5 class="font-weight-light mb-7">
@@ -53,38 +53,58 @@
       <v-row>
         <v-col cols="11">
           <v-row no-gutters>
-            <v-col>
-              <v-btn tile large dark color="purple darken-4" block depressed>
+            <v-col cols="6">
+              <v-btn dark color="purple darken-4">
                 <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
               </v-btn>
             </v-col>
-            <v-col>
-              <v-btn tile large dark color="purple darken-4" block depressed>
-                <v-icon left>mdi-bookshelf</v-icon>COLOCAR NA ESTANTE
-              </v-btn>
+           
+
+            <v-col cols="6" class="d-flex justify-end">
+              <v-menu bottom origin="center center" transition="scale-transition">
+                <template v-slot:activator="{ on }">
+                  <v-btn color="purple darken-4" dark v-on="on">
+                    <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-list>
+                    <v-list-item class="font-italic font-weight-medium">Prateleiras</v-list-item>
+                    <v-divider class="ma-0"></v-divider>
+                    <v-list-item link>Acompanhando</v-list-item>
+                    <v-list-item link>Próximas Leituras</v-list-item>
+                    <v-list-item link>Prediletos</v-list-item>
+                  </v-list>
+                </v-card>
+              </v-menu>
             </v-col>
           </v-row>
         </v-col>
       </v-row>
 
       <v-row>
-        <v-col cols="4">
-          <v-btn tile large dark color="purple darken-4" depressed>
+        <v-col cols="11">
+          <v-row no-gutters>
+            <v-col cols="6">
+          <v-btn dark color="purple darken-4">
             <v-icon left>mdi-page-previous-outline</v-icon>Capitulo Anterior
           </v-btn>
         </v-col>
-        <v-spacer></v-spacer>
+   
 
-        <v-col cols="4">
+        <v-col cols="6" class="d-flex justify-end" >
           <router-link
             :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: 3 } }"
           >
-            <v-btn tile large dark color="purple darken-4" depressed>
+            <v-btn dark color="purple darken-4">
               proximo capitulo
               <v-icon right>mdi-page-next-outline</v-icon>
             </v-btn>
           </router-link>
         </v-col>
+          </v-row>
+        </v-col>
+        
       </v-row>
     </v-content>
 
@@ -104,15 +124,14 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="11">
+        <v-col cols="11" class="d-flex justify-end">
           <v-btn
-            tile
-            large
+            
             dark
             color="purple darken-4"
-            depressed
+           
             @click="salvarComentario"
-          >Salvar Comentário</v-btn>
+          >Salvar</v-btn>
         </v-col>
       </v-row>
     </v-content>
@@ -195,6 +214,7 @@ export default {
   },
   data() {
     return {
+      menu: false,
       page: 1,
       limit: 0,
       count: 0,

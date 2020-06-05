@@ -1,4 +1,24 @@
 module.exports = (app) => {
+  const save = (req, res) => {
+    const estante = { ...req.body };
+    if (req.params.id) estante.id = req.params.id;
+
+    if (estante.id) {
+      app
+        .db("estante")
+        .update(estante)
+        .where({ id: estante.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("estante")
+        .insert(estante)
+        .then((_) => res.status(240).send())
+        .catch((err) => res.status(500).send());
+    }
+  };
+
   const get = (req, res) => {
     app
       .db("estante")
@@ -23,5 +43,5 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  return { get, getById };
+  return { get, getById, save};
 };

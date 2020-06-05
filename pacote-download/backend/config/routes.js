@@ -26,9 +26,8 @@ module.exports = (app) => {
 
   //Estante
 
-  app
-    .route("/:usuarioId/estante/prateleira/:prateleiraId")
-    .get(app.api.estante.getById);
+  app.route("/:usuarioId/estante/prateleira/:prateleiraId").get(app.api.estante.getById);
+  app.route("/:usuarioId/estante/").post(app.api.estante.save)
 
   //Obras
 
