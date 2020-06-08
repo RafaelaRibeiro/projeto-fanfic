@@ -7,6 +7,7 @@ import ObrasPrivadas from '../components/mesa/ObrasPrivadas'
 import ObrasPublicas from '../components/mesa/ObrasPublicas'
 import AdicionarObra from '../components/mesa/AdicionarObra'
 import EditarObra from '../components/mesa/EditarObra'
+import EditarCapitulo from '../components/mesa/EditarCapitulo'
 import AdicionarCapitulo from '../components/mesa/AdicionarCapitulo'
 import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
@@ -56,6 +57,12 @@ const routes = [
     name: 'EditarObra',
     path: '/mesa/editarobra/:id',
     component: EditarObra,
+  },
+
+  {
+    name: 'EditarCapitulo',
+    path: '/mesa/:obraId/editarcapitulo/:numero',
+    component: EditarCapitulo,
   },
 
   {

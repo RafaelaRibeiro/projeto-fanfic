@@ -81,7 +81,7 @@ export default {
     },
 
     getNotas() {
-      const url = ` ${baseApiUrl}/${this.usuario.id}/mesa/notas`
+      const url = ` ${baseApiUrl}/${this.usuario.user}/notas`
       axios(url).then(res => {
         this.nota = res.data
       })

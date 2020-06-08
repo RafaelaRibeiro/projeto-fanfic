@@ -42,18 +42,18 @@ export default {
   },
   methods: {
     getNotas() {
-      const url = ` ${baseApiUrl}/${this.usuario.id}/mesa/notas`
+      const url = ` ${baseApiUrl}/${this.usuario.user}/notas`
       axios(url).then(res => {
         this.notas = res.data
       })
     },
   },
 
-  watch: {
-    notas() {
-      this.getNotas()
-    },
-  },
+  // watch: {
+  //   notas() {
+  //     this.getNotas()
+  //   },
+  // },
 
   computed: { ...mapState(['usuario']) },
   mounted() {

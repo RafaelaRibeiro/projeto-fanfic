@@ -30,9 +30,9 @@ module.exports = (app) => {
   const getByUser = (req, res) => {
     app
       .db("notas")
-      .select("id", "conteudo", "usuarioId")
-      .where({ usuarioId: req.params.usuarioId })
-
+      .join("usuarios", "notas.usuarioId", "usuarios.id")
+      .select("notas.*")
+      .where({ "usuarios.user": req.params.user })
       .then((note) => res.json(note))
       .catch((err) => res.status(500).send(err));
   };

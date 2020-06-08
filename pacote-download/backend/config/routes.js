@@ -97,12 +97,13 @@ module.exports = (app) => {
   //Minha Mesa - Capitulo
 
   app.route("/:user/mesa/adicionarcapitulo").post(app.api.mesa.saveCapitulo);
+  app.router("/mesa/editarcapitulo/:id").put(app.api.mesa.saveCapitulo)
   app.route("/mesa/:obraId/ultimocapitulo").get(app.api.mesa.getUltimoCapitulo);
 
   //Minha Mesa - Notas
 
   app
-    .route("/:usuarioId/mesa/notas")
+    .route("/:user/notas")
     .post(app.api.notas.save)
     .get(app.api.notas.getByUser);
 

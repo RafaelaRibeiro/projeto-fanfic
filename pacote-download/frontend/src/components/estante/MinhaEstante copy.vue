@@ -116,7 +116,7 @@ export default {
         },
 
         getObrasPrateleiras() {
-          const url =  ` ${baseApiUrl}/${this.usuario.id}/estante`
+          const url =  ` ${baseApiUrl}/${this.usuario.user}/estante`
           axios(url).then(res => {
             this.estante=this.estante.concat(res.data)
           })
