@@ -71,9 +71,10 @@
       <v-col>
         <template>
           <v-tabs
+            background-color="deep-purple lighten-5"
             v-model="tab"
             fixed-tabs
-            active-class=" bg-primary font-weight-bold text-white shadow p-3 mb-2 rounded "
+            active-class=" primary font-weight-bold text-white shadow p-3 mb-2 rounded "
           >
             <v-tabs-slider color="white"></v-tabs-slider>
             <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>

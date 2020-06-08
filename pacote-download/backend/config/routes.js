@@ -22,12 +22,13 @@ module.exports = (app) => {
 
   app.route("/prateleiras").get(app.api.prateleiras.get);
 
-  app.route("/:usuarioId/estante").get(app.api.estante.get);
-
   //Estante
-
-  app.route("/:usuarioId/estante/prateleira/:prateleiraId").get(app.api.estante.getById);
-  app.route("/:usuarioId/estante/").post(app.api.estante.save)
+  app.route("/:user/estante").get(app.api.estante.get);
+  app
+    .route("/:user/estante/prateleira/:prateleiraId")
+    .get(app.api.estante.getById);
+  app.route("/:user/estante/:obraId").get(app.api.estante.getEstanteByObraId);
+  app.route("/:user/estante/").post(app.api.estante.save);
 
   //Obras
 
@@ -40,6 +41,9 @@ module.exports = (app) => {
   app.route("/obra/:obraId/capitulos").get(app.api.obras.getCapitulosByObra);
   app.route("/obra/:obraId/universos").get(app.api.obras.getUniversosByObra);
   app.route("/obra/:obraId/avisos").get(app.api.obras.getAvisosByObra);
+  app
+    .route("/obra/:obraId/capitulo/:numero/avisos")
+    .get(app.api.obras.getAvisosByCapitulo);
   app
     .route("/obra/:obraId/caracteristicas")
     .get(app.api.obras.getCaracteristicasByObra);

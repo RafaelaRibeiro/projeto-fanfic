@@ -62,6 +62,53 @@
             </v-col>
           </v-row>
 
+          <v-row>
+            <v-col>
+              <v-expansion-panels flat focusable>
+                <v-expansion-panel>
+                  <v-expansion-panel-header>Seu capítulo necessita de avisos?</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-row justify="center">
+                      <v-col cols="4">
+                        <v-checkbox
+                          v-for="aviso in avisos.slice(0, 4)"
+                          :key="aviso.id"
+                          v-model="selected"
+                          dense
+                          class="ma-0"
+                          :label="aviso.nome"
+                          :value="aviso.id"
+                        ></v-checkbox>
+                      </v-col>
+                      <v-col cols="4">
+                        <v-checkbox
+                          v-for="aviso in avisos.slice(4, 8)"
+                          :key="aviso.id"
+                          v-model="selected"
+                          dense
+                          class="ma-0"
+                          :label="aviso.nome"
+                          :value="aviso.id"
+                        ></v-checkbox>
+                      </v-col>
+                      <v-col cols="4">
+                        <v-checkbox
+                          v-for="aviso in avisos.slice(8, 12)"
+                          :key="aviso.id"
+                          v-model="selected"
+                          dense
+                          class="ma-0"
+                          :label="aviso.nome"
+                          :value="aviso.id"
+                        ></v-checkbox>
+                      </v-col>
+                    </v-row>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-col>
+          </v-row>
+
           <v-row justify="center">
             <v-col cols="4">
               <q-checkbox v-model="capitulo.publica" label="Marcar capítulo como Publico?" />
@@ -128,6 +175,7 @@
           </v-card>
         </v-col>
       </v-row>
+
       <v-row>
         <v-col>
           <v-btn
@@ -157,6 +205,8 @@ export default {
   data() {
     return {
       content: '',
+      selected: [],
+      avisos: [],
 
       language: 'pt_br',
 
@@ -228,6 +278,13 @@ export default {
       })
     },
 
+    getAvisos() {
+      const url = ` ${baseApiUrl}/avisos`
+      axios(url).then(res => {
+        this.avisos = res.data
+      })
+    },
+
     getNumeroCapitulo() {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo`
       axios(url).then(res => {
@@ -256,6 +313,7 @@ export default {
   mounted() {
     this.capitulo.obraId = this.$route.params.obraId
     this.getObra()
+    this.getAvisos()
     this.getNumeroCapitulo()
   },
 }

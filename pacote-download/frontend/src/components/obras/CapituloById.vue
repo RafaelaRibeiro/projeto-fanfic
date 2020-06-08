@@ -57,8 +57,10 @@
               <v-btn dark color="purple darken-4">
                 <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
               </v-btn>
+              <v-btn dark color="purple darken-4" @click="saveEstante">
+                <v-icon left>mdi-check-bold</v-icon>Estante
+              </v-btn>
             </v-col>
-           
 
             <v-col cols="6" class="d-flex justify-end">
               <v-menu bottom origin="center center" transition="scale-transition">
@@ -83,28 +85,30 @@
       </v-row>
 
       <v-row>
-        <v-col cols="11">
+        <v-col cols="11" v-for="u in ultimo" :key="u.id">
           <v-row no-gutters>
             <v-col cols="6">
-          <v-btn dark color="purple darken-4">
-            <v-icon left>mdi-page-previous-outline</v-icon>Capitulo Anterior
-          </v-btn>
-        </v-col>
-   
+              <router-link
+                :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero -1 } }"
+              >
+                <v-btn v-show="capitulo.numero != u.min_numero" dark color="purple darken-4">
+                  <v-icon left>mdi-chevron-triple-left</v-icon>Capitulo Anterior
+                </v-btn>
+              </router-link>
+            </v-col>
 
-        <v-col cols="6" class="d-flex justify-end" >
-          <router-link
-            :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: 3 } }"
-          >
-            <v-btn dark color="purple darken-4">
-              proximo capitulo
-              <v-icon right>mdi-page-next-outline</v-icon>
-            </v-btn>
-          </router-link>
-        </v-col>
+            <v-col cols="6" class="d-flex justify-end">
+              <router-link
+                :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
+              >
+                <v-btn v-show="capitulo.numero != u.max_numero" dark color=" blue darken-2">
+                  proximo capitulo
+                  <v-icon right>mdi-chevron-triple-right</v-icon>
+                </v-btn>
+              </router-link>
+            </v-col>
           </v-row>
         </v-col>
-        
       </v-row>
     </v-content>
 
@@ -125,13 +129,7 @@
       </v-row>
       <v-row>
         <v-col cols="11" class="d-flex justify-end">
-          <v-btn
-            
-            dark
-            color="purple darken-4"
-           
-            @click="salvarComentario"
-          >Salvar</v-btn>
+          <v-btn dark color="purple darken-4" @click="salvarComentario">Salvar</v-btn>
         </v-col>
       </v-row>
     </v-content>
@@ -187,6 +185,30 @@
         </v-col>
       </v-row>
     </v-content>
+
+    <v-row align="center" justify="center">
+      <v-dialog v-model="dialog" persistent max-width="355">
+        <!-- <template v-slot:activator="{ on }">
+          <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+        </template>-->
+        <v-card align="center">
+          <v-row align="center" justify="center" no-gutters>
+            <v-icon color="red" x-large class="ma-5">mdi-alert-circle-outline</v-icon>
+          </v-row>
+          <v-card-subtitle class="headline">Esse capítulo contém</v-card-subtitle>
+          <v-card-text
+            v-for="aviso in avisos"
+            :key="aviso.nome"
+            class="title text-center"
+          >{{aviso.nome}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialog = false">Continuar</v-btn>
+            <v-btn color="green darken-1" text @click="dialog = false">Voltar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </v-container>
 </template>
 
@@ -200,21 +222,13 @@ import axios from 'axios'
 export default {
   name: 'CapituloById',
   computed: {
-    nextCapitulo() {
-      let a = this.$route.params.numero
-      return a++
-    },
-    // dtComentario() {
-    //   let dtNow = moment(this.comentarios.dataComentario).format('DD/MM/YYYY HH:mm')
-
-    //   return dtNow
-    // },
-
     ...mapState(['usuario']),
   },
   data() {
     return {
       menu: false,
+      dialog: false,
+      avisos: [],
       page: 1,
       limit: 0,
       count: 0,
@@ -225,6 +239,8 @@ export default {
       edicao: false,
       // mask: '##/##/####',
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
+      ultimo: {},
+      estante: {},
     }
   },
 
@@ -247,6 +263,21 @@ export default {
         .catch(showError)
     },
 
+    saveEstante() {
+      const url = ` ${baseApiUrl}/teste2/estante`
+      axios
+        .post(url, {
+          usuarioId: this.usuario.id,
+          obraId: this.capitulo.obraId,
+          sugerir: false,
+          prateleiraId: 2,
+        })
+        .then(() => {
+          this.$toasted.global.defaultSuccess()
+        })
+        .catch(showError)
+    },
+
     loadComentarios() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/comentarios?page=${this.page}`
       axios.get(url).then(res => {
@@ -256,22 +287,53 @@ export default {
         this.totalPage = res.data.totalPage
       })
     },
+    getCapitulo() {
+      const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
+      axios.get(url).then(res => {
+        this.capitulo = res.data
+        if (this.capitulo.avisosId) this.dialog = true
+      })
+    },
+
+    ultimoCapitulo() {
+      const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo/`
+      axios.get(url).then(res => (this.ultimo = res.data))
+    },
+    getAvisos() {
+      const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/avisos`
+      axios.get(url).then(res => (this.avisos = res.data))
+    },
   },
 
   watch: {
     page() {
       this.loadComentarios()
     },
+
+    $route(to) {
+      this.capitulo.obraId = to.params.obraId
+      this.capitulo.numero = to.params.numero
+      this.page = 1
+      this.getCapitulo()
+      this.loadComentarios()
+      this.getAvisos()
+    },
   },
 
   mounted() {
-    const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
-    axios.get(url).then(res => (this.capitulo = res.data))
+    this.capitulo.obraId = this.$route.params.obraId
+    this.capitulo.numero = this.$route.params.numero
+    this.getCapitulo()
     this.loadComentarios()
+    this.ultimoCapitulo()
+    this.getAvisos()
   },
 }
 </script>
 
 
 <style>
+.botao {
+  margin-top: 200px;
+}
 </style>

@@ -60,7 +60,7 @@ module.exports = (app) => {
       .join("obras", "capitulos.obraId", "=", "obras.id")
       .select(
         app.db.raw(
-          "obras.nome as obraNome, capitulos.id, CONVERT(capitulos.conteudo USING utf8) as conteudo, capitulos.numero, capitulos.nome, capitulos.notasIniciais, capitulos.notasFinais, obraId"
+          "obras.nome as obraNome, capitulos.id, CONVERT(capitulos.conteudo USING utf8) as conteudo, capitulos.numero, capitulos.nome, capitulos.notasIniciais, capitulos.notasFinais, capitulos.obraId, capitulos.avisosId"
         )
       )
       .where({ obraId: req.params.obraId, numero: req.params.numero })
@@ -125,6 +125,21 @@ module.exports = (app) => {
       .then((aviso) => res.json(aviso))
       .catch((err) => res.status(500).send(err));
   };
+
+  const getAvisosByCapitulo = (req, res) => {
+    app
+      .db("avisos")
+      .join("capitulos")
+      .select(app.db.raw("GROUP_CONCAT(avisos.nome SEPARATOR ', ') as nome"))
+      .whereRaw("FIND_IN_SET(avisos.id, capitulos.avisosId)")
+      .where({
+        "capitulos.obraId": req.params.obraId,
+        "capitulos.numero": req.params.numero,
+      })
+      .orderBy("avisos.nome", "asc")
+      .then((aviso) => res.json(aviso))
+      .catch((err) => res.status(500).send(err));
+  };
   const getCaracteristicasByObra = (req, res) => {
     app
       .db("caracteristicas")
@@ -147,5 +162,6 @@ module.exports = (app) => {
     getUniversosByObra,
     getAvisosByObra,
     getCaracteristicasByObra,
+    getAvisosByCapitulo,
   };
 };

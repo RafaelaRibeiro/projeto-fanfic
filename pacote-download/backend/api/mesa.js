@@ -154,7 +154,7 @@ module.exports = (app) => {
       .leftJoin("capitulos", "obras.id", "capitulos.obraId")
       .select(
         app.db.raw(
-          "obras.id, case when max(capitulos.numero) is null then 0 else max(capitulos.numero) end as numero"
+          "obras.id, case when max(capitulos.numero) is null then 0 else max(capitulos.numero) end as max_numero, case when min(capitulos.numero) is null then 0 else min(capitulos.numero) end as min_numero"
         )
       )
       .where({

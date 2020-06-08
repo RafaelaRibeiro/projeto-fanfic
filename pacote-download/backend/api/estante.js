@@ -1,19 +1,36 @@
 module.exports = (app) => {
-  const save = (req, res) => {
-    const estante = { ...req.body };
-    if (req.params.id) estante.id = req.params.id;
+  const { existsOrError, notExistsOrError } = app.api.validacao;
 
-    if (estante.id) {
+  const save = async (req, res) => {
+    const shelf = { ...req.body };
+    if (req.params.id) shelf.id = req.params.id;
+
+    try {
+      existsOrError(shelf.usuarioId, "Usuario não informado");
+      existsOrError(shelf.obraId, "Obra não informada");
+
+      const userFromDB = await app
+        .db("estante")
+        .where({ usuarioId: shelf.usuarioId, obraId: shelf.obraId })
+        .first();
+      if (!shelf.id) {
+        notExistsOrError(userFromDB, "Obra já está na estante");
+      }
+    } catch (msg) {
+      res.status(400).send(msg);
+    }
+
+    if (shelf.id) {
       app
         .db("estante")
-        .update(estante)
-        .where({ id: estante.id })
+        .update(shelf)
+        .where({ id: shelf.id })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
       app
         .db("estante")
-        .insert(estante)
+        .insert(shelf)
         .then((_) => res.status(240).send())
         .catch((err) => res.status(500).send());
     }
@@ -22,9 +39,10 @@ module.exports = (app) => {
   const get = (req, res) => {
     app
       .db("estante")
-      .join("obras", "estante.obraId", "=", "obras.id")
+      .join("obras", "estante.obraId", "obras.id")
+      .join("usuarios", "estante.usuarioId", "usuarios.id")
       .select("estante.id", "estante.obraId", "obras.nome", "prateleiraId")
-      .where({ usuarioId: req.params.usuarioId })
+      .where({ "usuarios.user": req.params.user })
       .then((estante) => res.json(estante))
       .catch((err) => res.status(500).send(err));
   };
@@ -43,5 +61,15 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  return { get, getById, save};
+  const getEstanteByObraId = (req, res) => {
+    app
+      .db("estante")
+      .join("usuarios", "estante.usuarioId", "usuarios.id")
+      .select("estante.*")
+      .where({ "usuarios.user": req.params.user, obraId: req.params.obraId })
+      .then((obra) => res.json(obra))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  return { get, getById, save, getEstanteByObraId };
 };

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat min-height="300px">
+  <v-card color="#FFF" flat min-height="300px">
     <v-row justify="center">
       <v-col cols="7">
         <v-card-title class="display-1 font-weight-light mb-4">Sobre Mim</v-card-title>
