@@ -97,7 +97,7 @@ module.exports = (app) => {
   //Minha Mesa - Capitulo
 
   app.route("/:user/mesa/adicionarcapitulo").post(app.api.mesa.saveCapitulo);
-  app.router("/mesa/editarcapitulo/:id").put(app.api.mesa.saveCapitulo)
+  app.route("/mesa/editarcapitulo/:id").put(app.api.mesa.saveCapitulo);
   app.route("/mesa/:obraId/ultimocapitulo").get(app.api.mesa.getUltimoCapitulo);
 
   //Minha Mesa - Notas
