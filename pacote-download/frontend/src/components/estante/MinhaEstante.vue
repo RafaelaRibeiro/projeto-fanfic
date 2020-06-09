@@ -50,7 +50,7 @@
             <v-card-title>Prateleiras</v-card-title>
           </v-card>
           <v-card outlined>
-            <v-list>
+            <!-- <v-list>
               <v-list-item-group>
                 <v-list-item v-for="prateleira in lista" :key="prateleira.id">
                   <v-list-item-content>
@@ -58,7 +58,15 @@
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
-            </v-list>
+            </v-list>-->
+
+            <md-list>
+              <md-list-item
+                v-for="prateleira in lista"
+                :key="prateleira.id"
+                @click="search = prateleira.id"
+              >{{prateleira.nome}}</md-list-item>
+            </md-list>
           </v-card>
         </v-col>
       </v-row>

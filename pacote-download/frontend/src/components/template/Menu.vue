@@ -19,7 +19,7 @@
       </v-list-item>
 
       <v-divider class="ma-0"></v-divider>
-      <v-list dense>
+      <!-- <v-list dense>
         <template v-for="item in items">
           <v-list-group
             v-if="item.children"
@@ -46,7 +46,7 @@
                 >
                   <v-list-item-title>{{ child.text }}</v-list-item-title>
                 </router-link>
-                <!-- <v-list-item-title>{{ child.text }}</v-list-item-title> -->
+            
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
@@ -79,6 +79,27 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+ -->
+
+        <md-list class="md-dense pa-0 mb-4 ">
+          <md-list-item v-for="item in items"   :key="item.text"  :to="{name:item.path, params: {user: usuario.user}}">
+            <v-icon class="pr-6">{{item.icon}}</v-icon>
+            <span color="red" class="md-list-item-text">{{item.text}}</span>
+          </md-list-item>
+
+
+           <md-list-item  md-expand :md-expanded.sync="expandNews">
+          <md-icon>whatshot</md-icon>
+          <span class="md-list-item-text md-headline">News</span>
+
+          <md-list slot="md-expand">
+            <md-list-item class="md-inset">World</md-list-item>
+            <md-list-item class="md-inset">Europe</md-list-item>
+            <md-list-item class="md-inset">South America</md-list-item>
+          </md-list>
+        </md-list-item>
+        </md-list>
+  
     </v-navigation-drawer>
   </div>
 </template>
@@ -104,6 +125,8 @@ export default {
     nome: {},
     usuarios: [],
     drawer: false,
+    expandNews: false,
+        expandSingle: true,
 
     items: [
       {
@@ -122,7 +145,7 @@ export default {
       },
 
       {
-        icon: 'mdi-chevron-up',
+        icon: 'mdi-desk',
         'icon-alt': 'mdi-chevron-down',
         text: 'Minha Mesa',
         notificacao: 0,
@@ -161,13 +184,35 @@ export default {
 </script>
 
 
-<style>
-.v-list-item__title {
-  text-decoration: none;
-  color: black;
-}
-.routerLink:hover {
-  text-decoration: none;
-  color: black;
-}
+<style lang="scss" scoped>
+
+
+ $list-width: 320px;
+
+  .full-control {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap-reverse;
+  }
+
+  .list {
+    width: $list-width;
+  }
+
+  .full-control > .md-list {
+    width: $list-width;
+    max-width: 100%;
+    height: 400px;
+    display: inline-block;
+    overflow: auto;
+    border: 1px solid rgba(#000, .12);
+    vertical-align: top;
+  }
+
+  .control {
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
 </style>
