@@ -16,12 +16,16 @@
       </v-row>
       <v-row>
         <v-col cols="9">
-          <v-img
-            src="https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
-            contain
-            max-height="400"
-            max-width="700"
-          ></v-img>
+          <!-- https://uploads.spiritfanfiction.com/fanfics/historias/201902/como-se-eu-fosse-flor-15878925-260520201109.jpg 
+          
+          https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png
+          -->
+          <b-img
+            center
+            src=" https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
+            fluid
+            alt="Responsive image"
+          ></b-img>
 
           <v-card flat>
             <v-card-title>Sinopse</v-card-title>
@@ -73,9 +77,9 @@
                   v-for="universo in universos"
                   :key="universo.id"
                 >
-                <v-chip small>
-                      <a>{{universo.nome}}</a>
-                </v-chip>
+                  <v-chip small>
+                    <a>{{universo.nome}}</a>
+                  </v-chip>
                 </p>
               </div>
 
@@ -93,7 +97,7 @@
         <v-col cols="9">
           <v-card flat>
             <v-card-title>Índice</v-card-title>
-            <v-list  class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
+            <v-list class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
               <v-list-item link>
                 <v-list-item-content>
                   <v-list-item-title>

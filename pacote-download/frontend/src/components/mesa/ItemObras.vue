@@ -4,10 +4,15 @@
       <v-row>
         <v-col cols="3">
           <v-card flat class="d-flex mb-2">
-            <v-avatar size="80" tile class="d-none d-sm-block">
-              <v-img v-if="item.capa " :src="item.capa"></v-img>
-              <v-img v-else src="@/assets/sem_imagem.jpg"></v-img>
-            </v-avatar>
+            <v-img v-if="item.capa " :src="item.capa"></v-img>
+            <!-- <v-img v-else src="@/assets/sem_imagem.jpg"></v-img> -->
+            <b-img
+              center
+              v-else
+              src="https://uploads.spiritfanfiction.com/fanfics/historias/201902/como-se-eu-fosse-flor-15878925-260520201109.jpg "
+              fluid-grow
+              alt="Imagem responsiva"
+            >,</b-img>
           </v-card>
         </v-col>
         <v-col>

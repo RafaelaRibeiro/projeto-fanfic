@@ -13,7 +13,7 @@
         </v-list-item-avatar>
 
         <v-list-item-title>{{usuario.nome}}</v-list-item-title>
-        <v-btn icon @click.stop="mini = !mini">
+        <v-btn icon @click="fechar">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
       </v-list-item>
@@ -79,27 +79,31 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
- -->
+      -->
 
-        <md-list class="md-dense pa-0 mb-4 ">
-          <md-list-item v-for="item in items"   :key="item.text"  :to="{name:item.path, params: {user: usuario.user}}">
-            <v-icon class="pr-6">{{item.icon}}</v-icon>
-            <span color="red" class="md-list-item-text">{{item.text}}</span>
-          </md-list-item>
-
-
-           <md-list-item  md-expand :md-expanded.sync="expandNews">
-          <md-icon>whatshot</md-icon>
-          <span class="md-list-item-text md-headline">News</span>
+      <md-list class="md-dense pa-0 mb-2" v-for="item in items" :key="item.text">
+        <md-list-item v-if="item.children" md-expand :md-expanded.sync="expandNews">
+          <v-icon class="pr-6">{{item.icon}}</v-icon>
+          <span class="md-list-item-text md-headline">{{item.text}}</span>
 
           <md-list slot="md-expand">
-            <md-list-item class="md-inset">World</md-list-item>
-            <md-list-item class="md-inset">Europe</md-list-item>
-            <md-list-item class="md-inset">South America</md-list-item>
+            <md-list-item
+              v-for="(child, i) in item.children"
+              :key="i"
+              class="pl-0"
+              :to="{name:child.path, params: {autor: usuario.user}}"
+            >
+              <v-icon small class="pr-6">{{child.icon}}</v-icon>
+              <span class="md-list-item-text">{{ child.text }}</span>
+            </md-list-item>
           </md-list>
         </md-list-item>
-        </md-list>
-  
+
+        <md-list-item v-else :to="{name:item.path, params: {user: usuario.user}}">
+          <v-icon class="pr-6">{{item.icon}}</v-icon>
+          <span color="red" class="md-list-item-text">{{item.text}}</span>
+        </md-list-item>
+      </md-list>
     </v-navigation-drawer>
   </div>
 </template>
@@ -126,7 +130,7 @@ export default {
     usuarios: [],
     drawer: false,
     expandNews: false,
-        expandSingle: true,
+    expandSingle: true,
 
     items: [
       {
@@ -179,40 +183,29 @@ export default {
       this.$store.commit('setUser', null)
       this.$router.push({ name: 'auth' })
     },
+    fechar() {
+      this.mini = !this.mini
+      this.expandNews = false
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
+$list-width: 320px;
 
+.full-control {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+}
 
- $list-width: 320px;
+.list {
+  width: $list-width;
+}
 
-  .full-control {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap-reverse;
-  }
-
-  .list {
-    width: $list-width;
-  }
-
-  .full-control > .md-list {
-    width: $list-width;
-    max-width: 100%;
-    height: 400px;
-    display: inline-block;
-    overflow: auto;
-    border: 1px solid rgba(#000, .12);
-    vertical-align: top;
-  }
-
-  .control {
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-  }
+// [dir='ltr'] .md-list-item.md-inset .md-list-item-content {
+//   padding-left: 40px !important;
+// }
 </style>

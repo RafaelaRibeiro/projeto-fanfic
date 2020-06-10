@@ -97,7 +97,7 @@ export default {
 
   methods: {
     getObrasPublicas() {
-      const url = ` ${baseApiUrl}/teste1/mesa/obraspublicas`
+      const url = ` ${baseApiUrl}/teste1/obraspublicas`
       axios(url).then(res => {
         this.obras = res.data
       })
