@@ -71,5 +71,19 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  return { get, getById, save, getEstanteByObraId };
+  const getuniversosByEstante = (req, res) => {
+    app
+    .db("estante")
+    .join("usuarios", "estante.usuarioId", "usuarios.id")
+    .join("obras","estante.obraId", "obras.id")
+    .joinRaw("LEFT JOIN fandons ON FIND_IN_SET(fandons.id, obras.fandonsId)")
+    .select("fandons.id", "fandons.nome")
+    .where({ "usuarios.user": req.params.user })
+    .groupBy("fandons.id", "fandons.nome")
+    .then((universoEstante) => res.json(universoEstante))
+      .catch((err) => res.status(500).send(err))
+
+  };
+
+  return { get, getById, save, getEstanteByObraId, getuniversosByEstante };
 };
