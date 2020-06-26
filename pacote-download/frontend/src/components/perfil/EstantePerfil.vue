@@ -14,11 +14,20 @@
       <v-col>
         <v-card-title>
           <i class="display-1 font-weight-light mb-4 text--primary">Universos</i>
-          <v-treeview selected-color="purple darken-4"
-    selectable
-    :items="items"
-    dense
-  ></v-treeview>
+          <!-- <v-treeview selected-color="purple darken-4" selectable :items="universos" dense></v-treeview> -->
+          <div class="full-control">
+            <md-list class="md-dense pa-0" v-for="u in universos" :key="u.id">
+              <md-list-item md-expand :md-expanded.sync="expandNews">
+                <span class="md-list-item-text md-headline">{{u.name}}</span>
+
+                <md-list slot="md-expand">
+                  <md-list-item>
+                    <span class="md-list-item-text">teste</span>
+                  </md-list-item>
+                </md-list>
+              </md-list-item>
+            </md-list>
+          </div>
         </v-card-title>
       </v-col>
     </v-row>
@@ -36,6 +45,10 @@ export default {
     return {
       usuarios: {},
       estante: [],
+      universos: [],
+      universo: [],
+      expandNews: false,
+      notification: [],
       items: [
         {
           id: 1,
@@ -122,6 +135,12 @@ export default {
         this.estante = this.estante.concat(res.data)
       })
     },
+    getUniversoEstante() {
+      const url = `${baseApiUrl}/estante/${this.usuarios.user}/universos `
+      axios(url).then(res => {
+        this.universos = res.data
+      })
+    },
   },
 
   watch: {
@@ -135,9 +154,13 @@ export default {
     this.usuarios.user = this.$route.params.user
     this.getEstantePerfil()
     this.getUsuarios()
+    this.getUniversoEstante()
   },
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+// [dir='ltr'] .md-list-item.md-inset .md-list-item-content {
+//   padding-left: 40px !important;
+// }
 </style>
