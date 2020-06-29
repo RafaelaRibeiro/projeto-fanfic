@@ -17,15 +17,15 @@
         </v-col>
         <v-col>
           <v-card class="d-flex flex-column" flat>
-            <span class="mb-2">
-              <strong>{{item.nome}}</strong>
+            <span class="mb-2 subtitle-2 font-weight-medium">
+              {{item.nome}}
             </span>
             <span>
-              <strong>Total de Capitulos:</strong>
+              <span class="subtitle-2 font-weight-medium" >Total de Capitulos:</span>
               {{item.countCap}}
             </span>
             <span>
-              <strong>Adicionado em:</strong>
+              <span class="subtitle-2 font-weight-medium" >Adicionado em:</span>
               {{item.dataAdicionado}}
             </span>
           </v-card>
