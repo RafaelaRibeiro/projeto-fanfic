@@ -29,7 +29,7 @@ module.exports = (app) => {
     .get(app.api.estante.getById);
   app.route("/:user/estante/:obraId").get(app.api.estante.getEstanteByObraId);
   // app.route("/:user/estanteUniverso").get(app.api.estante.getuniversosByEstante)
-  app.get('/estante/:user/universo', app.api.estante.getuniversosByEstante)
+  app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
 
   //Obras

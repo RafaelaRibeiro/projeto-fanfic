@@ -16,6 +16,7 @@ import './styles/main.css'
 
 Vue.config.productionTip = false
 
+
 new Vue({
   vuetify,
   store,
