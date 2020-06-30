@@ -5,9 +5,11 @@
         <v-card class="perfil-banner">
           <v-img
             height="300px"
-            src="https://www.ceperfil.com.br/wp-content/uploads/2016/10/fundo-banner-aprovados.jpg"
+            v-for="usuario in usuarios"
+            :key="usuario.user"
+            :src="usuario.imagemCapa"
           >
-            <v-overlay :absolute="absolute" :value="overlay"></v-overlay>
+           
           </v-img>
         </v-card>
       </v-col>
@@ -40,11 +42,6 @@
               <v-icon>mdi-account-multiple-plus</v-icon>
               <span>Seguir</span>
           </v-btn>-->
-
-          <v-btn depressed small @click="editarPerfil">
-            <v-icon>mdi-account-edit</v-icon>
-            <span>Editar Perfil</span>
-          </v-btn>
 
           <v-menu top offset-y>
             <template v-slot:activator="{ on }">
@@ -83,8 +80,7 @@
           <v-tabs-items v-model="tab">
             <v-tab-item :transition="false" :reverse-transition="false">
               <div v-for="usuario in usuarios" :key="usuario.id">
-                <Sobre v-if="editar" :usuario="usuario"></Sobre>
-                <PerfilEditar v-else :usuario="usuario"></PerfilEditar>
+                <Sobre :usuario="usuario"></Sobre>
               </div>
             </v-tab-item>
             <v-tab-item :transition="false" :reverse-transition="false">
@@ -137,7 +133,6 @@ import EstantePerfil from './EstantePerfil'
 import Sugestoes from './Sugestoes'
 import Sobre from './Sobre'
 import Conexoes from './Conexoes'
-import PerfilEditar from './PerfilEditar'
 
 export default {
   name: 'Perfil',
@@ -148,7 +143,6 @@ export default {
     Sobre,
     Sugestoes,
     Conexoes,
-    PerfilEditar,
   },
 
   data() {

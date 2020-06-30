@@ -13,6 +13,7 @@ import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Auth from '@/components/auth/Auth'
+import Configuracoes from '../components/configuracoes/Configuracoes'
 
 Vue.use(VueRouter)
 
@@ -81,12 +82,18 @@ const routes = [
     path: '/obra/:obraId',
     component: ObraById,
   },
+
+  {
+    name: 'Configuracoes',
+    path: '/configuracoes',
+    component: Configuracoes,
+  },
 ]
 
 export default new VueRouter({
   mode: 'history',
   scrollBehavior() {
-    return {x: 0, y: 0}
-},
+    return { x: 0, y: 0 }
+  },
   routes,
 })

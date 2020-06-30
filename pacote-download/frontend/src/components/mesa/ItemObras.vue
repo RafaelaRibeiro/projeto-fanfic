@@ -12,20 +12,18 @@
               src="https://uploads.spiritfanfiction.com/fanfics/historias/201902/como-se-eu-fosse-flor-15878925-260520201109.jpg "
               fluid-grow
               alt="Imagem responsiva"
-            >,</b-img>
+            ></b-img>
           </v-card>
         </v-col>
         <v-col>
           <v-card class="d-flex flex-column" flat>
-            <span class="mb-2 subtitle-2 font-weight-medium">
-              {{item.nome}}
-            </span>
+            <span class="mb-2 subtitle-2 font-weight-medium">{{item.nome}}</span>
             <span>
-              <span class="subtitle-2 font-weight-medium" >Total de Capitulos:</span>
+              <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
               {{item.countCap}}
             </span>
             <span>
-              <span class="subtitle-2 font-weight-medium" >Adicionado em:</span>
+              <span class="subtitle-2 font-weight-medium">Adicionado em:</span>
               {{item.dataAdicionado}}
             </span>
           </v-card>

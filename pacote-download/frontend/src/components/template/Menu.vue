@@ -104,6 +104,12 @@
           <span color="red" class="md-list-item-text">{{item.text}}</span>
         </md-list-item>
       </md-list>
+      <md-list class="md-dense pa-0 mb-2">
+        <md-list-item @click.prevent="logout">
+          <v-icon class="pr-6">mdi-logout</v-icon>
+          <span color="red" class="md-list-item-text">Sair</span>
+        </md-list-item>
+      </md-list>
     </v-navigation-drawer>
   </div>
 </template>
@@ -173,7 +179,7 @@ export default {
       { icon: 'mdi-comment', text: 'Comentários', notificacao: 3, acao: '' },
       { icon: 'mdi-send', text: 'Mensagens', notificacao: 10, acao: '' },
       { icon: 'mdi-help-circle', text: 'Help', notificacao: 0, acao: '' },
-      { icon: 'mdi-cog', text: 'Configurações', notificacao: 0, acao: '' },
+      { icon: 'mdi-cog', text: 'Configurações', path: 'Configuracoes', notificacao: 0, acao: '' },
     ],
   }),
 
