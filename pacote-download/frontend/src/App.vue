@@ -1,10 +1,8 @@
 <template>
   <v-app id="app">
     <Header />
-
     <Menu />
     <Content />
-
     <Footer />
   </v-app>
 </template>

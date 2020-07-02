@@ -1,46 +1,44 @@
 <template>
   <v-content class="deep-purple lighten-5" v-if="isMenuVisible">
-    <v-container fluid>
-      <v-row justify="center">
-        <v-col md="12">
-          <v-card elevation="7">
-            <router-view></router-view>
-          </v-card>
-        </v-col>
-      </v-row>
-
-      <v-btn bottom color="purple darken-4" dark fab fixed right @click="dialog = !dialog">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-      <v-dialog v-model="dialog" width="800px">
-        <v-card>
-          <v-card-title color="white" class="purple darken-4 font-weight-light">
-            <i class="white--text">Minhas Notas</i>
-          </v-card-title>
-          <v-container>
-            <v-row class="mx-2">
-              <v-col cols="12">
-                <v-textarea
-                  v-model="nota.conteudo"
-                  rows="2"
-                  auto-grow
-                  counter="255"
-                  maxlength="255"
-                  color="purple darken-4"
-                  prepend-icon="mdi-text"
-                  placeholder="Notas"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn text @click="reset">Cancelar</v-btn>
-            <v-btn text @click="save">Salvar</v-btn>
-          </v-card-actions>
+    <v-row justify="center" class="mx-3">
+      <v-col md="12">
+        <v-card elevation="7">
+          <router-view></router-view>
         </v-card>
-      </v-dialog>
-    </v-container>
+      </v-col>
+    </v-row>
+
+    <v-btn bottom color="purple darken-4" dark fab fixed right @click="dialog = !dialog">
+      <v-icon>mdi-pencil</v-icon>
+    </v-btn>
+    <v-dialog v-model="dialog" width="800px">
+      <v-card>
+        <v-card-title color="white" class="purple darken-4 font-weight-light">
+          <i class="white--text">Minhas Notas</i>
+        </v-card-title>
+        <v-container>
+          <v-row class="mx-2">
+            <v-col cols="12">
+              <v-textarea
+                v-model="nota.conteudo"
+                rows="2"
+                auto-grow
+                counter="255"
+                maxlength="255"
+                color="purple darken-4"
+                prepend-icon="mdi-text"
+                placeholder="Notas"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="reset">Cancelar</v-btn>
+          <v-btn text @click="save">Salvar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-content>
   <router-view v-else class="deep-purple lighten-5"></router-view>
 </template>
@@ -80,5 +78,4 @@ export default {
 </script>
 
 <style >
-
 </style>
