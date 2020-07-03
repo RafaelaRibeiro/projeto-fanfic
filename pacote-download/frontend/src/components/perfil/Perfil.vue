@@ -8,9 +8,7 @@
             v-for="usuario in usuarios"
             :key="usuario.user"
             :src="usuario.imagemCapa"
-          >
-           
-          </v-img>
+          ></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -96,29 +94,6 @@
               <Conexoes />
             </v-tab-item>
           </v-tabs-items>
-
-          <!-- <b-tabs v-model="tabIndex" pills card justified no-fade>
-            <b-tab title="Sobre" :title-link-class="linkClass(0)">
-              <div v-for="usuario in usuarios" :key="usuario.id">
-                <Sobre v-if="editar" :usuario="usuario"></Sobre>
-                <PerfilEditar v-else :usuario="usuario"></PerfilEditar>
-              </div>
-            </b-tab>
-
-            <b-tab title="Estante" :title-link-class="linkClass(1)">
-              <EstantePerfil />
-            </b-tab>
-
-            <b-tab title="Obras" :title-link-class="linkClass(2)">
-              <ObrasPerfil />
-            </b-tab>
-            <b-tab title="Sugestoes" :title-link-class="linkClass(3)">
-              <Sugestoes />
-            </b-tab>
-            <b-tab title="Conexoes" :title-link-class="linkClass(4)">
-              <Conexoes />
-            </b-tab>
-          </b-tabs>-->
         </template>
       </v-col>
     </v-row>

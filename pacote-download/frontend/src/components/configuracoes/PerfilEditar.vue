@@ -83,30 +83,20 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="12" class="text-center">
-          <v-btn class="ma-3" color="success" @click="uploadPerfil">Salvar</v-btn>
-          <v-btn class="ma-3" color="error">Cancelar</v-btn>
-        </v-col>
-      </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { baseApiUrl, showError } from '@/global'
-import axios from 'axios'
 export default {
   name: 'PerfilEditar',
-
-  computed: mapState(['usuario']),
+  props: ['usuario'],
 
   data() {
     return {
       tab: null,
       dialog: false,
-      usuarios: {},
+
       absolute: true,
       overlay: false,
       file2: null,
@@ -127,26 +117,26 @@ export default {
     }
   },
 
-  methods: {
-    uploadPerfil() {
-      axios
-        .put(`${baseApiUrl}/perfil/${this.usuario.id}`, this.usuario)
-        .then(() => {
-          this.$toasted.global.defaultSuccess()
-        })
-        .catch(showError)
-    },
+  // methods: {
+  //   uploadPerfil() {
+  //     axios
+  //       .put(`${baseApiUrl}/perfil/${this.usuario.id}`, this.usuario)
+  //       .then(() => {
+  //         this.$toasted.global.defaultSuccess()
+  //       })
+  //       .catch(showError)
+  //   },
 
-    loadUsuario() {
-      axios.get(`${baseApiUrl}/perfil/${this.usuario.user}`).then(res => {
-        this.editUsuario = res.data
-      })
-    },
-  },
+  //   loadUsuario() {
+  //     axios.get(`${baseApiUrl}/perfil/${this.usuario.user}`).then(res => {
+  //       this.editUsuario = res.data
+  //     })
+  //   },
+  // },
 
-  mounted() {
-    this.loadUsuario()
-  },
+  // mounted() {
+  //   this.loadUsuario()
+  // },
 }
 </script>
 

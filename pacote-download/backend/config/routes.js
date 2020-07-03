@@ -56,7 +56,7 @@ module.exports = (app) => {
 
   //Perfil
 
-  app.route("/perfil/:id").put(app.api.usuario.save);
+  app.route("/perfil/:user").put(app.api.perfil.updateUser);
 
   app
     .route("/perfil/:user")

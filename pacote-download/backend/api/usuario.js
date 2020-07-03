@@ -62,7 +62,7 @@ module.exports = (app) => {
     app
       .db("usuarios")
       .update({ "usuarios.nome": usuario.nome, "usuarios.user": usuario.user })
-      .where({ id: usuario.id })
+      .where({ user: usuario.user })
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));
   };

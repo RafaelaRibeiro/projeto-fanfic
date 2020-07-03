@@ -1,20 +1,13 @@
 module.exports = (app) => {
-  const updateUsuario = (req, res) => {
+  const updateUser = (req, res) => {
     const usuario = { ...req.body };
-    if (usuario.id) {
-      app
-        .db("usuarios")
-        .update(usuario)
-        .where({ id: usuario.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      app
-        .db("usuarios")
-        .insert(usuario)
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    }
+    if (req.params.user) usuario.user = req.params.user;
+    app
+      .db("usuarios")
+      .update({ "usuarios.nome": usuario.nome, "usuarios.user": usuario.user })
+      .where({ user: usuario.user })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
   };
 
   const savePerfil = (req, res) => {
@@ -58,6 +51,16 @@ module.exports = (app) => {
   const getPerfil = (req, res) => {
     app
       .db("usuarios")
+      .select(
+        "id",
+        "nome",
+        "email",
+        "user",
+        "perfil",
+        "autor",
+        "sobreMim",
+        "facebook"
+      )
       .where({ user: req.params.user })
 
       .then((usuarios) => res.json(usuarios))
@@ -110,6 +113,6 @@ module.exports = (app) => {
     getPerfil,
     savePerfil,
 
-    updateUsuario,
+    updateUser,
   };
 };
