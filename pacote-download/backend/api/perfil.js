@@ -59,7 +59,13 @@ module.exports = (app) => {
         "perfil",
         "autor",
         "sobreMim",
-        "facebook"
+        "facebook",
+        "twitter",
+        "pinterest",
+        "tumblr",
+        "instagram",
+        "imagemPerfil",
+        "imagemCapa"
       )
       .where({ user: req.params.user })
 
@@ -85,7 +91,7 @@ module.exports = (app) => {
       .db("estante")
       .join("obras", "estante.obraId", "=", "obras.id")
       .join("usuarios", "estante.usuarioId", "=", "usuarios.id")
-      .select("estante.id", "obras.nome")
+      .select({estanteId:"estante.id" , nome :"obras.nome", obraId: "obras.id"})
       .where({ user: req.params.user })
       .whereNot({ prateleiraId: 4 })
       .orderBy("estante.id", "desc")

@@ -1,6 +1,9 @@
 <template>
   <v-card flat>
-    <v-row>
+   
+    <v-container fluid>
+      <!-- titulos -->
+       <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
           <i>
@@ -9,8 +12,7 @@
         </h1>
       </v-col>
     </v-row>
-    <v-container fluid>
-      <!-- titulos -->
+
       <v-row class="mb-n2">
         <v-col cols="9">
           <v-card flat color="purple darken-4" dark>
@@ -38,7 +40,16 @@
           <v-row>
             <v-col>
               <v-card outlined>
-                <v-list>
+                <md-list>
+                  <md-list-item 
+                  v-for="s in status" :key="s.id"
+                  @click="search = s.id"
+                  >
+                 {{ s.text}}
+  
+                  </md-list-item>
+                </md-list>
+                <!-- <v-list>
                   <v-list-item-group>
                     <v-list-item v-for="s in status" :key="s.id">
                       <v-list-item-content>
@@ -46,7 +57,7 @@
                       </v-list-item-content>
                     </v-list-item>
                   </v-list-item-group>
-                </v-list>
+                </v-list> -->
               </v-card>
             </v-col>
           </v-row>

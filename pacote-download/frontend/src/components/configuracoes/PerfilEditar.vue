@@ -4,18 +4,17 @@
       <v-card-title>Meus Dados</v-card-title>
       <v-row class="ml-2 mb-0">
         <v-col cols="12" md="5">
-          <v-text-field v-model="u.nome" label="Nome" color="purple darken-4" outlined></v-text-field>
-          <v-text-field v-model="u.id" label="Nome" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="usuario.nome" label="Nome" color="purple darken-4" outlined></v-text-field>
         </v-col>
         <v-col cols="12" md="5">
-          <v-text-field v-model="u.user" label="Usuario" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="usuario.user" label="Usuario" color="purple darken-4" outlined></v-text-field>
         </v-col>
       </v-row>
       <v-row class="ml-2 mt-0">
         <v-col cols="12" md="5">
           <v-text-field
             v-mask="mask"
-            v-model="u.dataNasc"
+            v-model="usuario.dataNasc"
             label="Data de Nascimento"
             placeholder="dd/mm/aaaa"
             color="purple darken-4"
@@ -29,11 +28,12 @@
           <v-textarea
             class="ml-3"
             name="input-7-1"
+            v-model="usuario.sobreMim"
             auto-grow
             clearable
             outlined
             color="purple darken-4"
-            :value="u.sobreMim"
+            :value="usuario.sobreMim"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -41,7 +41,7 @@
       <v-row class="ml-2 mb-n2">
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="u.twitter"
+            v-model="usuario.twitter"
             label="Twitter"
             placeholder
             outlined
@@ -52,7 +52,7 @@
         </v-col>
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="u.facebook"
+            v-model="usuario.facebook"
             label="Facebook"
             prefix="http://facebook.com.br/"
             outlined
@@ -65,7 +65,7 @@
       <v-row class="ml-2">
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="u.instagram"
+            v-model="usuario.instagram"
             label="Instagram"
             placeholder="perfil"
             prefix="http://instagram.com/"
@@ -76,7 +76,7 @@
         </v-col>
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="u.pinterest"
+            v-model="usuario.pinterest"
             label="Pinterest"
             placeholder="perfil"
             prefix="http://pinterest.com/"
@@ -85,55 +85,49 @@
           ></v-text-field>
         </v-col>
       </v-row>
+      <v-row class="ml-2" justify="end">
+        <v-col md="4">
+          <v-btn dark class="ma-3" color="purple darken-4" @click="updatePerfil">
+            <v-icon small left>mdi-floppy</v-icon>Salvar
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
+import { baseApiUrl, showError } from '@/global'
+import axios from 'axios'
 export default {
   name: 'PerfilEditar',
-  props: ['u'],
+  props: ['usuario'],
 
   data() {
     return {
       tab: null,
       dialog: false,
-
-      absolute: true,
-      overlay: false,
-      file2: null,
       mask: '##/##/####',
-
-      // titulos: [
-      //   { id: 1, text: "Perfil", conteudo: "Sobre" },
-      //   { id: 2, text: "Estante", conteudo: "Estante" },
-      //   { id: 3, text: "Obras", conteudo: "Obras" },
-      //   { id: 4, text: "Sugestões", conteudo: "Sugestões" },
-      //   { id: 5, text: "Conexões", conteudo: "Seguidores" }
-      // ]
     }
   },
 
-  // methods: {
-  //   uploadPerfil() {
-  //     axios
-  //       .put(`${baseApiUrl}/perfil/${this.usuario.id}`, this.usuario)
-  //       .then(() => {
-  //         this.$toasted.global.defaultSuccess()
-  //       })
-  //       .catch(showError)
-  //   },
+  methods: {
+    updatePerfil() {
+      axios
+        .put(`${baseApiUrl}/usuario/1`, this.usuario)
+        .then(() => {
+          this.$toasted.global.defaultSuccess()
+        })
+        .catch(showError)
+    },
 
-  //   loadUsuario() {
-  //     axios.get(`${baseApiUrl}/perfil/${this.usuario.user}`).then(res => {
-  //       this.editUsuario = res.data
-  //     })
-  //   },
-  // },
-
-  // mounted() {
-  //   this.loadUsuario()
-  // },
+    getUsuarios() {
+      const url = `${baseApiUrl}/usuario/1`
+      axios.get(url).then(res => {
+        this.usuario = res.data
+      })
+    },
+  },
 }
 </script>
 

@@ -1,36 +1,16 @@
 <template>
   <v-card flat min-height="300px">
-    <v-row>
-      <v-col cols="8">
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Minhas Obras</i>
-        </v-card-title>
+    <v-row justify="center">
+      <v-col cols="7">
+        <v-card-title class="display-1 font-weight-light mb-4">Minha Obras</v-card-title>
         <v-card-text>
           <div v-for="item in filterShipp" :key="item.id">
             <ItemObra :item="item"></ItemObra>
           </div>
         </v-card-text>
       </v-col>
-      <v-col>
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Universos</i>
-        </v-card-title>
-
-        <v-list>
-          <v-list-item-group>
-            <v-list-item v-for="shipp in shippObras" :key="shipp.id">
-              <v-list-item-content>
-                <v-list-item-title @click="search = shipp.id">{{shipp.nome}} ({{shipp.shippCount}})</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title @click="search = ''">Todas as Obras</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+      <v-col cols="4">
+        <v-card-title class="display-1 font-weight-light mb-4">Universos</v-card-title>
       </v-col>
     </v-row>
   </v-card>

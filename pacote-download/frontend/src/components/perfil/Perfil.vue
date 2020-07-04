@@ -11,6 +11,7 @@
           ></v-img>
         </v-card>
       </v-col>
+       
     </v-row>
 
     <v-row class="sub-banner">
@@ -18,9 +19,7 @@
         <v-avatar class="profile" color="grey" size="160">
           <v-img v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imagemPerfil"></v-img>
 
-          <v-overlay :absolute="absolute" :value="overlay">
-            <!-- <v-file-input prepend-icon="mdi-camera"></v-file-input> -->
-          </v-overlay>
+       
         </v-avatar>
       </v-col>
       <v-col v-for="perfil in usuarios" :key="perfil.user">
@@ -97,7 +96,9 @@
         </template>
       </v-col>
     </v-row>
+  
   </div>
+
 </template>
 
 <script>

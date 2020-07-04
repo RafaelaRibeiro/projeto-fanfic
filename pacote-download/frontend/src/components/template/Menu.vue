@@ -5,6 +5,7 @@
       :clipped="$vuetify.breakpoint.lgAndUp"
       :mini-variant.sync="mini"
       permanent
+      expand-on-hover
       app
     >
       <v-list-item class="px-2 mb-0">

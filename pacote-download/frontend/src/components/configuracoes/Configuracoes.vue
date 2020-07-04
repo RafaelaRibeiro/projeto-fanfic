@@ -20,14 +20,8 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item :transition="false" :reverse-transition="false">
-        <div v-for="u in usuarios" :key="u.user">
-          <PerfilEditar :u="u"></PerfilEditar>
-
-          <v-row>
-            <v-col>
-              <v-btn dark class="ma-3" color="green darken-4" @click="updatePerfil">Salvar</v-btn>
-            </v-col>
-          </v-row>
+        <div v-for="usuario in usuarios" :key="usuario.id">
+          <PerfilEditar :usuario="usuario"></PerfilEditar>
         </div>
       </v-tab-item>
       <v-tab-item :transition="false" :reverse-transition="false">
@@ -36,14 +30,14 @@
         </div>
       </v-tab-item>
     </v-tabs-items>
-    {{usuarios}}
+   
   </v-container>
 </template>
 
 <script>
 import PerfilEditar from './PerfilEditar'
 import Imagens from './Imagens'
-import { baseApiUrl, showError } from '@/global'
+import { baseApiUrl } from '@/global'
 
 import axios from 'axios'
 export default {
@@ -52,9 +46,8 @@ export default {
 
   data() {
     return {
-      usuarios: {
-        id: 1,
-      },
+      usuarios: [],
+      usuario: {},
       tab: null,
       mask: '##/##/####',
       titulos: [
@@ -70,19 +63,9 @@ export default {
   methods: {
     getUsuarios() {
       const url = `${baseApiUrl}/usuario/1`
-      axios.get(url).then(res => {
+      axios(url).then(res => {
         this.usuarios = res.data
       })
-    },
-
-    updatePerfil() {
-      axios
-        .put(`${baseApiUrl}/usuario/1`, this.usuarios)
-        .then(() => {
-          // eslint-disable-next-line no-console
-          console.log(this.usuarios)
-        })
-        .catch(showError)
     },
   },
 

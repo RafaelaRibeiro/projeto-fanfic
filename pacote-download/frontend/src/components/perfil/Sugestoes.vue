@@ -1,20 +1,16 @@
 <template>
   <v-card flat min-height="300px">
-    <v-row>
-      <v-col cols="8">
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Minhas Sugestões</i>
-        </v-card-title>
+    <v-row justify="center">
+      <v-col cols="7">
+        <v-card-title class="display-1 font-weight-light mb-4">Minhas Sugestões</v-card-title>
         <v-card-text>
           <div v-for="item in sugestoes" :key="item.id">
             <ItemObra :item="item"></ItemObra>
           </div>
         </v-card-text>
       </v-col>
-      <v-col>
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Universos</i>
-        </v-card-title>
+      <v-col cols="4">
+        <v-card-title class="display-1 font-weight-light mb-4">Universos</v-card-title>
       </v-col>
     </v-row>
   </v-card>

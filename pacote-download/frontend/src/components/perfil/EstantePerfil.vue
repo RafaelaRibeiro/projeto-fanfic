@@ -1,34 +1,16 @@
 <template>
   <v-card flat min-height="300px">
-    <v-row>
-      <v-col cols="8">
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Minha Estante</i>
-        </v-card-title>
+    <v-row justify="center">
+      <v-col cols="7">
+        <v-card-title class="display-1 font-weight-light mb-4">Minha Estante</v-card-title>
         <v-card-text>
           <div v-for="item in estante" :key="item.id">
             <ItemObra :item="item"></ItemObra>
           </div>
         </v-card-text>
       </v-col>
-      <v-col>
-        <v-card-title>
-          <i class="display-1 font-weight-light mb-4 text--primary">Universos</i>
-          <!-- <v-treeview selected-color="purple darken-4" selectable :items="universos" dense></v-treeview> -->
-          <div class="full-control">
-            <md-list class="md-dense pa-0" v-for="u in universos" :key="u.id">
-              <md-list-item md-expand :md-expanded.sync="expandNews">
-                <span class="md-list-item-text md-headline">{{u.name}}</span>
-
-                <md-list slot="md-expand">
-                  <md-list-item>
-                    <span class="md-list-item-text">teste</span>
-                  </md-list-item>
-                </md-list>
-              </md-list-item>
-            </md-list>
-          </div>
-        </v-card-title>
+      <v-col cols="4">
+        <v-card-title class="display-1 font-weight-light mb-4">Universos</v-card-title>
       </v-col>
     </v-row>
   </v-card>

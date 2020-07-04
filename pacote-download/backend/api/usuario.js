@@ -61,7 +61,7 @@ module.exports = (app) => {
     if (req.params.id) usuario.id = req.params.id;
     app
       .db("usuarios")
-      .update(usuario)
+      .update( usuario)
       .where({ id: usuario.id })
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));

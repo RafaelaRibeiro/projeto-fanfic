@@ -3,7 +3,8 @@
     <v-row justify="center">
       <v-col cols="7">
         <v-card-title class="display-1 font-weight-light mb-4">Sobre Mim</v-card-title>
-        <v-card-text class="text-justify">{{usuario.sobreMim}}</v-card-text>
+        <v-card-text  style="white-space: pre-line"
+              class="text--primary text-justify">{{usuario.sobreMim}}</v-card-text>
         
       </v-col>
 
