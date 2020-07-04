@@ -20,9 +20,9 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item :transition="false" :reverse-transition="false">
-        <div v-for="usuario in usuarios" :key="usuario.id">
-          <PerfilEditar :usuario="usuario"></PerfilEditar>
-          {{usuario.nome}}
+        <div v-for="u in usuarios" :key="u.user">
+          <PerfilEditar :u="u"></PerfilEditar>
+
           <v-row>
             <v-col>
               <v-btn dark class="ma-3" color="green darken-4" @click="updatePerfil">Salvar</v-btn>
@@ -36,6 +36,7 @@
         </div>
       </v-tab-item>
     </v-tabs-items>
+    {{usuarios}}
   </v-container>
 </template>
 
@@ -51,8 +52,11 @@ export default {
 
   data() {
     return {
-      usuarios: [],
+      usuarios: {
+        id: 1,
+      },
       tab: null,
+      mask: '##/##/####',
       titulos: [
         { id: 1, text: 'Minha Conta', icon: 'mdi-account' },
         { id: 2, text: 'Imagens', icon: 'mdi-image' },
@@ -65,7 +69,7 @@ export default {
 
   methods: {
     getUsuarios() {
-      const url = `${baseApiUrl}/perfil/teste1`
+      const url = `${baseApiUrl}/usuario/1`
       axios.get(url).then(res => {
         this.usuarios = res.data
       })
@@ -73,9 +77,10 @@ export default {
 
     updatePerfil() {
       axios
-        .put(`${baseApiUrl}/perfil/teste1`, this.usuarios)
+        .put(`${baseApiUrl}/usuario/1`, this.usuarios)
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          // eslint-disable-next-line no-console
+          console.log(this.usuarios)
         })
         .catch(showError)
     },

@@ -4,17 +4,18 @@
       <v-card-title>Meus Dados</v-card-title>
       <v-row class="ml-2 mb-0">
         <v-col cols="12" md="5">
-          <v-text-field v-model="usuario.nome" label="Nome" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="u.nome" label="Nome" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="u.id" label="Nome" color="purple darken-4" outlined></v-text-field>
         </v-col>
         <v-col cols="12" md="5">
-          <v-text-field v-model="usuario.user" label="Usuario" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="u.user" label="Usuario" color="purple darken-4" outlined></v-text-field>
         </v-col>
       </v-row>
       <v-row class="ml-2 mt-0">
         <v-col cols="12" md="5">
           <v-text-field
             v-mask="mask"
-            v-model="usuario.dataNasc"
+            v-model="u.dataNasc"
             label="Data de Nascimento"
             placeholder="dd/mm/aaaa"
             color="purple darken-4"
@@ -26,12 +27,13 @@
       <v-row>
         <v-col cols="10">
           <v-textarea
-            class="ma-3 pa-1"
+            class="ml-3"
             name="input-7-1"
             auto-grow
             clearable
+            outlined
             color="purple darken-4"
-            :value="usuario.sobreMim"
+            :value="u.sobreMim"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -39,7 +41,7 @@
       <v-row class="ml-2 mb-n2">
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="usuario.twitter"
+            v-model="u.twitter"
             label="Twitter"
             placeholder
             outlined
@@ -50,7 +52,7 @@
         </v-col>
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="usuario.facebook"
+            v-model="u.facebook"
             label="Facebook"
             prefix="http://facebook.com.br/"
             outlined
@@ -63,7 +65,7 @@
       <v-row class="ml-2">
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="usuario.instagram"
+            v-model="u.instagram"
             label="Instagram"
             placeholder="perfil"
             prefix="http://instagram.com/"
@@ -74,7 +76,7 @@
         </v-col>
         <v-col cols="12" md="5">
           <v-text-field
-            v-model="usuario.pinterest"
+            v-model="u.pinterest"
             label="Pinterest"
             placeholder="perfil"
             prefix="http://pinterest.com/"
@@ -90,7 +92,7 @@
 <script>
 export default {
   name: 'PerfilEditar',
-  props: ['usuario'],
+  props: ['u'],
 
   data() {
     return {
@@ -101,12 +103,7 @@ export default {
       overlay: false,
       file2: null,
       mask: '##/##/####',
-      editUsuario: [],
 
-      items: [
-        { id: 1, icon: 'mdi-book', text: 'Bloquear' },
-        { id: 2, icon: 'mdi-alert-circle', text: 'Denunciar Usuário' },
-      ],
       // titulos: [
       //   { id: 1, text: "Perfil", conteudo: "Sobre" },
       //   { id: 2, text: "Estante", conteudo: "Estante" },

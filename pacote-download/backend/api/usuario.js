@@ -56,13 +56,13 @@ module.exports = (app) => {
     }
   };
 
-  const updateUser = (req, res) => {
+  const updateUsuario = (req, res) => {
     const usuario = { ...req.body };
     if (req.params.id) usuario.id = req.params.id;
     app
       .db("usuarios")
-      .update({ "usuarios.nome": usuario.nome, "usuarios.user": usuario.user })
-      .where({ user: usuario.user })
+      .update(usuario)
+      .where({ id: usuario.id })
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));
   };
@@ -86,13 +86,18 @@ module.exports = (app) => {
         "perfil",
         "autor",
         "sobreMim",
-        "facebook"
+        "facebook",
+        "twitter",
+        "instagram",
+        "pinterest",
+
+        "dataNasc"
       )
       .where({ id: req.params.id })
-      .first()
+
       .then((usuario) => res.json(usuario))
       .catch((err) => res.status(500).send(err));
   };
 
-  return { save, get, getById, updateUser };
+  return { save, get, getById, updateUsuario };
 };

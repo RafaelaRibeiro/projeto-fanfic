@@ -7,10 +7,8 @@ module.exports = (app) => {
 
   app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get);
 
-  app
-    .route("/usuario/:id")
-    .get(app.api.usuario.getById)
-    .put(app.api.usuario.updateUser);
+  app.route("/usuario/:id").get(app.api.usuario.getById);
+  app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
 
   app.route("/categorias").get(app.api.categorias.getCategoria);
 
