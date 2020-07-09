@@ -66,8 +66,21 @@ module.exports = (app) => {
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };
-
+  const limit = 10; // usado para paginação
   const getObrasPublicas = (req, res) => {
+    const page = req.query.page || 1;
+
+    const result = app
+      .db("obras")
+      .join("usuarios", "obras.autor", "=", "usuarios.id")
+      .count("obras.id", { as: "count" })
+      .where({
+        "usuarios.user": req.params.user,
+        "obras.publica": true,
+      })
+      .first();
+    const count = parseInt(result.count);
+    const totalPage = Math.ceil(count / limit);
     app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
@@ -80,9 +93,11 @@ module.exports = (app) => {
       )
       .count("capitulos.id", { as: "countCap" })
       .where({ user: req.params.user, "obras.publica": true })
+      .limit(limit)
+      .offset(page * limit - limit)
       .groupBy("obras.id")
       .orderBy("obras.id", "desc")
-      .then((obras) => res.json(obras))
+      .then((obras) => res.json({ data: obras, count, limit }))
       .catch((err) => res.status(500).send(err));
   };
 

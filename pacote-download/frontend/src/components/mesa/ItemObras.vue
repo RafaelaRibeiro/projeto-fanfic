@@ -1,21 +1,19 @@
 <template>
   <div>
-    <v-card min-height="200" outlined class="pa-2">
-      <v-row>
-        <v-col cols="3">
-          <v-card flat class="d-flex mb-2">
-            <v-img v-if="item.capa " :src="item.capa"></v-img>
-            <!-- <v-img v-else src="@/assets/sem_imagem.jpg"></v-img> -->
-            <b-img
-              center
-              v-else
-              src="https://uploads.spiritfanfiction.com/fanfics/historias/201902/como-se-eu-fosse-flor-15878925-260520201109.jpg "
-              fluid-grow
-              alt="Imagem responsiva"
-            ></b-img>
+    <v-card outlined>
+      <v-row class="mr-1">
+        <v-col cols="2">
+          <v-card flat class="ma-2">
+            <v-avatar size="100" tile class="d-none d-sm-block">
+              <v-img v-if="item.capa " :src="item.capa"></v-img>
+              <v-img
+                v-else
+                src=" https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
+              ></v-img>
+            </v-avatar>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col cols="8">
           <v-card class="d-flex flex-column" flat>
             <span class="mb-2 subtitle-2 font-weight-medium">{{item.nome}}</span>
             <span>
@@ -26,12 +24,50 @@
               <span class="subtitle-2 font-weight-medium">Adicionado em:</span>
               {{item.dataAdicionado}}
             </span>
+
+            <v-card flat class="d-flex">
+              <!-- <b-btn size="sm" variant="light" disabled>|</b-btn> -->
+
+              <b-btn size="sm" variant="light" v-b-tooltip.hover title="Comentários">
+                <v-icon color="purple darken-4" small left>mdi-comment-multiple</v-icon>58
+              </b-btn>
+
+              <b-btn size="sm" variant="light" v-b-tooltip.hover title="Estantes">
+                <v-icon left color="purple darken-4" small>mdi-bookshelf</v-icon>45
+              </b-btn>
+            </v-card>
           </v-card>
         </v-col>
-        <!-- <v-col cols="4">{{ dataFormatado}}</v-col> -->
+        <v-col cols="2" align="end">
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
+            <md-list class="md-dense">
+              <md-list-item>
+                <v-icon small left>mdi-plus-thick</v-icon>
+                <span class="md-list-item-text">Adicionar Capítulos</span>
+              </md-list-item>
+
+              <md-list-item>
+                <v-icon small left>mdi-file-edit</v-icon>
+                <span class="md-list-item-text">Editar Obra</span>
+              </md-list-item>
+
+              <md-list-item>
+                <v-icon small left>mdi-delete</v-icon>
+                <span class="md-list-item-text">Deletar Obra</span>
+              </md-list-item>
+            </md-list>
+          </v-menu>
+        </v-col>
       </v-row>
 
-      <v-divider></v-divider>
+      <!-- <v-col cols="4">{{ dataFormatado}}</v-col> -->
+
+      <!-- <v-divider></v-divider>
 
       <v-row no-gutters justify="center">
         <v-col cols="12">
@@ -61,7 +97,7 @@
             </b-btn>
           </v-card>
         </v-col>
-      </v-row>
+      </v-row>-->
     </v-card>
   </div>
 </template>

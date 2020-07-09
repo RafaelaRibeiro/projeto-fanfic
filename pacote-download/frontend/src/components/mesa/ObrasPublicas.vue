@@ -1,17 +1,16 @@
 <template>
   <v-card flat>
-   
     <v-container fluid>
       <!-- titulos -->
-       <v-row>
-      <v-col>
-        <h1 class="display-1 font-weight-light mb-4">
-          <i>
-            <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas
-          </i>
-        </h1>
-      </v-col>
-    </v-row>
+      <v-row>
+        <v-col>
+          <h1 class="display-1 font-weight-light mb-4">
+            <i>
+              <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas
+            </i>
+          </h1>
+        </v-col>
+      </v-row>
 
       <v-row class="mb-n2">
         <v-col cols="9">
@@ -31,7 +30,7 @@
       <v-row>
         <v-col cols="9">
           <v-row>
-            <v-col class="mb-n3" cols="6" v-for="item in filtershelves" :key="item.id">
+            <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
               <ItemObras :item="item"></ItemObras>
             </v-col>
           </v-row>
@@ -41,13 +40,7 @@
             <v-col>
               <v-card outlined>
                 <md-list>
-                  <md-list-item 
-                  v-for="s in status" :key="s.id"
-                  @click="search = s.id"
-                  >
-                 {{ s.text}}
-  
-                  </md-list-item>
+                  <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">{{ s.text}}</md-list-item>
                 </md-list>
                 <!-- <v-list>
                   <v-list-item-group>
@@ -57,7 +50,7 @@
                       </v-list-item-content>
                     </v-list-item>
                   </v-list-item-group>
-                </v-list> -->
+                </v-list>-->
               </v-card>
             </v-col>
           </v-row>
@@ -110,7 +103,7 @@ export default {
     getObrasPublicas() {
       const url = ` ${baseApiUrl}/teste1/obraspublicas`
       axios(url).then(res => {
-        this.obras = res.data
+        this.obras = res.data.data
       })
     },
   },
