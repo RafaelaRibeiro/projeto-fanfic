@@ -15,7 +15,7 @@
   "dependencies": {
     "@appsflare/quill-image-resize-module": "^3.0.3",
     "@ckeditor/ckeditor5-build-classic": "^18.0.0",
-    "@mdi/font": "^5.0.45",
+    "@mdi/font": "^5.3.45",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",

@@ -88,7 +88,7 @@ module.exports = (app) => {
       .leftJoin("imagemObras", "obras.id", "imagemObras.obraId")
       .select(
         app.db.raw(
-          "obras.id,obras.nome,obras.publica,obras.categoriaId,obras.fandonsId,obras.shippPrincipal,obras.shippSecundario, obras.classificacao,   obras.terminada, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s')as dataAdicionado, imagemObras.key"
+          "obras.id as obraId,obras.nome,obras.publica,obras.categoriaId,obras.fandonsId,obras.shippPrincipal,obras.shippSecundario, obras.classificacao,   obras.terminada, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s')as dataAdicionado, imagemObras.key"
         )
       )
       .count("capitulos.id", { as: "countCap" })
@@ -97,6 +97,7 @@ module.exports = (app) => {
       .offset(page * limit - limit)
       .groupBy("obras.id")
       .orderBy("obras.id", "desc")
+      .having('countCap', '>',0)
       .then((obras) => res.json({ data: obras, count, limit }))
       .catch((err) => res.status(500).send(err));
   };

@@ -4,7 +4,7 @@
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
           <i>
-            <v-icon x-large class="pa-3">mdi-plus-box</v-icon>Adicionar Obra
+            <v-icon x-large class="pa-3">mdi-notebook</v-icon>Editar Obra
           </i>
         </h1>
       </v-col>
@@ -190,6 +190,7 @@
               :label="aviso.nome"
               :value="aviso.id"
             ></v-checkbox>
+           
           </v-col>
         </v-row>
 
@@ -215,7 +216,6 @@ export default {
     return {
       selectedCateg: [],
       search: [],
-
       selected: [],
       options: [
         { text: 'Orange', value: 'orange' },
@@ -240,7 +240,6 @@ export default {
       universos: [],
       caracteristicas: [],
       avisos: [],
-
       classificacao: [
         { nome: 'Livre', cod: 'livre' },
         { nome: 'Acima de 10 Anos', cod: '10+' },
@@ -250,7 +249,6 @@ export default {
         { nome: 'Acima de 18 Anos', cod: '18+' },
       ],
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
-
       loading: false,
       items: [],
       searchA: null,
@@ -261,7 +259,7 @@ export default {
   methods: {
     // /:autor/mesa/adicionarobra
     getObras() {
-      const url = ` ${baseApiUrl}/teste1/mesa/${this.$route.params.id}/`
+      const url = ` ${baseApiUrl}/teste1/mesa/${this.$route.params.obraId}/`
       axios.get(url).then(res => {
         this.obra = res.data
         this.obra.avisosId = this.obra.avisosId.split(',')
@@ -277,7 +275,7 @@ export default {
 
     salvarObra() {
       axios
-        .put(`${baseApiUrl}/${this.usuario.user}/mesa/editarobra/${this.$route.params.id}/`, {
+        .put(`${baseApiUrl}/${this.usuario.user}/mesa/editarobra/${this.$route.params.obraId}/`, {
           nome: this.obra.nome,
           autor: this.obra.autor,
           publica: this.obra.publica,
@@ -293,6 +291,7 @@ export default {
         })
         .then(() => {
           if (this.imagemObra.size === 0) {
+            this.$toasted.global.defaultSuccess()
             this.$router.push({ path: `/obra/${this.obra.id}/` })
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
@@ -307,26 +306,7 @@ export default {
         .catch(showError)
     },
 
-    // getUltimaObra() {
-    //   const url = ` ${baseApiUrl}/${this.usuario.user}/mesa/${this.$route.params.id}/`
-    //   axios(url)
-    //     .then(res => {
-    //       this.a = res.data[0]
-    //       if (this.imagemObra.size === 0) {
-    //         this.$router.push({ path: `/obra/${this.a.id}/` })
-    //       } else var fd = new FormData()
-    //       fd.append('file', this.imagemObra)
-    //       axios
-    //         .post(`${baseApiUrl}/upload/${this.a.id}`, fd)
-    //         .then(() => {
-    //           this.$toasted.global.defaultSuccess()
-    //           this.$router.push({ path: `/obra/${this.a.id}/` })
-    //         })
-    //         .catch(showError)
-    //     })
-    //     .catch(showError)
-    // },
-    getCategorias() {
+     getCategorias() {
       const url = ` ${baseApiUrl}/categorias`
       axios(url).then(res => {
         this.categorias = res.data

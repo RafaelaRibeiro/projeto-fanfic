@@ -46,12 +46,12 @@
               </v-btn>
             </template>
             <md-list class="md-dense">
-              <md-list-item>
+              <md-list-item :to="{ name: 'adicionarCapitulo', params: { obraId: item.obraId } }">
                 <v-icon small left>mdi-plus-thick</v-icon>
                 <span class="md-list-item-text">Adicionar Capítulos</span>
               </md-list-item>
 
-              <md-list-item>
+              <md-list-item :to="{ name: 'EditarObra', params: {obraId: item.obraId } }">
                 <v-icon small left>mdi-file-edit</v-icon>
                 <span class="md-list-item-text">Editar Obra</span>
               </md-list-item>

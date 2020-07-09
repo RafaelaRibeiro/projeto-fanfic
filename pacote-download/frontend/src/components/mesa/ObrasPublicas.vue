@@ -32,6 +32,7 @@
           <v-row>
             <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
               <ItemObras :item="item"></ItemObras>
+             
             </v-col>
           </v-row>
         </v-col>
