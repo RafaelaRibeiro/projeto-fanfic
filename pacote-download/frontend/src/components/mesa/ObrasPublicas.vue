@@ -32,7 +32,6 @@
           <v-row>
             <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
               <ItemObras :item="item"></ItemObras>
-             
             </v-col>
           </v-row>
         </v-col>
@@ -57,6 +56,16 @@
           </v-row>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col cols="9">
+          <v-pagination
+            color="purple darken-4"
+            v-model="page"
+            :total-visible="7"
+            :length="totalPage"
+          ></v-pagination>
+        </v-col>
+      </v-row>
     </v-container>
   </v-card>
 </template>
@@ -73,6 +82,10 @@ export default {
     return {
       obras: [],
       search: 0,
+      page: 1,
+      limit: 0,
+      count: 0,
+      totalPage: 0,
       status: [
         { id: 0, text: 'Em Andamento' },
         { id: 1, text: 'Terminada' },
@@ -102,13 +115,20 @@ export default {
 
   methods: {
     getObrasPublicas() {
-      const url = ` ${baseApiUrl}/teste1/obraspublicas`
+      const url = ` ${baseApiUrl}/teste1/obraspublicas?page=${this.page}`
       axios(url).then(res => {
         this.obras = res.data.data
+        this.count = res.data.count
+        this.limit = res.data.limit
+        this.totalPage = res.data.totalPage
       })
     },
   },
-
+  watch: {
+    page() {
+      this.getObrasPublicas()
+    },
+  },
   mounted() {
     this.getObrasPublicas()
   },

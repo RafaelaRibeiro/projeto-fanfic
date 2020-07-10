@@ -67,10 +67,10 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
   const limit = 10; // usado para paginação
-  const getObrasPublicas = (req, res) => {
+  const getObrasPublicas = async (req, res) => {
     const page = req.query.page || 1;
 
-    const result = app
+    const result = await app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
       .count("obras.id", { as: "count" })
@@ -97,8 +97,8 @@ module.exports = (app) => {
       .offset(page * limit - limit)
       .groupBy("obras.id")
       .orderBy("obras.id", "desc")
-      .having('countCap', '>',0)
-      .then((obras) => res.json({ data: obras, count, limit }))
+      // .having('countCap', '>',0)
+      .then((obras) => res.json({ data: obras, count, limit, totalPage }))
       .catch((err) => res.status(500).send(err));
   };
 
