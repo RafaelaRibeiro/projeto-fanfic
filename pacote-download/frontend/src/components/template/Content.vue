@@ -59,8 +59,8 @@ export default {
   },
   methods: {
     save() {
-      this.nota.usuarioId = this.usuarioId
-      axios['post'](`${baseApiUrl}/${this.usuario.id}/mesa/notas`, {
+      
+      axios['post'](`${baseApiUrl}/${this.usuario.user}/notas`, {
         conteudo: this.nota.conteudo,
         usuarioId: this.usuario.id,
       })

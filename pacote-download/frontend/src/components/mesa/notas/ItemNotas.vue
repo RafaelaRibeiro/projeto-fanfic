@@ -1,12 +1,17 @@
 <template>
   <v-row>
     <v-col cols="8">
-      <p v-if="!edit">{{nota.conteudo}}</p>
+      <p
+        style="white-space: pre-line"
+        class="text--primary text-justify"
+        v-if="!edit"
+      >{{nota.conteudo}}</p>
       <v-textarea
         v-else
         v-model="nota.conteudo"
         rows="2"
         auto-grow
+        outlined
         counter="255"
         maxlength="255"
         color="purple darken-4"
@@ -14,7 +19,29 @@
     </v-col>
 
     <v-col v-if="!edit">
-      <v-btn text @click.prevent="edit=!edit">
+      <v-menu bottom left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-menu</v-icon>
+          </v-btn>
+        </template>
+        <md-list class="md-dense">
+          <md-list-item>
+            <v-btn text @click.prevent="edit=!edit">
+              <v-icon small left>mdi-pencil</v-icon>
+              <span class="md-list-item-text">Editar Nota</span>
+            </v-btn>
+          </md-list-item>
+
+          <md-list-item>
+            <v-btn text @click="remove">
+              <v-icon small left>mdi-delete</v-icon>
+              <span class="md-list-item-text">Deletar Nota</span>
+            </v-btn>
+          </md-list-item>
+        </md-list>
+      </v-menu>
+      <!-- <v-btn text @click.prevent="edit=!edit">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
       <v-btn text @click="remove">
@@ -28,7 +55,16 @@
       </v-btn>
       <v-btn text v-if="edit" @click.prevent="edit=!edit">
         <v-icon>mdi-close</v-icon>
+      </v-btn>-->
+    </v-col>
+    <v-col v-else>
+      <v-btn text v-if="edit" @click="save">
+        <v-icon>mdi-floppy</v-icon>
       </v-btn>
+      <v-btn text v-if="edit" @click.prevent="edit=!edit">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+
     </v-col>
   </v-row>
 
@@ -55,7 +91,11 @@ export default {
       edit: false,
     }
   },
-
+  watch: {
+    notas() {
+      this.getNotas()
+    },
+  },
   methods: {
     save() {
       this.nota.usuarioId = this.usuarioId
@@ -75,7 +115,6 @@ export default {
         .delete(`${baseApiUrl}/${this.usuario.id}/mesa/notas/${this.nota.id}`)
         .then(() => {
           this.$toasted.global.defaultSuccess()
-          this.getNotas()
         })
         .catch(showError)
     },
