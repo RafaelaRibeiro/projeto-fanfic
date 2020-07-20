@@ -20,20 +20,22 @@ module.exports = (app) => {
       res.status(400).send(msg);
     }
 
-    if (shelf.id) {
-      app
-        .db("estante")
-        .update(shelf)
-        .where({ id: shelf.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      app
-        .db("estante")
-        .insert(shelf)
-        .then((_) => res.status(240).send())
-        .catch((err) => res.status(500).send());
-    }
+    app
+      .db("estante")
+      .insert(shelf)
+      .then((_) => res.status(240).send())
+      .catch((err) => res.status(500).send());
+  };
+
+  const updateEstante = (req, res) => {
+    const shelf = { ...req.body };
+    if (req.params.id) shelf.id = req.params.id;
+    app
+      .db("estante")
+      .update(shelf)
+      .where({ id: shelf.id })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
   };
 
   const get = (req, res) => {
@@ -67,6 +69,7 @@ module.exports = (app) => {
       .join("usuarios", "estante.usuarioId", "usuarios.id")
       .select("estante.*")
       .where({ "usuarios.user": req.params.user, obraId: req.params.obraId })
+      .andWhere("estante.prateleiraId", "<>", 3)
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
   };
@@ -84,5 +87,12 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  return { get, getById, save, getEstanteByObraId, getuniversosByEstante };
+  return {
+    get,
+    getById,
+    save,
+    getEstanteByObraId,
+    getuniversosByEstante,
+    updateEstante,
+  };
 };

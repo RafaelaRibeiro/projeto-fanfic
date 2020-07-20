@@ -29,6 +29,7 @@ module.exports = (app) => {
   // app.route("/:user/estanteUniverso").get(app.api.estante.getuniversosByEstante)
   app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
+  app.route("/estante/:id").put(app.api.estante.updateEstante);
 
   //Obras
 
@@ -83,7 +84,7 @@ module.exports = (app) => {
     app.api.mesa.upload
   );
 
-  app.route("/:user/mesa/:id").get(app.api.mesa.getById);
+  app.route("/mesa/:id").get(app.api.mesa.getById);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
 
   app.route("/:user/obraspublicas").get(app.api.mesa.getObrasPublicas);

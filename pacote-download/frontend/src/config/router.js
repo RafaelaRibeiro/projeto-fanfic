@@ -14,6 +14,7 @@ import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Auth from '@/components/auth/Auth'
 import Configuracoes from '../components/configuracoes/Configuracoes'
+import CadastroDados from '../components/baseDados/CadastroDados'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,13 @@ const routes = [
     path: '/auth',
     component: Auth,
   },
+
+  {
+    name: 'cadastroDados',
+    path: '/basededados',
+    component: CadastroDados,
+  },
+
   {
     name: 'minhaEstante',
     path: '/minhaestante',

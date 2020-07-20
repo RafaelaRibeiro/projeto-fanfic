@@ -57,28 +57,12 @@
               <v-btn dark color="purple darken-4">
                 <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
               </v-btn>
-              <v-btn dark color="purple darken-4" @click="saveEstante">
-                <v-icon left>mdi-check-bold</v-icon>Estante
-              </v-btn>
             </v-col>
 
             <v-col cols="6" class="d-flex justify-end">
-              <v-menu bottom origin="center center" transition="scale-transition">
-                <template v-slot:activator="{ on }">
-                  <v-btn color="purple darken-4" dark v-on="on">
-                    <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-list>
-                    <v-list-item class="font-italic font-weight-medium">Prateleiras</v-list-item>
-                    <v-divider class="ma-0"></v-divider>
-                    <v-list-item link>Acompanhando</v-list-item>
-                    <v-list-item link>Próximas Leituras</v-list-item>
-                    <v-list-item link>Prediletos</v-list-item>
-                  </v-list>
-                </v-card>
-              </v-menu>
+              <v-btn color="purple darken-4" dark @click="saveEstante">
+                <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
+              </v-btn>
             </v-col>
           </v-row>
         </v-col>
@@ -278,6 +262,13 @@ export default {
         .catch(showError)
     },
 
+    getEstante() {
+      const url = `${baseApiUrl}/teste1/estante/${this.$route.params.obraId} `
+      axios.get(url).then(res => {
+        this.estante = res.data
+      })
+    },
+
     loadComentarios() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/comentarios?page=${this.page}`
       axios.get(url).then(res => {
@@ -327,6 +318,7 @@ export default {
     this.loadComentarios()
     this.ultimoCapitulo()
     this.getAvisos()
+    this.getEstante()
   },
 }
 </script>

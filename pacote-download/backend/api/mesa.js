@@ -35,7 +35,7 @@ module.exports = (app) => {
       .db("obras")
       .join("usuarios", "obras.autor", "usuarios.id")
       .select("obras.*")
-      .where({ "obras.id": req.params.id, "usuarios.user": req.params.user })
+      .where({ "obras.id": req.params.id })
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));

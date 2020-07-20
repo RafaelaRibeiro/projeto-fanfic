@@ -289,8 +289,8 @@ export default {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo`
       axios(url).then(res => {
         this.ultimoCapitulo = res.data[0]
-        this.ultimoCapitulo.numero++
-        this.capitulo.numero = this.ultimoCapitulo.numero
+        this.ultimoCapitulo.max_numero++
+        this.capitulo.numero = this.ultimoCapitulo.max_numero
       })
     },
   },
