@@ -56,7 +56,7 @@
                 <span class="md-list-item-text">Editar Obra</span>
               </md-list-item>
 
-              <md-list-item>
+              <md-list-item @click="active=true">
                 <v-icon small left>mdi-delete</v-icon>
                 <span class="md-list-item-text">Deletar Obra</span>
               </md-list-item>
@@ -64,49 +64,26 @@
           </v-menu>
         </v-col>
       </v-row>
-
-      <!-- <v-col cols="4">{{ dataFormatado}}</v-col> -->
-
-      <!-- <v-divider></v-divider>
-
-      <v-row no-gutters justify="center">
-        <v-col cols="12">
-          <v-card flat class="d-flex justify-center">
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Adicionar Capítulo">
-              <v-icon color="purple darken-4" small left>mdi-plus-thick</v-icon>
-            </b-btn>
-
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Editar Obra">
-              <v-icon color="purple darken-4" small left>mdi-file-edit</v-icon>
-            </b-btn>
-
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Deletar Obra">
-              <v-icon color="purple darken-4" small left>mdi-delete</v-icon>
-            </b-btn>
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Lista de Capitulos">
-              <v-icon color="purple darken-4" small left>mdi-file-multiple</v-icon>
-            </b-btn>
-            <b-btn size="sm" variant="light" disabled>|</b-btn>
-
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Comentários">
-              <v-icon color="purple darken-4" small left>mdi-comment-multiple</v-icon>58
-            </b-btn>
-
-            <b-btn size="sm" variant="light" v-b-tooltip.hover title="Estantes">
-              <v-icon left color="purple darken-4" small>mdi-bookshelf</v-icon>45
-            </b-btn>
-          </v-card>
-        </v-col>
-      </v-row>-->
     </v-card>
+    <md-dialog :md-active.sync="active">
+      <md-dialog-title>Solicictação de Exclusão</md-dialog-title>
+      <v-card>teste</v-card>
+    </md-dialog>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import { baseApiUrl, showError } from '@/global'
+import axios from 'axios'
 export default {
   name: 'ItemEstante',
   props: ['item'],
+  data() {
+    return {
+      active: false,
+    }
+  },
 
   computed: {
     dataFormatado() {
@@ -115,6 +92,23 @@ export default {
       }
 
       return this.dataAdicionado
+    },
+  },
+  methods: {
+    remove() {
+      const id = this.item.obraId
+      axios
+        .delete(`${baseApiUrl}/mesa/${id}`)
+        .then(() => {
+          this.$toasted.global.defaultSuccess()
+        })
+        .catch(showError)
+    },
+    onConfirm() {
+      this.value = 'Agreed'
+    },
+    onCancel() {
+      this.value = 'Disagreed'
     },
   },
 }

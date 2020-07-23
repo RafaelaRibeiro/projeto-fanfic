@@ -135,6 +135,13 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const remove = async (req, res) => {
+    const rowsUpdate = await app
+      .db("obras")
+      .update({ deletado: new Date(), terminada: "S" })
+      .where({ id: req.params.id });
+  };
+
   //Capitulos
 
   const saveCapitulo = (req, res) => {
@@ -206,5 +213,6 @@ module.exports = (app) => {
     upload,
     getCoautor,
     getAvisosByObra,
+    remove,
   };
 };

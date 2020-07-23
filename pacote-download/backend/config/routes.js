@@ -84,7 +84,7 @@ module.exports = (app) => {
     app.api.mesa.upload
   );
 
-  app.route("/mesa/:id").get(app.api.mesa.getById);
+  app.route("/mesa/:id").get(app.api.mesa.getById).delete(app.api.mesa.remove);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
 
   app.route("/:user/obraspublicas").get(app.api.mesa.getObrasPublicas);

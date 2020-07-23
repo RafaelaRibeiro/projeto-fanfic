@@ -81,14 +81,15 @@ export default {
   data() {
     return {
       obras: [],
-      search: 0,
+      search: 'A',
       page: 1,
       limit: 0,
       count: 0,
       totalPage: 0,
       status: [
-        { id: 0, text: 'Em Andamento' },
-        { id: 1, text: 'Terminada' },
+        { id: 'A', text: 'Em Andamento' },
+        { id: 'T', text: 'Terminada' },
+        { id: 'S', text: 'Suspensa' },
       ],
     }
   },
@@ -125,6 +126,9 @@ export default {
     },
   },
   watch: {
+    obras() {
+      this.getObrasPublicas()
+    },
     page() {
       this.getObrasPublicas()
     },
