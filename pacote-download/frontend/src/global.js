@@ -3,7 +3,7 @@ import Vue from 'vue'
 export const userKey = '__fanbase'
 export const obraId = '__obra'
 // export const baseApiUrl = 'http://35.153.213.232:3000'
-export const baseApiUrl = 'http://localhost:3000'
+export const baseApiUrl = 'http://3.236.89.164:3000'
 
 export function showError(e) {
   if (e && e.response && e.response.data) {

@@ -1,23 +1,17 @@
 version: "3"
 services:
   backend:
-    container_name: backend
-    build:
-      context: ./backend
-
+    build: ./backend
+    command: npm start
     volumes:
-      - ./backend:/usr/app
-      - /usr/app/node_modules
-
+      - ./backend:/backend
     ports:
-      - "3000:3000"
+      - 3000:3000
 
   frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
+    build: ./frontend
+    command: npm run serve
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/frontend
     ports:
-      - "8080:8080"
+      - 8080:8080
