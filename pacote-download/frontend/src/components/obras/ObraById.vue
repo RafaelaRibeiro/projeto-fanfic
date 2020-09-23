@@ -33,14 +33,14 @@
           </v-card>
 
           <v-card flat>
-            <v-card-title>Caracteristicas da Obra</v-card-title>
+            <v-card-title>Caracteristicas</v-card-title>
             <v-card-text
               v-for="c in caracteristicas"
               :key="c.nome"
               class="text--primary text-justify"
             >{{c.nome}}</v-card-text>
           </v-card>
-
+          <!-- 
           <v-card flat outlined color="#EEEEEE">
             <v-card-title>Avisos Importantes</v-card-title>
             <v-card-text
@@ -48,10 +48,10 @@
               :key="aviso.nome"
               class="text--primary text-justify"
             >{{aviso.nome}}</v-card-text>
-          </v-card>
+          </v-card>-->
 
           <v-card flat>
-            <v-card-title>Informações da Obra</v-card-title>
+            <v-card-title>Informações</v-card-title>
             <v-card-text>
               <p class="text--primary text-justify">
                 <strong>Status:</strong>
@@ -90,6 +90,15 @@
                 </v-avatar>
               </p>
             </v-card-text>
+          </v-card>
+
+          <v-card flat outlined color="#EEEEEE">
+            <v-card-title>Avisos Importantes</v-card-title>
+            <v-card-text
+              v-for="aviso in avisos"
+              :key="aviso.nome"
+              class="text--primary text-justify"
+            >{{aviso.nome}}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -134,27 +143,27 @@ export default {
   methods: {
     getObras() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}`
-      axios.get(url).then(res => (this.obras = res.data))
+      axios.get(url).then((res) => (this.obras = res.data))
     },
 
     getUniversos() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/universos`
-      axios.get(url).then(res => (this.universos = res.data))
+      axios.get(url).then((res) => (this.universos = res.data))
     },
 
     getAvisos() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/avisos`
-      axios.get(url).then(res => (this.avisos = res.data))
+      axios.get(url).then((res) => (this.avisos = res.data))
     },
 
     getCaracteristicas() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/caracteristicas`
-      axios.get(url).then(res => (this.caracteristicas = res.data))
+      axios.get(url).then((res) => (this.caracteristicas = res.data))
     },
 
     getCapitulosByObra() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulos`
-      axios.get(url).then(res => (this.capitulos = res.data))
+      axios.get(url).then((res) => (this.capitulos = res.data))
     },
   },
 

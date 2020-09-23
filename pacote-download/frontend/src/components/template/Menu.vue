@@ -212,6 +212,10 @@ $list-width: 320px;
   width: $list-width;
 }
 
+.md-list-item-text {
+  color: black;
+}
+
 // [dir='ltr'] .md-list-item.md-inset .md-list-item-content {
 //   padding-left: 40px !important;
 // }

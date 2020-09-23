@@ -3,9 +3,9 @@ const bcrypt = require("bcrypt-nodejs");
 module.exports = (app) => {
   const { existsOrError, notExistsOrError, equalsOrError } = app.api.validacao;
 
-  const encryptPassword = (senha) => {
+  const encryptPassword = (password) => {
     const salt = bcrypt.genSaltSync(10);
-    return bcrypt.hashSync(senha, salt);
+    return bcrypt.hashSync(password, salt);
   };
 
   const save = async (req, res) => {
@@ -18,11 +18,11 @@ module.exports = (app) => {
     try {
       existsOrError(usuario.nome, "Nome não informado");
       existsOrError(usuario.email, "E-mail não informado");
-      existsOrError(usuario.senha, "Senha não informada");
-      existsOrError(usuario.confirmarSenha, "Necessário confirmar a senha");
+      existsOrError(usuario.password, "Senha não informada");
+      existsOrError(usuario.confirmarPassword, "Necessário confirmar a senha");
       equalsOrError(
-        usuario.senha,
-        usuario.confirmarSenha,
+        usuario.password,
+        usuario.confirmarPassword,
         "Senhas não conferem"
       );
 
@@ -37,8 +37,8 @@ module.exports = (app) => {
       return res.status(400).send(msg);
     }
 
-    usuario.senha = encryptPassword(usuario.senha);
-    delete usuario.confirmarSenha;
+    usuario.password = encryptPassword(usuario.password);
+    delete usuario.confirmarPassword;
 
     if (usuario.id) {
       app
@@ -61,7 +61,7 @@ module.exports = (app) => {
     if (req.params.id) usuario.id = req.params.id;
     app
       .db("usuarios")
-      .update( usuario)
+      .update(usuario)
       .where({ id: usuario.id })
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));
@@ -79,19 +79,9 @@ module.exports = (app) => {
     app
       .db("usuarios")
       .select(
-        "id",
-        "nome",
-        "email",
-        "user",
-        "perfil",
-        "autor",
-        "sobreMim",
-        "facebook",
-        "twitter",
-        "instagram",
-        "pinterest",
-
-        "dataNasc"
+        app.db.raw(
+          "id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, date_format(dataNasc, '%d/%m/%Y')"
+        )
       )
       .where({ id: req.params.id })
 

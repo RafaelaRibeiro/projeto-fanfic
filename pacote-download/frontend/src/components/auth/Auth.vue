@@ -18,7 +18,7 @@
             class="ml-3 mr-3 mt-6"
           ></v-text-field>
           <v-text-field
-            v-model="usuario.senha"
+            v-model="usuario.password"
             color="purple darken-4"
             :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
             name="Password"
@@ -57,7 +57,7 @@ export default {
     signin() {
       axios
         .post(`${baseApiUrl}/signin`, this.usuario)
-        .then(res => {
+        .then((res) => {
           this.$store.commit('setUser', res.data)
           localStorage.setItem(userKey, JSON.stringify(res.data))
           this.$router.push({ path: `/perfil/${res.data.user}` })
