@@ -1,3 +1,5 @@
+const usuario = require("./usuario");
+
 module.exports = (app) => {
   const updateUser = (req, res) => {
     const usuario = { ...req.body };
@@ -131,12 +133,14 @@ module.exports = (app) => {
   // };
 
   const uploadPerfil = async (req, res) => {
-    const imagem = { ...req.body };
-    if (req.params.usuarioId) imagem.id = req.params.usuarioId;
+    const image = {...req.body}
+    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
 
-    app.db("imagnsPerfil").where({ usuarioId: imagem.id }).first();
+    image.id = await app.db("imagensPerfil").select("id").where({usuarioId:req.params.usuarioId}).first()
 
-    if (imagem.id) {
+
+    
+    if (image.id) {
       app
         .db("imagensPerfil")
         .update({
@@ -144,9 +148,9 @@ module.exports = (app) => {
           size: req.file.size,
           path: req.file.location,
           key: req.file.key,
-          usuarioId: req.params.usuarioId,
+          
         })
-        .where({ usuarioId: imagem.id })
+        .where({ usuarioId: image.usuarioId })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
@@ -164,6 +168,8 @@ module.exports = (app) => {
     }
   };
 
+  
+
   return {
     getObrasPerfil,
     getEstantePerfil,
@@ -173,5 +179,6 @@ module.exports = (app) => {
     savePerfil,
     updateUser,
     uploadPerfil,
+  
   };
 };

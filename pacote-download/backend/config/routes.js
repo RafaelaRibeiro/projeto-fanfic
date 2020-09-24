@@ -72,16 +72,11 @@ module.exports = (app) => {
     .route("/perfil/:autor/obras/shipp")
     .get(app.api.perfil.getObrasPerfilShipp);
 
-  
-    app.post(
-      "/perfil/:usuarioId/upload",
-      multer(multerConfig).single("file"),
-      app.api.perfil.uploadPerfil
-    );
-
-   
-
-    
+  app.post(
+    "/perfil/:usuarioId/upload",
+    multer(multerConfig).single("file"),
+    app.api.perfil.uploadPerfil
+  );
 
   //Minha Mesa - Obra
 
@@ -94,7 +89,6 @@ module.exports = (app) => {
     multer(multerConfig).single("file"),
     app.api.mesa.upload
   );
-
 
   app.route("/mesa/:id").get(app.api.mesa.getById).delete(app.api.mesa.remove);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
