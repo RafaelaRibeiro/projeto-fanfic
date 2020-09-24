@@ -91,7 +91,11 @@ module.exports = (app) => {
       .db("estante")
       .join("obras", "estante.obraId", "=", "obras.id")
       .join("usuarios", "estante.usuarioId", "=", "usuarios.id")
-      .select({estanteId:"estante.id" , nome :"obras.nome", obraId: "obras.id"})
+      .select({
+        estanteId: "estante.id",
+        nome: "obras.nome",
+        obraId: "obras.id",
+      })
       .where({ user: req.params.user })
       .whereNot({ prateleiraId: 4 })
       .orderBy("estante.id", "desc")
@@ -111,6 +115,55 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  // const uploadPerfil = (req, res) => {
+  //   app
+  //     .db("imagensPerfil")
+  //     .insert({
+  //       name: req.file.originalname,
+  //       size: req.file.size,
+  //       path: req.file.location,
+  //       key: req.file.key,
+  //       usuarioId: req.params.usuarioId,
+
+  //     })
+  //     .then((_) => res.status(204).send())
+  //     .catch((err) => res.status(500).send(err));
+  // };
+
+  const uploadPerfil = async (req, res) => {
+    const imagem = { ...req.body };
+    if (req.params.usuarioId) imagem.id = req.params.usuarioId;
+
+    app.db("imagnsPerfil").where({ usuarioId: imagem.id }).first();
+
+    if (imagem.id) {
+      app
+        .db("imagensPerfil")
+        .update({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .where({ usuarioId: imagem.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagensPerfil")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
+
   return {
     getObrasPerfil,
     getEstantePerfil,
@@ -118,7 +171,7 @@ module.exports = (app) => {
     getObrasPerfilShipp,
     getPerfil,
     savePerfil,
-
     updateUser,
+    uploadPerfil,
   };
 };

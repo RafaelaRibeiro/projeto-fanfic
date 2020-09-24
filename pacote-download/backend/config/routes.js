@@ -72,6 +72,17 @@ module.exports = (app) => {
     .route("/perfil/:autor/obras/shipp")
     .get(app.api.perfil.getObrasPerfilShipp);
 
+  
+    app.post(
+      "/perfil/:usuarioId/upload",
+      multer(multerConfig).single("file"),
+      app.api.perfil.uploadPerfil
+    );
+
+   
+
+    
+
   //Minha Mesa - Obra
 
   app.route("/:user/mesa/adicionarobra").post(app.api.mesa.save);
@@ -79,10 +90,11 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
   app.post(
-    "/upload/:id",
+    "/obra/:id/upload",
     multer(multerConfig).single("file"),
     app.api.mesa.upload
   );
+
 
   app.route("/mesa/:id").get(app.api.mesa.getById).delete(app.api.mesa.remove);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
