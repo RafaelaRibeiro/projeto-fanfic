@@ -193,8 +193,8 @@ module.exports = (app) => {
       .insert({
         name: req.file.originalname,
         size: req.file.size,
-        path: req.file.path,
-        key: req.file.filename,
+        path: req.file.location,
+        key: req.file.key,
         obraId: req.params.id,
       })
       .then((_) => res.status(204).send())
