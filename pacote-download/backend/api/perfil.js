@@ -140,64 +140,63 @@ module.exports = (app) => {
     const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
 
-    image.id = await app
+    var getImage = await app
       .db("imagensPerfil")
-      .select("id")
+      .select("id", "key", "usuarioId")
       .where({ usuarioId: req.params.usuarioId })
       .first();
 
-    if (image.id) {
+    if (getImage) {
+      await s3
+      .deleteObject({
+        Bucket: "upload.fanbase",
+        Key: getImage.key,
+      })
+      .promise();
       app
-
         .db("imagensPerfil")
         .update({
           name: req.file.originalname,
           size: req.file.size,
           path: req.file.location,
-          key: req.file.key,
+          key:  req.file.key,
         })
-        .where({ usuarioId: image.usuarioId })
+        .where({ usuarioId: getImage.usuarioId })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
       app
-        .db("imagensPerfil")
-        .insert({
-          name: req.file.originalname,
-          size: req.file.size,
-          path: req.file.location,
-          key: req.file.key,
-          usuarioId: req.params.usuarioId,
-        })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+      .db("imagensPerfil")
+      .insert({
+        name: req.file.originalname,
+        size: req.file.size,
+        path: req.file.location,
+        key: req.file.key,
+        usuarioId: req.params.usuarioId,
+      })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
     }
+
   };
 
   const uploadBanner = async (req, res) => {
     const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
 
-    image.id = await app
+    var getImage = await app
       .db("imagensBanner")
-      .select("id")
+      .select("id", "key", "usuarioId")
       .where({ usuarioId: req.params.usuarioId })
       .first();
 
-    const { chave } = await app
-      .db("imagensBanner")
-      .select("key")
-      .where({ usuarioId: req.params.usuarioId })
-      .first();
-
-    if (image.id) {
+    if (getImage) {
       await s3
-        .deleteObject({
-          Bucket: "upload.fanbase",
-          Key: chave,
-        })
-        .promise();
-
+      .deleteObject({
+        Bucket: "upload.fanbase",
+        Key: getImage.key,
+      })
+      .promise();
       app
         .db("imagensBanner")
         .update({
@@ -206,22 +205,24 @@ module.exports = (app) => {
           path: req.file.location,
           key: req.file.key,
         })
-        .where({ usuarioId: image.usuarioId })
+        .where({ usuarioId: getImage.usuarioId })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
       app
-        .db("imagensBanner")
-        .insert({
-          name: req.file.originalname,
-          size: req.file.size,
-          path: req.file.location,
-          key: req.file.key,
-          usuarioId: req.params.usuarioId,
-        })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+      .db("imagensBanner")
+      .insert({
+        name: req.file.originalname,
+        size: req.file.size,
+        path: req.file.location,
+        key: req.file.key,
+        usuarioId: req.params.usuarioId,
+      })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
     }
+
+    
   };
 
   return {

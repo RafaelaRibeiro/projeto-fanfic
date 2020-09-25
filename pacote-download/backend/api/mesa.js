@@ -203,15 +203,21 @@ module.exports = (app) => {
 
   const uploadObra = async (req, res) => {
     const image = { ...req.body };
-    if (req.params.obraId) image.obraId = req.params.obraId;
+    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
 
-    image.id = await app
+    var getImage = await app
       .db("imagemObra")
-      .select("id")
-      .where({ obraId: req.params.obraId })
+      .select("id", "key", "usuarioId")
+      .where({ usuarioId: req.params.usuarioId })
       .first();
 
-    if (image.id) {
+    if (getImage) {
+      await s3
+      .deleteObject({
+        Bucket: "upload.fanbase",
+        Key: getImage.key,
+      })
+      .promise();
       app
         .db("imagemObra")
         .update({
@@ -220,21 +226,21 @@ module.exports = (app) => {
           path: req.file.location,
           key: req.file.key,
         })
-        .where({ obraId: image.obraId })
+        .where({ usuarioId: getImage.usuarioId })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
       app
-        .db("imagemObra")
-        .insert({
-          name: req.file.originalname,
-          size: req.file.size,
-          path: req.file.location,
-          key: req.file.key,
-          obraId: req.params.obraId,
-        })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+      .db("imagemObra")
+      .insert({
+        name: req.file.originalname,
+        size: req.file.size,
+        path: req.file.location,
+        key: req.file.key,
+        usuarioId: req.params.usuarioId,
+      })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
     }
   };
 
