@@ -3,9 +3,7 @@
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
-          <i>
-            <v-icon x-large class="pa-3">mdi-plus-box</v-icon>Adicionar Obra
-          </i>
+          <i> <v-icon x-large class="pa-3">mdi-plus-box</v-icon>Adicionar Obra </i>
         </h1>
       </v-col>
     </v-row>
@@ -172,7 +170,7 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="aviso in avisos.slice(4, 8 )"
+              v-for="aviso in avisos.slice(4, 8)"
               :key="aviso.id"
               v-model="obra.avisosId"
               dense
@@ -350,14 +348,14 @@ export default {
     getUltimaObra() {
       const url = ` ${baseApiUrl}/${this.usuario.user}/mesa/ultimaobra`
       axios(url)
-        .then(res => {
+        .then((res) => {
           this.a = res.data[0]
           if (this.imagemObra.size === 0) {
             this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
           axios
-            .post(`${baseApiUrl}/upload/${this.a.id}`, fd)
+            .post(`${baseApiUrl}obra/${this.a.id}/upload`, fd)
             .then(() => {
               this.$toasted.global.defaultSuccess()
               this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
@@ -369,39 +367,39 @@ export default {
 
     getCategorias() {
       const url = ` ${baseApiUrl}/categorias`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.categorias = res.data
       })
     },
     getUniversos() {
       const url = ` ${baseApiUrl}/universos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.universos = res.data.concat(this.universos)
       })
     },
     getShipps() {
       const url = ` ${baseApiUrl}/shipp`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.shipps = res.data
       })
     },
 
     getCaracteristicas() {
       const url = ` ${baseApiUrl}/caracteristicas`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.caracteristicas = res.data
       })
     },
     getAvisos() {
       const url = ` ${baseApiUrl}/avisos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.avisos = res.data
       })
     },
 
     getCoautor() {
       const url = ` ${baseApiUrl}/Coautor`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.coautor = res.data
       })
     },
@@ -410,7 +408,7 @@ export default {
       this.loading = true
       // Simulated ajax query
       setTimeout(() => {
-        this.items = this.states.filter(e => {
+        this.items = this.states.filter((e) => {
           return e.toLowerCase().indexOf((v || '').toLowerCase()) > -1
         })
         this.loading = false
@@ -426,7 +424,7 @@ export default {
 
   computed: {
     list() {
-      const a = this.universos.filter(e => {
+      const a = this.universos.filter((e) => {
         return e.categoriaId == this.obra.categoriaId
       })
       return a
@@ -437,7 +435,7 @@ export default {
     },
 
     shippLista() {
-      const a = this.shipps.filter(e => this.obra.fandonsId.includes(e.fandonsId))
+      const a = this.shipps.filter((e) => this.obra.fandonsId.includes(e.fandonsId))
       return a
     },
     ...mapState(['usuario']),

@@ -187,18 +187,55 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  const upload = (req, res) => {
-    app
-      .db("imagemObras")
-      .insert({
-        name: req.file.originalname,
-        size: req.file.size,
-        path: req.file.location,
-        key: req.file.key,
-        obraId: req.params.id,
-      })
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
+  // const upload = (req, res) => {
+  //   app
+  //     .db("imagemObras")
+  //     .insert({
+  //       name: req.file.originalname,
+  //       size: req.file.size,
+  //       path: req.file.location,
+  //       key: req.file.key,
+  //       obraId: req.params.id,
+  //     })
+  //     .then((_) => res.status(204).send())
+  //     .catch((err) => res.status(500).send(err));
+  // };
+
+  const uploadObra = async (req, res) => {
+    const image = { ...req.body };
+    if (req.params.obraId) image.obraId = req.params.obraId;
+
+    image.id = await app
+      .db("imagemObra")
+      .select("id")
+      .where({ obraId: req.params.obraId })
+      .first();
+
+    if (image.id) {
+      app
+        .db("imagemObra")
+        .update({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+        })
+        .where({ obraId: image.obraId })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagemObra")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          obraId: req.params.obraId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
   };
 
   return {
@@ -210,7 +247,7 @@ module.exports = (app) => {
     getUltimaObra,
     saveCapitulo,
     getUltimoCapitulo,
-    upload,
+    uploadObra,
     getCoautor,
     getAvisosByObra,
     remove,

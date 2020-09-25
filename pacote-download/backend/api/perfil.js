@@ -1,5 +1,9 @@
 const usuario = require("./usuario");
 
+const { StorageGateway } = require("aws-sdk");
+const aws = require("aws-sdk");
+const s3 = new aws.S3();
+
 module.exports = (app) => {
   const updateUser = (req, res) => {
     const usuario = { ...req.body };
@@ -133,22 +137,24 @@ module.exports = (app) => {
   // };
 
   const uploadPerfil = async (req, res) => {
-    const image = {...req.body}
+    const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
 
-    image.id = await app.db("imagensPerfil").select("id").where({usuarioId:req.params.usuarioId}).first()
+    image.id = await app
+      .db("imagensPerfil")
+      .select("id")
+      .where({ usuarioId: req.params.usuarioId })
+      .first();
 
-
-    
     if (image.id) {
       app
+
         .db("imagensPerfil")
         .update({
           name: req.file.originalname,
           size: req.file.size,
           path: req.file.location,
           key: req.file.key,
-          
         })
         .where({ usuarioId: image.usuarioId })
         .then((_) => res.status(204).send())
@@ -168,7 +174,55 @@ module.exports = (app) => {
     }
   };
 
-  
+  const uploadBanner = async (req, res) => {
+    const image = { ...req.body };
+    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+
+    image.id = await app
+      .db("imagensBanner")
+      .select("id")
+      .where({ usuarioId: req.params.usuarioId })
+      .first();
+
+    const { chave } = await app
+      .db("imagensBanner")
+      .select("key")
+      .where({ usuarioId: req.params.usuarioId })
+      .first();
+
+    if (image.id) {
+      await s3
+        .deleteObject({
+          Bucket: "upload.fanbase",
+          Key: chave,
+        })
+        .promise();
+
+      app
+        .db("imagensBanner")
+        .update({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+        })
+        .where({ usuarioId: image.usuarioId })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagensBanner")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
 
   return {
     getObrasPerfil,
@@ -179,6 +233,6 @@ module.exports = (app) => {
     savePerfil,
     updateUser,
     uploadPerfil,
-  
+    uploadBanner,
   };
 };

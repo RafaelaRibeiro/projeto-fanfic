@@ -77,6 +77,11 @@ module.exports = (app) => {
     multer(multerConfig).single("file"),
     app.api.perfil.uploadPerfil
   );
+  app.post(
+    "/banner/:usuarioId/upload",
+    multer(multerConfig).single("file"),
+    app.api.perfil.uploadBanner
+  );
 
   //Minha Mesa - Obra
 
@@ -87,7 +92,7 @@ module.exports = (app) => {
   app.post(
     "/obra/:id/upload",
     multer(multerConfig).single("file"),
-    app.api.mesa.upload
+    app.api.mesa.uploadObra
   );
 
   app.route("/mesa/:id").get(app.api.mesa.getById).delete(app.api.mesa.remove);
