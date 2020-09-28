@@ -3,33 +3,25 @@
     <v-row>
       <v-col>
         <v-card class="perfil-banner">
-          <v-img
-            height="300px"
-            v-for="usuario in usuarios"
-            :key="usuario.user"
-            :src="usuario.imagemCapa"
-          ></v-img>
+          <v-img height="300px" v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imageBanner"></v-img>
         </v-card>
       </v-col>
-       
     </v-row>
 
     <v-row class="sub-banner">
       <v-col class="avatar" cols="3">
         <v-avatar class="profile" color="grey" size="160">
-          <v-img v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imagemPerfil"></v-img>
-
-       
+          <v-img v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imagePerfil"></v-img>
         </v-avatar>
       </v-col>
       <v-col v-for="perfil in usuarios" :key="perfil.user">
         <div>
           <strong>Nome:</strong>
-          {{perfil.nome}}
+          {{ perfil.nome }}
         </div>
         <div>
           <strong>Usuario:</strong>
-          {{perfil.user}}
+          {{ perfil.user }}
         </div>
       </v-col>
       <v-col>
@@ -96,9 +88,7 @@
         </template>
       </v-col>
     </v-row>
-  
   </div>
-
 </template>
 
 <script>
@@ -149,7 +139,7 @@ export default {
   methods: {
     getUsuarios() {
       const url = `${baseApiUrl}/perfil/${this.usuarios.user}`
-      axios(url).then(res => (this.usuarios = res.data))
+      axios(url).then((res) => (this.usuarios = res.data))
     },
 
     editarPerfil() {

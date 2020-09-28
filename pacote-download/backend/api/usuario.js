@@ -78,12 +78,15 @@ module.exports = (app) => {
   const getById = (req, res) => {
     app
       .db("usuarios")
+      .join("imagensPerfil", "usuarios.id", "=", "imagensPerfil.usuarioId")
+      .join("imagensBanner", "usuarios.id", "=", "imagensBanner.usuarioId")
       .select(
         app.db.raw(
-          "id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, date_format(dataNasc, '%d/%m/%Y')"
+          "usuarios.id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner, date_format(dataNasc, '%d/%m/%Y')"
         )
       )
-      .where({ id: req.params.id })
+
+      .where({ "usuarios.id": req.params.id })
 
       .then((usuario) => res.json(usuario))
       .catch((err) => res.status(500).send(err));
