@@ -14,11 +14,17 @@
         </v-row>
         <v-row class="ml-2 mb-0" no-gutters>
           <v-col>
-            <v-btn small color="primary">Alterar</v-btn>
-            <v-file-input show-size counter multiple label="File input" @change="onFileChange"></v-file-input>
-            <!-- <input type="file" @change="onFileChange" /> -->
-            <!-- <md-file v-model="single" /> -->
-            <b-form-file id="file-small" size="sm" @change="onFileChange"></b-form-file>
+            <v-btn v-show="!url" small color="primary" @click.native="openFileDialog">Alterar</v-btn>
+            <v-btn v-show="url" small color="primary" @click="savePerfil">Salvar</v-btn>
+
+            <!-- <input type="file" id="file-upload" style="display: none" @change="onFileChange" /> -->
+            <b-form-file
+              v-model="imagemPerfil"
+              id="file-upload"
+              accept="image/jpeg, image/png, image/bmp"
+              style="display: none"
+              @change="onFileChange"
+            ></b-form-file>
           </v-col>
         </v-row>
       </v-col>
@@ -41,12 +47,15 @@
 </template>
 
 <script>
+import { baseApiUrl, showError } from '@/global'
+import axios from 'axios'
 export default {
   name: 'Imagens',
   props: ['usuario'],
   data() {
     return {
       url: null,
+      imagemPerfil: [],
     }
   },
 
@@ -54,6 +63,20 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0]
       this.url = URL.createObjectURL(file)
+    },
+    openFileDialog() {
+      document.getElementById('file-upload').click()
+    },
+
+    savePerfil() {
+      var fd = new FormData()
+      fd.append('file', this.imagemPerfil)
+      axios
+        .post(`${baseApiUrl}/perfil/1/upload`, fd)
+        .then(() => {
+          this.$toasted.global.defaultSuccess()
+        })
+        .catch(showError)
     },
   },
 }
