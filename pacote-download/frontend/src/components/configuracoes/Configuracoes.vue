@@ -29,6 +29,11 @@
           <Imagens :usuario="usuario"></Imagens>
         </div>
       </v-tab-item>
+       <v-tab-item :transition="false" :reverse-transition="false">
+        <div v-for="usuario in usuarios" :key="usuario.id">
+         <Senha :usuario="usuario"/>
+        </div>
+      </v-tab-item>
     </v-tabs-items>
    
   </v-container>
@@ -37,17 +42,19 @@
 <script>
 import PerfilEditar from './PerfilEditar'
 import Imagens from './Imagens'
+import Senha from './Senha'
+
 import { baseApiUrl } from '@/global'
 
 import axios from 'axios'
 export default {
-  components: { PerfilEditar, Imagens },
+  components: { PerfilEditar, Imagens, Senha },
   name: 'Configuracoes',
 
   data() {
     return {
       usuarios: [],
-      usuario: {},
+     
       tab: null,
       mask: '##/##/####',
       titulos: [

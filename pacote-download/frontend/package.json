@@ -32,7 +32,7 @@
     "tiptap-vuetify": "^2.13.2",
     "vee-validate": "^2.0.3",
     "vue": "^2.6.11",
-    "vue-material": "^1.0.0-beta-14",
+    "vue-material": "^1.0.0-beta-15",
     "vue-router": "^3.3.2",
     "vue-scrollto": "^2.18.0",
     "vue-the-mask": "^0.11.1",

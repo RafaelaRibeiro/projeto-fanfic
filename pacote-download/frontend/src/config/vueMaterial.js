@@ -11,6 +11,7 @@ import {
   MdMenu,
   MdDialog,
   MdDialogConfirm,
+  MdField
 } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
@@ -25,3 +26,4 @@ Vue.use(MdSpeedDial)
 Vue.use(MdMenu)
 Vue.use(MdDialog)
 Vue.use(MdDialogConfirm)
+Vue.use(MdField)

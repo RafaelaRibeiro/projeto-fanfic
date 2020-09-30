@@ -1,5 +1,5 @@
 <template>
-  <v-content class="deep-purple lighten-5" v-if="isMenuVisible">
+  <v-content  v-if="isMenuVisible">
     <v-row justify="center" class="mx-3">
       <v-col md="12">
         <v-card elevation="7">
@@ -40,7 +40,7 @@
       </v-card>
     </v-dialog>
   </v-content>
-  <router-view v-else class="deep-purple lighten-5"></router-view>
+  <router-view id="imagem-login"  :style="{backgroundImage: 'url('+require('@/assets/teste.png')+')' , backgroundSize: 'cover'}" v-else ></router-view>
 </template>
 
 <script>
@@ -78,4 +78,5 @@ export default {
 </script>
 
 <style >
+
 </style>

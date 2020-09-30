@@ -1,10 +1,10 @@
-<template>
-  <v-row dense align="center" justify="center" class="deep-purple lighten-5">
+<template id="auth">
+  <v-row dense align="center" justify="center" >
     <v-col cols="7" class="mt-n2">
-      <v-img src="@/assets/login.jpg" height="600" width="700"></v-img>
+      <!-- <v-img src="@/assets/login.jpg" height="600" width="700"></v-img> -->
     </v-col>
-    <v-spacer></v-spacer>
-    <v-col cols="5" class="text-center">
+   
+    <v-col cols="5" class="text-center deep-purple lighten-5 h-100" >
       <v-card flat width="500px" class="deep-purple lighten-5">
         <div>
           <p class="display-1 font-weight-medium pt-3">Entrar</p>
@@ -69,4 +69,8 @@ export default {
 </script>
 
 <style>
+#id{
+  background: red;
+}
+
 </style>
