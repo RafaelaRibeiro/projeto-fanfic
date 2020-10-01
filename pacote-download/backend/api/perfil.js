@@ -3,6 +3,7 @@ const usuario = require("./usuario");
 const { StorageGateway } = require("aws-sdk");
 const aws = require("aws-sdk");
 const s3 = new aws.S3();
+const fs = require('fs')
 
 module.exports = (app) => {
   const updateUser = (req, res) => {
@@ -127,6 +128,50 @@ module.exports = (app) => {
   //     .catch((err) => res.status(500).send(err));
   // };
 
+  // const uploadPerfil = async (req, res) => {
+  //   const image = { ...req.body };
+  //   if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+
+  //   var getImage = await app
+  //     .db("imagensPerfil")
+  //     .select("id", "key", "usuarioId")
+  //     .where({ usuarioId: req.params.usuarioId })
+  //     .first();
+
+  //   if (getImage) {
+  //     await s3
+  //       .deleteObject({
+  //         Bucket: "upload.fanbase",
+  //         Key: getImage.key
+
+  //       })
+  //       .promise();
+  //     app
+  //       .db("imagensPerfil")
+  //       .update({
+  //         name: req.file.originalname,
+  //         size: req.file.size,
+  //         path: req.file.location,
+  //         key: req.file.key,
+  //       })
+  //       .where({ usuarioId: getImage.usuarioId })
+  //       .then((_) => res.status(204).send())
+  //       .catch((err) => res.status(500).send(err));
+  //   } else {
+  //     app
+  //       .db("imagensPerfil")
+  //       .insert({
+  //         name: req.file.originalname,
+  //         size: req.file.size,
+  //         path: req.file.location,
+  //         key: req.file.key,
+  //         usuarioId: req.params.usuarioId,
+  //       })
+  //       .then((_) => res.status(204).send())
+  //       .catch((err) => res.status(500).send(err));
+  //   }
+  // };
+
   const uploadPerfil = async (req, res) => {
     const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
@@ -138,22 +183,21 @@ module.exports = (app) => {
       .first();
 
     if (getImage) {
-      await s3
-        .deleteObject({
-          Bucket: "upload.fanbase",
-          Key: getImage.key,
-        })
-        .promise();
+      
+      await fs.unlink(`./tmp/perfil/${getImage.key}` ,(err)=> {
+        if(err) throw err;
+        console.log('File deleted!');
+      })
       app
         .db("imagensPerfil")
         .update({
           name: req.file.originalname,
           size: req.file.size,
-          path: req.file.location,
+          path: `http://localhost:3000/perfil/${req.params.usuarioId}/upload/${req.file.key}`,
           key: req.file.key,
         })
         .where({ usuarioId: getImage.usuarioId })
-        .then((_) => res.status(204).send())
+        .then((_) => res.status(204).send(console.log(req.file)))
         .catch((err) => res.status(500).send(err));
     } else {
       app
@@ -161,7 +205,7 @@ module.exports = (app) => {
         .insert({
           name: req.file.originalname,
           size: req.file.size,
-          path: req.file.location,
+          path: `http://localhost:3000/perfil/${req.params.usuarioId}/upload/${req.file.key}`,
           key: req.file.key,
           usuarioId: req.params.usuarioId,
         })
@@ -169,6 +213,7 @@ module.exports = (app) => {
         .catch((err) => res.status(500).send(err));
     }
   };
+
 
   const uploadBanner = async (req, res) => {
     const image = { ...req.body };

@@ -8,7 +8,7 @@
           <v-col>
             <v-avatar size="160" tile class="mb-3">
               <img v-if="urlPerfil" :src="urlPerfil" />
-              <v-img v-else :src="usuario.imagePerfil"></v-img>
+              <v-img v-else :src="usuario.imagePerfil" ></v-img>
             </v-avatar>
           </v-col>
         </v-row>

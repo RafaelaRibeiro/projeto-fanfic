@@ -78,8 +78,8 @@ module.exports = (app) => {
   const getById = (req, res) => {
     app
       .db("usuarios")
-      .join("imagensPerfil", "usuarios.id", "=", "imagensPerfil.usuarioId")
-      .join("imagensBanner", "usuarios.id", "=", "imagensBanner.usuarioId")
+      .leftJoin("imagensPerfil", "usuarios.id", "=", "imagensPerfil.usuarioId")
+      .leftJoin("imagensBanner", "usuarios.id", "=", "imagensBanner.usuarioId")
       .select(
         app.db.raw(
           "usuarios.id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner, date_format(dataNasc, '%d/%m/%Y')"
