@@ -1,11 +1,10 @@
+
+
+
 <template id="auth">
-  <v-row dense align="center" justify="center" >
-    <v-col cols="7" class="mt-n2">
-      <!-- <v-img src="@/assets/login.jpg" height="600" width="700"></v-img> -->
-    </v-col>
-   
-    <v-col cols="5" class="text-center deep-purple lighten-5 h-100" >
-      <v-card flat width="500px" class="deep-purple lighten-5">
+  <v-row dense align="center" justify="center">
+    <v-col cols="5" class="text-center">
+      <v-card flat width="500px">
         <div>
           <p class="display-1 font-weight-medium pt-3">Entrar</p>
         </div>
@@ -16,30 +15,25 @@
             name="Email"
             label="E-mail"
             class="ml-3 mr-3 mt-6"
+            outlined
           ></v-text-field>
           <v-text-field
             v-model="usuario.password"
             color="purple darken-4"
             :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-            name="Password"
             label="Senha"
             :type="show1 ? 'text' : 'password'"
             class="ml-3 mr-3"
+            outlined
             @click:append="show1 = !show1"
             @keydown.enter="signin"
           ></v-text-field>
-          <!-- <v-checkbox v-model="checkbox" label="Mantenha-me Conectado"   color="indigo darken-4" class="ml-3 mr-3" ></v-checkbox> -->
-          <v-btn
-            rounded
-            width="450"
-            dark
-            color="indigo darken-4"
-            class="ma-3"
-            @click="signin"
-          >Entrar</v-btn>
+
+          <v-btn rounded width="450" dark color="indigo darken-4" class="ma-3" @click="signin">Entrar</v-btn>
         </v-form>
       </v-card>
     </v-col>
+    <v-col cols="6" class="mt-n2"> </v-col>
   </v-row>
 </template>
 
@@ -69,8 +63,7 @@ export default {
 </script>
 
 <style>
-#id{
-  background: red;
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset;
 }
-
 </style>

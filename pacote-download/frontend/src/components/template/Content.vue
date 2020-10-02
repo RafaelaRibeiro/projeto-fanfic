@@ -1,5 +1,5 @@
 <template>
-  <v-content  v-if="isMenuVisible">
+  <v-content v-if="isMenuVisible" class="deep-purple lighten-5">
     <v-row justify="center" class="mx-3">
       <v-col md="12">
         <v-card elevation="7">
@@ -40,7 +40,15 @@
       </v-card>
     </v-dialog>
   </v-content>
-  <router-view id="imagem-login"  :style="{backgroundImage: 'url('+require('@/assets/teste.png')+')' , backgroundSize: 'cover'}" v-else ></router-view>
+  <router-view
+    id="imagem-login"
+    :style="{
+      backgroundImage: 'url(' + require('@/assets/login_new.jpg') + ')',
+      backgroundSize: 'cover',
+      backgroundPosition: 'right',
+    }"
+    v-else
+  ></router-view>
 </template>
 
 <script>
@@ -59,7 +67,6 @@ export default {
   },
   methods: {
     save() {
-      
       axios['post'](`${baseApiUrl}/${this.usuario.user}/notas`, {
         conteudo: this.nota.conteudo,
         usuarioId: this.usuario.id,
@@ -78,5 +85,4 @@ export default {
 </script>
 
 <style >
-
 </style>
