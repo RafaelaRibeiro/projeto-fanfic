@@ -7,9 +7,6 @@ module.exports = (app) => {
 
   app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get);
 
-  app.route("/usuario/:id").get(app.api.usuario.getById);
-  app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
-
   app.route("/categorias").get(app.api.categorias.getCategoria);
 
   app.route("/universos").get(app.api.universo.getUniverso);
@@ -19,6 +16,22 @@ module.exports = (app) => {
   app.route("/shipp").get(app.api.shipps.getShipp);
 
   app.route("/prateleiras").get(app.api.prateleiras.get);
+
+  //**************************************Usuario*****************************************************
+
+  app.route("/usuario/:id").get(app.api.usuario.getById);
+  app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
+  app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword)
+  app.post(
+    "/perfil/:usuarioId/upload",
+    multer(multerConfig).single("file"),
+    app.api.usuario.uploadPerfil
+  );
+  app.post(
+    "/banner/:usuarioId/upload",
+    multer(multerConfig).single("file"),
+    app.api.usuario.uploadBanner
+  );
 
   //Estante
   app.route("/:user/estante").get(app.api.estante.get);
@@ -71,17 +84,6 @@ module.exports = (app) => {
   app
     .route("/perfil/:autor/obras/shipp")
     .get(app.api.perfil.getObrasPerfilShipp);
-
-  app.post(
-    "/perfil/:usuarioId/upload",
-    multer(multerConfig).single("file"),
-    app.api.perfil.uploadPerfil
-  );
-  app.post(
-    "/banner/:usuarioId/upload",
-    multer(multerConfig).single("file"),
-    app.api.perfil.uploadBanner
-  );
 
   //Minha Mesa - Obra
 

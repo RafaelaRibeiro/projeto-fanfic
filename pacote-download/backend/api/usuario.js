@@ -1,4 +1,10 @@
+const { authSecret } = require("../e/.env");
+const jwt = require("jwt-simple");
 const bcrypt = require("bcrypt-nodejs");
+const { StorageGateway } = require("aws-sdk");
+const aws = require("aws-sdk");
+const s3 = new aws.S3();
+const fs = require("fs");
 
 module.exports = (app) => {
   const { existsOrError, notExistsOrError, equalsOrError } = app.api.validacao;
@@ -7,6 +13,8 @@ module.exports = (app) => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
   };
+
+  //*****************************************SAVE***************************************************** */
 
   const save = async (req, res) => {
     const usuario = { ...req.body };
@@ -56,24 +64,7 @@ module.exports = (app) => {
     }
   };
 
-  const updateUsuario = (req, res) => {
-    const usuario = { ...req.body };
-    if (req.params.id) usuario.id = req.params.id;
-    app
-      .db("usuarios")
-      .update(usuario)
-      .where({ id: usuario.id })
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
-  };
-
-  const get = (req, res) => {
-    app
-      .db("usuarios")
-      .select("id", "nome", "email", "perfil", "autor")
-      .then((usuarios) => res.json(usuarios))
-      .catch((err) => res.status(500).send(err));
-  };
+  //*****************************************GET***************************************************** */
 
   const getById = (req, res) => {
     app
@@ -92,5 +83,156 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  return { save, get, getById, updateUsuario };
+  const get = (req, res) => {
+    app
+      .db("usuarios")
+      .select("id", "nome", "email", "perfil", "autor")
+      .then((usuarios) => res.json(usuarios))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  //*****************************************UPDATE***************************************************** */
+
+  const updateUsuario = (req, res) => {
+    const usuario = { ...req.body };
+    if (req.params.id) usuario.id = req.params.id;
+    app
+      .db("usuarios")
+      .update(usuario)
+      .where({ id: usuario.id })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const updatePassword = async (req, res) => {
+    const user = { ...req.body };
+    if (req.params.id) user.id = req.params.id;
+
+    const usuario = await app
+      .db("usuarios")
+      .select("id", "email", "password")
+      .where({ id: req.params.id })
+      .first();
+
+    if (!usuario) return res.status(400).send("Usuário não encontrado!");
+
+    const isMatch = bcrypt.compareSync(req.body.password, usuario.password);
+    if (!isMatch) {
+      return res.status(406).send("Senha atual incorreta");
+    } else {
+      try {
+        equalsOrError(
+          usuario.newPassword,
+          usuario.confirmarPassword,
+          "Senhas não conferem"
+        );
+      } catch (msg) {
+        return res.status(400).send(msg);
+      }
+      usuario.password = encryptPassword(req.body.newPassword);
+      delete usuario.confirmarPassword
+      console.log(usuario)
+
+      app
+        .db("usuarios")
+        .update({ password: usuario.password })
+        .where({ id: usuario.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
+
+  const uploadPerfil = async (req, res) => {
+    const image = { ...req.body };
+    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+
+    var getImage = await app
+      .db("imagensPerfil")
+      .select("id", "key", "usuarioId")
+      .where({ usuarioId: req.params.usuarioId })
+      .first();
+
+    if (getImage) {
+      await fs.unlink(`./tmp/perfil/${getImage.key}`, (err) => {
+        if (err) throw err;
+        console.log("File deleted!");
+      });
+      app
+        .db("imagensPerfil")
+        .update({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          key: req.file.key,
+        })
+        .where({ usuarioId: getImage.usuarioId })
+        .then((_) => res.status(204).send(console.log(req.file)))
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagensPerfil")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
+
+  const uploadBanner = async (req, res) => {
+    const image = { ...req.body };
+    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+
+    var getImage = await app
+      .db("imagensBanner")
+      .select("id", "key", "usuarioId")
+      .where({ usuarioId: req.params.usuarioId })
+      .first();
+
+    if (getImage) {
+      await s3
+        .deleteObject({
+          Bucket: "upload.fanbase",
+          Key: getImage.key,
+        })
+        .promise();
+      app
+        .db("imagensBanner")
+        .update({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+        })
+        .where({ usuarioId: getImage.usuarioId })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagensBanner")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
+
+  return {
+    save,
+    get,
+    getById,
+    updateUsuario,
+    uploadPerfil,
+    uploadBanner,
+    updatePassword,
+  };
 };

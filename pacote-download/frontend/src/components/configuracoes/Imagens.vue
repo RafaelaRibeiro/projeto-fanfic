@@ -6,9 +6,14 @@
         <v-card-title>Perfil</v-card-title>
         <v-row class="altura">
           <v-col>
-            <v-avatar size="160" tile class="mb-3">
+            <v-avatar v-if="usuario.imagePerfil" size="160" tile class="mb-3">
               <img v-if="urlPerfil" :src="urlPerfil" />
-              <v-img v-else :src="usuario.imagePerfil" ></v-img>
+              <v-img v-else :src="url + '/' + usuario.imagePerfil"></v-img>
+            </v-avatar>
+
+            <v-avatar v-else size="160" tile class="mb-3">
+              <img v-if="urlPerfil" :src="urlPerfil" />
+              <v-img v-else src="@/assets/profile.png"></v-img>
             </v-avatar>
           </v-col>
         </v-row>
@@ -33,8 +38,8 @@
         <v-card-title>Banner</v-card-title>
         <v-row class="altura">
           <v-col>
-          <img v-if="urlBanner" :src="urlBanner" />
-              <v-img v-else :src="usuario.imageBanner"></v-img>
+            <img v-if="urlBanner" :src="urlBanner" />
+            <v-img v-else :src="usuario.imageBanner"></v-img>
           </v-col>
         </v-row>
         <v-row class="ml-2 mb-0" no-gutters>
@@ -69,6 +74,7 @@ export default {
       urlBanner: null,
       imagemPerfil: [],
       imagemBanner: [],
+      url: baseApiUrl,
     }
   },
 
@@ -77,14 +83,14 @@ export default {
       const file = e.target.files[0]
       this.urlPerfil = URL.createObjectURL(file)
     },
-     onFileChangeBanner(e) {
+    onFileChangeBanner(e) {
       const file = e.target.files[0]
       this.urlBanner = URL.createObjectURL(file)
     },
     openFileDialogPerfil() {
       document.getElementById('file-upload-perfil').click()
     },
-     openFileDialogBanner() {
+    openFileDialogBanner() {
       document.getElementById('file-upload-banner').click()
     },
 
@@ -94,12 +100,12 @@ export default {
 
       // const options = {
       //   onUploadProgress: (progressEvent) => {
-      
+
       //   let percent = parseInt(Math.round(progressEvent.loaded/progressEvent.total*100))
-       
+
       //   // eslint-disable-next-line no-console
       //   console.log( `${progressEvent.loaded}kb of ${progressEvent.total}kb | ${percent}%` );
-        
+
       //   }
       // }
       axios

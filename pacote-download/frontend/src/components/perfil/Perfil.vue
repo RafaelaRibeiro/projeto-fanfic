@@ -10,8 +10,9 @@
 
     <v-row class="sub-banner">
       <v-col class="avatar" cols="3">
-        <v-avatar class="profile" color="grey" size="160">
-          <v-img v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imagePerfil"></v-img>
+        <v-avatar v-for="usuario in usuarios" :key="usuario.user" class="profile" color="grey" size="150">
+          <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img>
+          <v-img v-else src="@/assets/profile.png"></v-img>
         </v-avatar>
       </v-col>
       <v-col v-for="perfil in usuarios" :key="perfil.user">
@@ -121,6 +122,7 @@ export default {
       overlay: false,
       file2: null,
       editar: true,
+      url: baseApiUrl,
 
       items: [
         { id: 1, icon: 'mdi-book', text: 'Bloquear' },
