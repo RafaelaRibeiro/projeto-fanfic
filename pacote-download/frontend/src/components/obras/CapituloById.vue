@@ -1,8 +1,8 @@
 <template>
-  <v-card flat>
+  <v-card flat class="pt-5">
     <v-container>
-      <v-row>
-        <v-col cols="12" md="11">
+      <v-row justify="center">
+        <v-col cols="12" sm="10">
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light" id="top">
               <i>
@@ -15,8 +15,8 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="12" md="11">
+      <v-row justify="center">
+        <v-col cols="12" sm="10">
           <v-card v-show="capitulo.notasIniciais" flat outlined color="#EEEEEE">
             <v-card-title>Notas Iniciais</v-card-title>
             <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
@@ -25,8 +25,8 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mb-12">
-        <v-col cols="12" md="11">
+      <v-row class="mb-12" justify="center">
+        <v-col cols="12" sm="10">
           <v-card flat>
             <h5 class="font-weight-light mb-7">
               <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
@@ -36,8 +36,8 @@
         </v-col>
       </v-row>
 
-      <v-row v-show="capitulo.notasFinais">
-        <v-col cols="12" md="11">
+      <v-row v-show="capitulo.notasFinais" justify="center">
+        <v-col cols="12" sm="10">
           <v-card flat outlined color="#EEEEEE">
             <v-card-title>Notas Finais</v-card-title>
             <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
@@ -48,14 +48,14 @@
       </v-row>
 
       <v-container>
-        <v-row>
-          <v-col cols="12" md="11">
+        <v-row justify="center">
+          <v-col cols="12" sm="10">
             <v-row no-gutters>
-              <v-col cols="12" md="6">
-                <v-btn dark color="purple darken-4"> <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO </v-btn>
+              <v-col cols="12" sm="6">
+                <v-btn dark color="purple darken-4"> <v-icon left>smi-check-bold</v-icon>MARCAR COMO LIDO </v-btn>
               </v-col>
 
-              <v-col cols="12" md="6" class="d-flex justify-end">
+              <v-col cols="12" sm="6" class="d-flex justify-end">
                 <v-btn color="purple darken-4" dark @click="saveEstante">
                   <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
                 </v-btn>
@@ -64,10 +64,10 @@
           </v-col>
         </v-row>
 
-        <v-row>
-          <v-col cols="12 " md="11" v-for="u in ultimo" :key="u.id">
+        <v-row justify="center">
+          <v-col cols="12 " sm="10" v-for="u in ultimo" :key="u.id">
             <v-row no-gutters>
-              <v-col cols="12" sm="11">
+              <v-col cols="12" sm="10">
                 <router-link
                   :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero - 1 } }"
                 >
@@ -77,7 +77,7 @@
                 </router-link>
               </v-col>
 
-              <v-col cols="12" sm="11" class="d-flex justify-end">
+              <v-col cols="12" sm="10" class="d-flex justify-end">
                 <router-link
                   :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
                 >
@@ -93,8 +93,8 @@
       </v-container>
 
       <v-container>
-        <v-row>
-          <v-col cols="12" sm="11">
+        <v-row justify="center">
+          <v-col cols="12" sm="10">
             <v-textarea
               v-model="comentario"
               color="purple darken-4"
@@ -107,15 +107,15 @@
             ></v-textarea>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" sm="11" class="d-flex justify-end">
+        <v-row justify="center">
+          <v-col cols="12" sm="10" class="d-flex justify-end">
             <v-btn dark color="purple darken-4" @click="salvarComentario">Salvar</v-btn>
           </v-col>
         </v-row>
       </v-container>
       <v-container>
-        <v-row>
-          <v-col cols="12" md="11" v-for="c in comentarios" :key="c.i">
+        <v-row justify="center">
+          <v-col cols="12" sm="10" v-for="c in comentarios" :key="c.i">
             <v-card class="px-5 text--primary text-justify" color="#EDE7F6" flat outlined>
               <v-row>
                 <v-col cols="12" sm="6">
@@ -154,8 +154,8 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" md="11">
+        <v-row justify="center">
+          <v-col cols="12" sm="11">
             <v-pagination color="purple darken-4" v-model="page" :total-visible="7" :length="totalPage"></v-pagination>
           </v-col>
         </v-row>
