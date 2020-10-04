@@ -123,7 +123,7 @@ export default {
 
     getUsuarios() {
       const url = `${baseApiUrl}/usuario/1`
-      axios.get(url).then(res => {
+      axios.get(url).then((res) => {
         this.usuario = res.data
       })
     },

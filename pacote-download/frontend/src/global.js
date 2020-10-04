@@ -8,11 +8,11 @@ export const baseApiUrl = 'http://localhost:3000'
 
 export function showError(e) {
   if (e && e.response && e.response.data) {
-    Vue.toasted.global.defaultError({ msg: e.response.data })
+    Vue.$toast.error(e.response.data)
   } else if (typeof e === 'string') {
-    Vue.toasted.global.defaultError({ msg: e })
+    Vue.$toast.error(e)
   } else {
-    Vue.toasted.global.defaultError()
+    Vue.$toast.error()
   }
 }
 

@@ -20,7 +20,7 @@
           <v-text-field
             v-model="usuario.password"
             color="purple darken-4"
-            name = 'password'
+            name="password"
             :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
             label="Senha"
             :type="show1 ? 'text' : 'password'"

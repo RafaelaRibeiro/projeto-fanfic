@@ -35,28 +35,27 @@
     </v-row>
     <v-row class="ml-2" justify="end">
       <v-col cols="6" md="4">
-        <v-btn @click="changePassword"> Salvar </v-btn>
+        <v-btn dark class="ma-3" color="purple darken-4" @click="changePassword">
+          <v-icon small left>mdi-floppy</v-icon>Salvar
+        </v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
-
-    {{ usuario }}
   </v-container>
 </template>
 
 <script>
-import { baseApiUrl } from '@/global'
+import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 export default {
   name: 'Senha',
-  
 
   data() {
     return {
       usuario: {
-        password:"",
-        newPassword:"",
-        confirmarPassword:""
+        password: '',
+        newPassword: '',
+        confirmarPassword: '',
       },
     }
   },
@@ -70,10 +69,9 @@ export default {
           confirmarPassword: this.usuario.confirmarPassword,
         })
         .then(() => {
-          // eslint-disable-next-line no-console
-          console.log('Deu certo')
+          this.$toast.success('Senha Alterada com Sucesso')
         })
-        .catch('erro')
+        .catch(showError)
 
       // eslint-disable-next-line no-console
       console.log(this.usuario)
