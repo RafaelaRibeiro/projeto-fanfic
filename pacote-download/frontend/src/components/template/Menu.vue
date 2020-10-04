@@ -5,7 +5,6 @@
       :clipped="$vuetify.breakpoint.lgAndUp"
       :mini-variant.sync="mini"
       permanent
-      expand-on-hover
       app
     >
       <v-list-item class="px-2 mb-0">
@@ -13,7 +12,7 @@
           <v-img :src="usuario.imagemPerfil"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>{{usuario.nome}}</v-list-item-title>
+        <v-list-item-title>{{ usuario.nome }}</v-list-item-title>
         <v-btn icon @click="fechar">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
@@ -84,25 +83,25 @@
 
       <md-list class="md-dense pa-0 mb-2" v-for="item in items" :key="item.text">
         <md-list-item v-if="item.children" md-expand :md-expanded.sync="expandNews">
-          <v-icon class="pr-6">{{item.icon}}</v-icon>
-          <span class="md-list-item-text md-headline">{{item.text}}</span>
+          <v-icon class="pr-6">{{ item.icon }}</v-icon>
+          <span class="md-list-item-text md-headline">{{ item.text }}</span>
 
           <md-list slot="md-expand">
             <md-list-item
               v-for="(child, i) in item.children"
               :key="i"
               class="pl-0"
-              :to="{name:child.path, params: {autor: usuario.user}}"
+              :to="{ name: child.path, params: { autor: usuario.user } }"
             >
-              <v-icon small class="pr-6">{{child.icon}}</v-icon>
+              <v-icon small class="pr-6">{{ child.icon }}</v-icon>
               <span class="md-list-item-text">{{ child.text }}</span>
             </md-list-item>
           </md-list>
         </md-list-item>
 
-        <md-list-item v-else :to="{name:item.path, params: {user: usuario.user}}">
-          <v-icon class="pr-6">{{item.icon}}</v-icon>
-          <span color="red" class="md-list-item-text">{{item.text}}</span>
+        <md-list-item v-else :to="{ name: item.path, params: { user: usuario.user } }">
+          <v-icon class="pr-6">{{ item.icon }}</v-icon>
+          <span color="red" class="md-list-item-text">{{ item.text }}</span>
         </md-list-item>
       </md-list>
       <md-list class="md-dense pa-0 mb-2">

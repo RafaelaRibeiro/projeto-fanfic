@@ -1,12 +1,9 @@
-
-
-
 <template id="auth">
   <v-row dense align="center" justify="center">
-    <v-col cols="5" class="text-center">
-      <v-card flat width="500px">
+    <v-col cols="12" sm="5" class="text-center">
+      <v-card flat max-width="460px" :style="{ background: none }">
         <div>
-          <p class="display-1 font-weight-medium pt-3">Entrar</p>
+          <p class="headline font-weight-medium pt-3">Entrar</p>
         </div>
         <v-form ref="form">
           <v-text-field
@@ -30,7 +27,7 @@
             @keydown.enter="signin"
           ></v-text-field>
 
-          <v-btn rounded width="450" dark color="indigo darken-4" class="ma-3" @click="signin">Entrar</v-btn>
+          <v-btn rounded dark color="indigo darken-4" class="ma-3" @click="signin">Entrar</v-btn>
         </v-form>
       </v-card>
     </v-col>

@@ -1,11 +1,11 @@
 <template>
-  <v-container>
-    <v-content v-for="obra in obras" :key="obra.id">
+  <v-card flat :style="{ padding: '100px' }">
+    <v-container v-for="obra in obras" :key="obra.id">
       <v-row>
         <v-col cols="11">
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light">
-              <i>Obra - {{obra.nome}}</i>
+              <i>Obra - {{ obra.nome }}</i>
             </h1>
             <v-card-text class="title text--primary font-weight-medium">
               Autor:
@@ -29,16 +29,14 @@
 
           <v-card flat>
             <v-card-title>Sinopse</v-card-title>
-            <v-card-text class="text--primary text-justify">{{obra.sinopse}}</v-card-text>
+            <v-card-text class="text--primary text-justify">{{ obra.sinopse }}</v-card-text>
           </v-card>
 
           <v-card flat>
             <v-card-title>Caracteristicas</v-card-title>
-            <v-card-text
-              v-for="c in caracteristicas"
-              :key="c.nome"
-              class="text--primary text-justify"
-            >{{c.nome}}</v-card-text>
+            <v-card-text v-for="c in caracteristicas" :key="c.nome" class="text--primary text-justify">{{
+              c.nome
+            }}</v-card-text>
           </v-card>
           <!-- 
           <v-card flat outlined color="#EEEEEE">
@@ -55,30 +53,26 @@
             <v-card-text>
               <p class="text--primary text-justify">
                 <strong>Status:</strong>
-                {{obra.status}}
+                {{ obra.status }}
               </p>
               <p class="text--primary text-justify">
                 <strong>Início:</strong>
-                {{obra.dataAdicionado}}
+                {{ obra.dataAdicionado }}
               </p>
               <p class="text--primary text-justify">
                 <strong>Atualizado:</strong>
-                {{obra.ultimaPostagem}}
+                {{ obra.ultimaPostagem }}
               </p>
               <p class="text--primary text-justify">
                 <strong>Categoria:</strong>
-                {{obra.categoriaId}}
+                {{ obra.categoriaId }}
               </p>
 
               <div class="d-flex flex-row">
                 <strong>Universos:</strong>
-                <p
-                  class="text--primary text-justify px-1"
-                  v-for="universo in universos"
-                  :key="universo.id"
-                >
+                <p class="text--primary text-justify px-1" v-for="universo in universos" :key="universo.id">
                   <v-chip small>
-                    <a>{{universo.nome}}</a>
+                    <a>{{ universo.nome }}</a>
                   </v-chip>
                 </p>
               </div>
@@ -94,11 +88,9 @@
 
           <v-card flat outlined color="#EEEEEE">
             <v-card-title>Avisos Importantes</v-card-title>
-            <v-card-text
-              v-for="aviso in avisos"
-              :key="aviso.nome"
-              class="text--primary text-justify"
-            >{{aviso.nome}}</v-card-text>
+            <v-card-text v-for="aviso in avisos" :key="aviso.nome" class="text--primary text-justify">{{
+              aviso.nome
+            }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -111,8 +103,9 @@
                 <v-list-item-content>
                   <v-list-item-title>
                     <router-link
-                      :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId , numero:capitulo.numero}  }"
-                    >{{capitulo.numero}} - {{capitulo.nome}}</router-link>
+                      :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }"
+                      >{{ capitulo.numero }} - {{ capitulo.nome }}</router-link
+                    >
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -120,8 +113,8 @@
           </v-card>
         </v-col>
       </v-row>
-    </v-content>
-  </v-container>
+    </v-container>
+  </v-card>
 </template>
 
 <script>

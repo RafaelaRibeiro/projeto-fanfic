@@ -5,9 +5,7 @@
       <v-row>
         <v-col>
           <h1 class="display-1 font-weight-light mb-4">
-            <i>
-              <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas
-            </i>
+            <i> <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas </i>
           </h1>
         </v-col>
       </v-row>
@@ -16,7 +14,7 @@
         <v-col cols="9">
           <v-card flat color="purple darken-4" dark>
             <v-card-title>
-              <i v-for="(item, index) in filteredItems" :key="index">{{item.text}}</i>
+              <i v-for="(item, index) in filteredItems" :key="index">{{ item.text }}</i>
             </v-card-title>
           </v-card>
         </v-col>
@@ -40,7 +38,7 @@
             <v-col>
               <v-card outlined>
                 <md-list>
-                  <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">{{ s.text}}</md-list-item>
+                  <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">{{ s.text }}</md-list-item>
                 </md-list>
                 <!-- <v-list>
                   <v-list-item-group>
@@ -54,16 +52,6 @@
               </v-card>
             </v-col>
           </v-row>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="9">
-          <v-pagination
-            color="purple darken-4"
-            v-model="page"
-            :total-visible="7"
-            :length="totalPage"
-          ></v-pagination>
         </v-col>
       </v-row>
     </v-container>
@@ -98,14 +86,14 @@ export default {
     filteredItems() {
       const id = this.search
 
-      const buscar = this.status.filter(e => {
+      const buscar = this.status.filter((e) => {
         return e.id === id
       })
       return buscar
     },
 
     filtershelves() {
-      const a = this.obras.filter(e => {
+      const a = this.obras.filter((e) => {
         return e.terminada === this.search
       })
       return a
@@ -116,23 +104,13 @@ export default {
 
   methods: {
     getObrasPublicas() {
-      const url = ` ${baseApiUrl}/teste1/obraspublicas?page=${this.page}`
-      axios(url).then(res => {
-        this.obras = res.data.data
-        this.count = res.data.count
-        this.limit = res.data.limit
-        this.totalPage = res.data.totalPage
+      const url = ` ${baseApiUrl}/teste1/obraspublicas`
+      axios(url).then((res) => {
+        this.obras = res.data
       })
     },
   },
-  watch: {
-    obras() {
-      this.getObrasPublicas()
-    },
-    page() {
-      this.getObrasPublicas()
-    },
-  },
+
   mounted() {
     this.getObrasPublicas()
   },

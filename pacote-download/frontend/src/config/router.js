@@ -64,7 +64,7 @@ const routes = [
 
   {
     name: 'EditarObra',
-    path: '/mesa/:obraId/editarobra',
+    path: '/mesa/:id/editarobra',
     component: EditarObra,
   },
 
@@ -76,7 +76,7 @@ const routes = [
 
   {
     name: 'adicionarCapitulo',
-    path: '/mesa/:obraId/adicionarCapitulo',
+    path: '/mesa/:id/adicionarCapitulo',
     component: AdicionarCapitulo,
   },
 

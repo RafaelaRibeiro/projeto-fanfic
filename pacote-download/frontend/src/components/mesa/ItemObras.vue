@@ -5,7 +5,7 @@
         <v-col cols="2">
           <v-card flat class="ma-2">
             <v-avatar size="100" tile class="d-none d-sm-block">
-              <v-img v-if="item.capa " :src="item.capa"></v-img>
+              <v-img v-if="item.capa" :src="item.capa"></v-img>
               <v-img
                 v-else
                 src=" https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
@@ -15,14 +15,14 @@
         </v-col>
         <v-col cols="8">
           <v-card class="d-flex flex-column" flat>
-            <span class="mb-2 subtitle-2 font-weight-medium">{{item.nome}}</span>
+            <span class="mb-2 subtitle-2 font-weight-medium">{{ item.nome }}</span>
             <span>
               <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
-              {{item.countCap}}
+              {{ item.countCap }}
             </span>
             <span>
               <span class="subtitle-2 font-weight-medium">Adicionado em:</span>
-              {{item.dataAdicionado}}
+              {{ item.dataAdicionado }}
             </span>
 
             <v-card flat class="d-flex">
@@ -45,18 +45,24 @@
                 <v-icon>mdi-menu</v-icon>
               </v-btn>
             </template>
+
             <md-list class="md-dense">
-              <md-list-item :to="{ name: 'adicionarCapitulo', params: { obraId: item.obraId } }">
+              <md-list-item>
+                <v-icon small left>mdi-view-list</v-icon>
+                <span class="md-list-item-text">Lista de Capitulos</span>
+              </md-list-item>
+              <md-list-item :to="{ name: 'adicionarCapitulo', params: { id: item.id } }">
                 <v-icon small left>mdi-plus-thick</v-icon>
                 <span class="md-list-item-text">Adicionar Capítulos</span>
               </md-list-item>
 
-              <md-list-item :to="{ name: 'EditarObra', params: {obraId: item.obraId } }">
+              <md-list-item :to="{ name: 'EditarObra', params: { id: item.id } }">
                 <v-icon small left>mdi-file-edit</v-icon>
+
                 <span class="md-list-item-text">Editar Obra</span>
               </md-list-item>
 
-              <md-list-item @click="active=true">
+              <md-list-item @click="active = true">
                 <v-icon small left>mdi-delete</v-icon>
                 <span class="md-list-item-text">Deletar Obra</span>
               </md-list-item>

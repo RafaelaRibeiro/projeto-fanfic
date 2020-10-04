@@ -3,9 +3,7 @@
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
-          <i>
-            <v-icon x-large class="pa-3">mdi-notebook</v-icon>Editar Obra
-          </i>
+          <i> <v-icon x-large class="pa-3">mdi-notebook</v-icon>Editar Obra </i>
         </h1>
       </v-col>
     </v-row>
@@ -171,7 +169,7 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="aviso in avisos.slice(4, 8 )"
+              v-for="aviso in avisos.slice(4, 8)"
               :key="aviso.id"
               v-model="obra.avisosId"
               dense
@@ -190,14 +188,13 @@
               :label="aviso.nome"
               :value="aviso.id"
             ></v-checkbox>
-           
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="12" class="text-center">
             <v-btn dark class="ma-3" color="green darken-4" @click="salvarObra">Salvar</v-btn>
-            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>                      
+            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -211,7 +208,7 @@ import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import moment from 'moment'
 export default {
-  name: 'EditarObra', 
+  name: 'EditarObra',
   data() {
     return {
       selectedCateg: [],
@@ -259,8 +256,8 @@ export default {
   methods: {
     // /:autor/mesa/adicionarobra
     getObras() {
-      const url = ` ${baseApiUrl}/teste1/mesa/${this.$route.params.obraId}/`
-      axios.get(url).then(res => {
+      const url = ` ${baseApiUrl}/mesa/${this.$route.params.id}/`
+      axios.get(url).then((res) => {
         this.obra = res.data
         this.obra.avisosId = this.obra.avisosId.split(',')
         this.obra.avisosId = this.obra.avisosId.map(Number)
@@ -306,34 +303,34 @@ export default {
         .catch(showError)
     },
 
-     getCategorias() {
+    getCategorias() {
       const url = ` ${baseApiUrl}/categorias`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.categorias = res.data
       })
     },
     getUniversos() {
       const url = ` ${baseApiUrl}/universos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.universos = res.data.concat(this.universos)
       })
     },
     getShipps() {
       const url = ` ${baseApiUrl}/shipp`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.shipps = res.data
       })
     },
 
     getCaracteristicas() {
       const url = ` ${baseApiUrl}/caracteristicas`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.caracteristicas = res.data
       })
     },
     getAvisos() {
       const url = ` ${baseApiUrl}/avisos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.avisos = res.data
       })
     },
@@ -341,7 +338,7 @@ export default {
 
   computed: {
     list() {
-      const a = this.universos.filter(e => {
+      const a = this.universos.filter((e) => {
         return e.categoriaId == this.obra.categoriaId
       })
       return a
@@ -352,7 +349,7 @@ export default {
     },
 
     shippLista() {
-      const a = this.shipps.filter(e => this.obra.fandonsId.includes(e.fandonsId))
+      const a = this.shipps.filter((e) => this.obra.fandonsId.includes(e.fandonsId))
       return a
     },
 

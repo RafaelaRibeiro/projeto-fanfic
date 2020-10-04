@@ -67,38 +67,15 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
   const limit = 10; // usado para paginação
-  const getObrasPublicas = async (req, res) => {
-    const page = req.query.page || 1;
 
-    const result = await app
-      .db("obras")
-      .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .count("obras.id", { as: "count" })
-      .where({
-        "usuarios.user": req.params.user,
-        "obras.publica": true,
-      })
-      .first();
-    const count = parseInt(result.count);
-    const totalPage = Math.ceil(count / limit);
+  const getObrasPublicas = (req, res) => {
     app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .leftJoin("capitulos", "obras.id", "capitulos.obraId")
-      .leftJoin("imagemObras", "obras.id", "imagemObras.obraId")
-      .select(
-        app.db.raw(
-          "obras.id as obraId,obras.nome,obras.publica,obras.categoriaId,obras.fandonsId,obras.shippPrincipal,obras.shippSecundario, obras.classificacao,   obras.terminada, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s')as dataAdicionado, imagemObras.key"
-        )
-      )
-      .count("capitulos.id", { as: "countCap" })
-      .where({ user: req.params.user, "obras.publica": true })
-      .limit(limit)
-      .offset(page * limit - limit)
-      .groupBy("obras.id")
+      .select("obras.*")
+      .where({ user: req.params.user, publica: true })
       .orderBy("obras.id", "desc")
-      // .having('countCap', '>',0)
-      .then((obras) => res.json({ data: obras, count, limit, totalPage }))
+      .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };
 
@@ -213,11 +190,11 @@ module.exports = (app) => {
 
     if (getImage) {
       await s3
-      .deleteObject({
-        Bucket: "upload.fanbase",
-        Key: getImage.key,
-      })
-      .promise();
+        .deleteObject({
+          Bucket: "upload.fanbase",
+          Key: getImage.key,
+        })
+        .promise();
       app
         .db("imagemObra")
         .update({
@@ -231,16 +208,16 @@ module.exports = (app) => {
         .catch((err) => res.status(500).send(err));
     } else {
       app
-      .db("imagemObra")
-      .insert({
-        name: req.file.originalname,
-        size: req.file.size,
-        path: req.file.location,
-        key: req.file.key,
-        usuarioId: req.params.usuarioId,
-      })
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
+        .db("imagemObra")
+        .insert({
+          name: req.file.originalname,
+          size: req.file.size,
+          path: req.file.location,
+          key: req.file.key,
+          usuarioId: req.params.usuarioId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
     }
   };
 
