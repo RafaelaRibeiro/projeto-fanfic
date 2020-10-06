@@ -12,6 +12,7 @@
                 }}</router-link>
               </i>
             </h1>
+         
           </v-card>
         </v-col>
       </v-row>
@@ -52,7 +53,9 @@
           <v-col cols="12" sm="10">
             <v-row no-gutters>
               <v-col cols="12" sm="6">
-                <v-btn dark color="purple darken-4"> <v-icon left>smi-check-bold</v-icon>MARCAR COMO LIDO </v-btn>
+                <v-btn dark color="purple darken-4" @click="checkRead">
+                  <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
+                </v-btn>
               </v-col>
 
               <v-col cols="12" sm="6" class="d-flex justify-end">
@@ -215,6 +218,7 @@ export default {
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
       ultimo: {},
       estante: {},
+    
     }
   },
 
@@ -238,7 +242,7 @@ export default {
     },
 
     saveEstante() {
-      const url = ` ${baseApiUrl}/teste2/estante`
+      const url = ` ${baseApiUrl}/teste1/estante`
       axios
         .post(url, {
           usuarioId: this.usuario.id,
@@ -256,6 +260,7 @@ export default {
       const url = `${baseApiUrl}/teste1/estante/${this.$route.params.obraId} `
       axios.get(url).then((res) => {
         this.estante = res.data
+        this.estanteId = this.estante.id
       })
     },
 
@@ -284,6 +289,19 @@ export default {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/avisos`
       axios.get(url).then((res) => (this.avisos = res.data))
     },
+
+    checkRead() {
+      const url = `${baseApiUrl}/estante/${this.estante.id}`
+
+      axios
+        .put(url, {
+          ultimoCapituloId: this.capitulo.id,
+        })
+        .then(() => {
+          this.$toast.success('Capítulo Marcado como Lido')
+        })
+        .catch(showError)
+    },
   },
 
   watch: {
@@ -298,6 +316,7 @@ export default {
       this.getCapitulo()
       this.loadComentarios()
       this.getAvisos()
+      this.getEstante()
     },
   },
 

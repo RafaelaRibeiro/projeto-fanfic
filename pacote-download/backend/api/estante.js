@@ -27,17 +27,7 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send());
   };
 
-  const updateEstante = (req, res) => {
-    const shelf = { ...req.body };
-    if (req.params.id) shelf.id = req.params.id;
-    app
-      .db("estante")
-      .update(shelf)
-      .where({ id: shelf.id })
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
-  };
-
+  
   const get = (req, res) => {
     app
       .db("estante")
@@ -70,6 +60,7 @@ module.exports = (app) => {
       .select("estante.*")
       .where({ "usuarios.user": req.params.user, obraId: req.params.obraId })
       .andWhere("estante.prateleiraId", "<>", 3)
+      .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
   };
@@ -87,6 +78,36 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const updateEstante = async (req, res) => {
+    const shelf = { ...req.body };
+    if (req.params.id) shelf.id = req.params.id;
+
+    const estante = await app
+    .db("estante")
+    .select("id", "prateleiraId")
+    .where({ id: req.params.id })
+    .first();
+
+    if (estante.prateleiraId === 2) {
+      app
+        .db("estante")
+        .update({
+          prateleiraId: 1,
+          ultimoCapituloId: req.body.ultimoCapituloId,
+        })
+        .where({ id: shelf.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("estante")
+        .update({ ultimoCapituloId: req.body.ultimoCapituloId })
+        .where({ id: shelf.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    }
+  };
+
   return {
     get,
     getById,
@@ -94,5 +115,6 @@ module.exports = (app) => {
     getEstanteByObraId,
     getuniversosByEstante,
     updateEstante,
+   
   };
 };

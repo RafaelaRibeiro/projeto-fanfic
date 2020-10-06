@@ -33,7 +33,7 @@ module.exports = (app) => {
     app.api.usuario.uploadBanner
   );
 
-  //Estante
+   //**************************************Estante*****************************************************
   app.route("/:user/estante").get(app.api.estante.get);
   app
     .route("/:user/estante/prateleira/:prateleiraId")
@@ -43,6 +43,7 @@ module.exports = (app) => {
   app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
   app.route("/estante/:id").put(app.api.estante.updateEstante);
+  
 
   //Obras
 
