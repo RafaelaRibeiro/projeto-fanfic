@@ -64,7 +64,7 @@
                 <v-card flat outlined color="#EEEEEE">
                   <v-card-text class="text--primary text-justify">
                     <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
-                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }}
+                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }} 
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -196,7 +196,8 @@
 
 <script>
 import moment from 'moment'
-import { mapState } from 'vuex'
+
+
 import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 // import hljs from 'highlight.js'
@@ -204,7 +205,7 @@ import axios from 'axios'
 export default {
   name: 'CapituloById',
   computed: {
-    ...mapState(['usuario']),
+  
 
     testeStatus() {
       let status = ''
@@ -238,6 +239,7 @@ export default {
       ultimo: {},
       estante: {},
       lido: false,
+    
     }
   },
 
@@ -261,7 +263,7 @@ export default {
     },
 
     saveEstante() {
-      const url = ` ${baseApiUrl}/teste1/estante`
+      const url = ` ${baseApiUrl}/${this.$store.state.user}/estante`
       axios
         .post(url, {
           usuarioId: this.usuario.id,
@@ -278,7 +280,8 @@ export default {
     },
 
     getEstante() {
-      const url = `${baseApiUrl}/teste1/estante/${this.$route.params.obraId} `
+     
+      const url = `${baseApiUrl}/${this.$store.state.user}/estante/${this.$route.params.obraId} `
       axios.get(url).then((res) => {
         this.estante = res.data
       })
@@ -330,22 +333,18 @@ export default {
       this.loadComentarios()
     },
 
-    estante() {
-      this.getEstante()
-    },
-
     $route(to) {
       this.capitulo.obraId = to.params.obraId
       this.capitulo.numero = to.params.numero
+    
       this.page = 1
       this.getCapitulo()
       this.loadComentarios()
       this.getAvisos()
-      this.getEstante()
     },
   },
 
-  mounted() {
+  mounted () {
     this.capitulo.obraId = this.$route.params.obraId
     this.capitulo.numero = this.$route.params.numero
     this.getCapitulo()

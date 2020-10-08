@@ -63,7 +63,7 @@ export default {
   methods: {
     changePassword() {
       axios
-        .put(`${baseApiUrl}/usuario/1/changepassword/`, {
+        .put(`${baseApiUrl}/usuario/${this.$store.state.id}/changepassword/`, {
           password: this.usuario.password,
           newPassword: this.usuario.newPassword,
           confirmarPassword: this.usuario.confirmarPassword,

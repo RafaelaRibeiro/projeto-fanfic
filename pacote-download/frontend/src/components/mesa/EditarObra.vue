@@ -357,6 +357,7 @@ export default {
   },
 
   mounted() {
+    this.user.user = 'ADM'
     this.getObras()
     this.getCategorias()
     this.getUniversos()

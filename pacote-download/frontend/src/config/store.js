@@ -7,7 +7,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isMenuVisible: false,
-    usuario: [],
+    usuario:{
+      user: 'adm'
+    },
     obra: [],
     drawer: false,
     expandir: false,
@@ -60,6 +62,9 @@ export default new Vuex.Store({
     },
 
     usuario(state) {
+      return state.usuario
+    },
+    getUsuario(state) {
       return state.usuario
     },
   },

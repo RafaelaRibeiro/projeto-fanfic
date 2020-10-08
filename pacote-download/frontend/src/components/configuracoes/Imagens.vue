@@ -4,6 +4,7 @@
     <v-row class="ml-2 mb-0">
       <v-col cols="12" md="5">
         <v-card-title>Perfil</v-card-title>
+        {{ user}}
         <v-row class="altura">
           <v-col>
             <v-avatar v-if="usuario.imagePerfil" size="160" tile class="mb-3">
@@ -75,6 +76,7 @@ export default {
       imagemPerfil: [],
       imagemBanner: [],
       url: baseApiUrl,
+      user:''
     }
   },
 
@@ -98,18 +100,8 @@ export default {
       var fd = new FormData()
       fd.append('file', this.imagemPerfil)
 
-      // const options = {
-      //   onUploadProgress: (progressEvent) => {
-
-      //   let percent = parseInt(Math.round(progressEvent.loaded/progressEvent.total*100))
-
-      //   // eslint-disable-next-line no-console
-      //   console.log( `${progressEvent.loaded}kb of ${progressEvent.total}kb | ${percent}%` );
-
-      //   }
-      // }
       axios
-        .post(`${baseApiUrl}/perfil/1/upload`, fd)
+        .post(`${baseApiUrl}/perfil/${this.$store.state.id}/upload`, fd)
         .then((res) => {
           // eslint-disable-next-line no-console
           console.log(res)
@@ -121,13 +113,18 @@ export default {
       var fd = new FormData()
       fd.append('file', this.imagemBanner)
       axios
-        .post(`${baseApiUrl}/banner/1/upload`, fd)
+        .post(`${baseApiUrl}/banner/${this.$store.state.id}/upload`, fd)
         .then(() => {
           this.$toasted.global.defaultSuccess()
         })
         .catch(showError)
     },
   },
+
+  mounted() {
+    this.user = this.$store.getters.user
+    
+  }
 }
 </script>
 
