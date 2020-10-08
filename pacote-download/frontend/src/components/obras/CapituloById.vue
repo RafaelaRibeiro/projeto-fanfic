@@ -12,7 +12,6 @@
                 }}</router-link>
               </i>
             </h1>
-         
           </v-card>
         </v-col>
       </v-row>
@@ -52,16 +51,22 @@
         <v-row justify="center">
           <v-col cols="12" sm="10">
             <v-row no-gutters>
-              <v-col cols="12" sm="6">
-                <v-btn dark color="purple darken-4" @click="checkRead">
+              <v-col v-show="lido" cols="12" sm="6">
+                <v-btn v-show="estante" dark color="purple darken-4" @click="checkRead">
                   <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
                 </v-btn>
-              </v-col>
 
-              <v-col cols="12" sm="6" class="d-flex justify-end">
-                <v-btn color="purple darken-4" dark @click="saveEstante">
+                <v-btn v-show="!estante" color="purple darken-4" dark @click="saveEstante">
                   <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
                 </v-btn>
+              </v-col>
+              <v-col v-show="testeStatus != null" cols="12" sm="6">
+                <v-card flat outlined color="#EEEEEE">
+                  <v-card-text class="text--primary text-justify">
+                    <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
+                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }}
+                  </v-card-text>
+                </v-card>
               </v-col>
             </v-row>
           </v-col>
@@ -200,6 +205,20 @@ export default {
   name: 'CapituloById',
   computed: {
     ...mapState(['usuario']),
+
+    testeStatus() {
+      let status = ''
+      if (this.estante.ultimoCapituloId === this.capitulo.id) {
+        status = 'Este foi o último capítulo lido'
+      } else {
+        if (this.estante.ultimoCapituloId > this.capitulo.id) {
+          status = `Você leu até o capítulo ${this.estante.ultimoCapituloId} dessa obra`
+        } else {
+          status = null
+        }
+      }
+      return status
+    },
   },
   data() {
     return {
@@ -218,7 +237,7 @@ export default {
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
       ultimo: {},
       estante: {},
-    
+      lido: false,
     }
   },
 
@@ -251,7 +270,9 @@ export default {
           prateleiraId: 2,
         })
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this
+          this.getEstante()
+          this.$toast.success('Obra adicionada à sua estante')
         })
         .catch(showError)
     },
@@ -260,7 +281,6 @@ export default {
       const url = `${baseApiUrl}/teste1/estante/${this.$route.params.obraId} `
       axios.get(url).then((res) => {
         this.estante = res.data
-        this.estanteId = this.estante.id
       })
     },
 
@@ -298,6 +318,7 @@ export default {
           ultimoCapituloId: this.capitulo.id,
         })
         .then(() => {
+          this.lido = true
           this.$toast.success('Capítulo Marcado como Lido')
         })
         .catch(showError)
@@ -307,6 +328,10 @@ export default {
   watch: {
     page() {
       this.loadComentarios()
+    },
+
+    estante() {
+      this.getEstante()
     },
 
     $route(to) {
