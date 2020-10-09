@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="getUsuario">
     <h1 class="display-1 font-weight-light mb-4">
       <i>
         <v-icon x-large class="pa-3">mdi-cog</v-icon>Configurações
@@ -18,21 +18,21 @@
       </v-tab>
     </v-tabs>
 
-    <v-tabs-items v-model="tab">
+    <v-tabs-items  v-model="tab">
       <v-tab-item :transition="false" :reverse-transition="false">
-        <div v-for="usuario in usuarios" :key="usuario.id">
-          <PerfilEditar :usuario="usuario"></PerfilEditar>
-        </div>
+       
+          <PerfilEditar :usuario="usuarios"></PerfilEditar>
+        
       </v-tab-item>
       <v-tab-item :transition="false" :reverse-transition="false">
-        <div v-for="usuario in usuarios" :key="usuario.id">
-          <Imagens :usuario="usuario"></Imagens>
-        </div>
+       
+          <Imagens :usuario="usuarios"></Imagens>
+       
       </v-tab-item>
        <v-tab-item :transition="false" :reverse-transition="false">
-        <div v-for="usuario in usuarios" :key="usuario.id">
-         <Senha :usuario="usuario"/>
-        </div>
+      
+         <Senha :usuario="usuarios"/>
+       
       </v-tab-item>
     </v-tabs-items>
    
@@ -43,7 +43,7 @@
 import PerfilEditar from './PerfilEditar'
 import Imagens from './Imagens'
 import Senha from './Senha'
-
+import {mapGetters} from 'vuex'
 import { baseApiUrl } from '@/global'
 
 import axios from 'axios'
@@ -66,10 +66,13 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapGetters(['getUsuario'])
+  } ,
 
   methods: {
     getUsuarios() {
-      const url = `${baseApiUrl}/usuario/1`
+      const url = `${baseApiUrl}/usuario/${this.getUsuario.id}`
       axios(url).then(res => {
         this.usuarios = res.data
       })

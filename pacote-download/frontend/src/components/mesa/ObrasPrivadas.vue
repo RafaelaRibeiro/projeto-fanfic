@@ -36,7 +36,7 @@ export default {
 
   methods: {
     getObrasPrivadas() {
-      const url = ` ${baseApiUrl}/${this.$store.state.user}/mesa/obrasprivadas`;
+      const url = ` ${baseApiUrl}/${this.$store.state.usuario.user}/mesa/obrasprivadas`;
       axios(url).then(res => {
         this.obras = this.obras.concat(res.data);
       });

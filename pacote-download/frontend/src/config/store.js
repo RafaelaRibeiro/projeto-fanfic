@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     isMenuVisible: false,
     usuario:{
-      user: 'adm'
+     
     },
     obra: [],
     drawer: false,

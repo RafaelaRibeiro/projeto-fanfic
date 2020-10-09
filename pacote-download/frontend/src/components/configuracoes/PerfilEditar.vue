@@ -20,7 +20,9 @@
             color="purple darken-4"
             outlined
           ></v-text-field>
+         
         </v-col>
+     
       </v-row>
       <v-card-title>Sobre Mim</v-card-title>
       <v-row>
@@ -97,8 +99,10 @@
 </template>
 
 <script>
-import { baseApiUrl, showError } from '@/global'
+import { baseApiUrl, showError,  } from '@/global'
 import axios from 'axios'
+import {mapGetters} from 'vuex'
+import moment from 'moment'
 export default {
   name: 'PerfilEditar',
   props: ['usuario'],
@@ -110,19 +114,49 @@ export default {
       mask: '##/##/####',
     }
   },
+  computed: {
+    ...mapGetters(['getUsuario'])
+  },
 
   methods: {
     updatePerfil() {
       axios
-        .put(`${baseApiUrl}/usuario/1`, this.usuario)
+        .put(`${baseApiUrl}/usuario/${this.getUsuario.id}`, {
+          nome:this.usuario.nome,
+          user:this.usuario.user,
+          sobreMim:this.usuario.sobreMim,
+          facebook:this.usuario.facebook,
+          twitter:this.usuario.twitter,
+          instagram:this.usuario.instagram,
+          pinterest:this.usuario.pinterest,
+          tumblr:this.usuario.tumblr,
+          dataNasc:moment(this.usuario.dataNasc).format('YYYY-MM-DD')
+
+        })
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this.$store.commit('setUser', {
+          nome:this.usuario.nome,
+          user:this.usuario.user,
+          sobreMim:this.usuario.sobreMim,
+          facebook:this.usuario.facebook,
+          twitter:this.usuario.twitter,
+          instagram:this.usuario.instagram,
+          pinterest:this.usuario.pinterest,
+          tumblr:this.usuario.tumblr,
+          dataNasc:moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
+            token: this.getUsuario.token,
+          exp: this.getUsuario.exp,
+          iap: this.getUsuario.iap
+
+          })
+      
+          this.$toast.success('Dados do perfil atualizados')
         })
         .catch(showError)
     },
 
     getUsuarios() {
-      const url = `${baseApiUrl}/usuario/1`
+      const url = `${baseApiUrl}/usuario/${this.getUsuario.id}`
       axios.get(url).then((res) => {
         this.usuario = res.data
       })

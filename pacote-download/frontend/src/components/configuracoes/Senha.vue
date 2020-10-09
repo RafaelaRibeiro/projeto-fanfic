@@ -63,18 +63,20 @@ export default {
   methods: {
     changePassword() {
       axios
-        .put(`${baseApiUrl}/usuario/${this.$store.state.id}/changepassword/`, {
+        .put(`${baseApiUrl}/usuario/${this.$store.state.usuario.id}/changepassword/`, {
           password: this.usuario.password,
           newPassword: this.usuario.newPassword,
           confirmarPassword: this.usuario.confirmarPassword,
         })
         .then(() => {
+          this.usuario.password = ''
+          this.usuario.newPassword = ''
+          this.usuario.confirmarPassword = ''
           this.$toast.success('Senha Alterada com Sucesso')
+          
         })
         .catch(showError)
 
-      // eslint-disable-next-line no-console
-      console.log(this.usuario)
     },
   },
 }

@@ -73,11 +73,12 @@ module.exports = (app) => {
       .leftJoin("imagensBanner", "usuarios.id", "=", "imagensBanner.usuarioId")
       .select(
         app.db.raw(
-          "usuarios.id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner, date_format(dataNasc, '%d/%m/%Y')"
+          "usuarios.id,nome,email,user,perfil,autor,sobreMim,facebook,twitter,instagram,pinterest, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner, date_format(dataNasc, '%d/%m/%Y') as dataNasc"
         )
       )
 
       .where({ "usuarios.id": req.params.id })
+      .first()
 
       .then((usuario) => res.json(usuario))
       .catch((err) => res.status(500).send(err));
