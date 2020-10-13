@@ -187,7 +187,7 @@ export default {
     logout() {
       localStorage.removeItem(userKey)
       this.$store.commit('setUser', null)
-      this.$router.push({ name: 'auth' })
+      this.$router.push({ name: 'login' })
     },
     fechar() {
       this.mini = !this.mini

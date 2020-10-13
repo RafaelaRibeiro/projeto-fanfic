@@ -40,15 +40,7 @@
       </v-card>
     </v-dialog>
   </v-content>
-  <router-view
-    id="imagem-login"
-    :style="{
-      backgroundImage: 'url(' + require('@/assets/login_new.jpg') + ')',
-      backgroundSize: 'cover',
-      backgroundPosition: 'right',
-    }"
-    v-else
-  ></router-view>
+  <router-view v-else></router-view>
 </template>
 
 <script>

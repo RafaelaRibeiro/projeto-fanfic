@@ -13,6 +13,7 @@ import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Auth from '@/components/auth/Auth'
+
 import Configuracoes from '../components/configuracoes/Configuracoes'
 import CadastroDados from '../components/baseDados/CadastroDados'
 
@@ -20,8 +21,8 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    name: 'auth',
-    path: '/auth',
+    name: 'login',
+    path: '/login',
     component: Auth,
   },
 

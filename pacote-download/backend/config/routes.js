@@ -21,7 +21,9 @@ module.exports = (app) => {
 
   app.route("/usuario/:id").get(app.api.usuario.getById);
   app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
-  app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword)
+  app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword);
+  app.route("/usuario/:id/forgotPassword").put(app.api.auth.forgotPassword);
+  app.route("/usuario/:id/resetPassword").put(app.api.auth.resetPassword);
   app.post(
     "/perfil/:usuarioId/upload",
     multer(multerConfig).single("file"),
@@ -33,7 +35,7 @@ module.exports = (app) => {
     app.api.usuario.uploadBanner
   );
 
-   //**************************************Estante*****************************************************
+  //**************************************Estante*****************************************************
   app.route("/:user/estante").get(app.api.estante.get);
   app
     .route("/:user/estante/prateleira/:prateleiraId")
@@ -43,7 +45,6 @@ module.exports = (app) => {
   app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
   app.route("/estante/:id").put(app.api.estante.updateEstante);
-  
 
   //Obras
 

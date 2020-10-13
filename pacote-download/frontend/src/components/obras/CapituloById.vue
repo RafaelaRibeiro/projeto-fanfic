@@ -64,7 +64,7 @@
                 <v-card flat outlined color="#EEEEEE">
                   <v-card-text class="text--primary text-justify">
                     <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
-                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }} 
+                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }}
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -197,7 +197,6 @@
 <script>
 import moment from 'moment'
 
-
 import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 // import hljs from 'highlight.js'
@@ -205,8 +204,6 @@ import axios from 'axios'
 export default {
   name: 'CapituloById',
   computed: {
-  
-
     testeStatus() {
       let status = ''
       if (this.estante.ultimoCapituloId === this.capitulo.id) {
@@ -239,7 +236,6 @@ export default {
       ultimo: {},
       estante: {},
       lido: false,
-    
     }
   },
 
@@ -255,7 +251,7 @@ export default {
           dataComentario: this.now,
         })
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this.$toast.success('Seu comentário foi salvo')
           this.comentario = null
           this.loadComentarios()
         })
@@ -280,7 +276,6 @@ export default {
     },
 
     getEstante() {
-     
       const url = `${baseApiUrl}/${this.$store.state.user}/estante/${this.$route.params.obraId} `
       axios.get(url).then((res) => {
         this.estante = res.data
@@ -336,7 +331,7 @@ export default {
     $route(to) {
       this.capitulo.obraId = to.params.obraId
       this.capitulo.numero = to.params.numero
-    
+
       this.page = 1
       this.getCapitulo()
       this.loadComentarios()
@@ -344,7 +339,7 @@ export default {
     },
   },
 
-  mounted () {
+  mounted() {
     this.capitulo.obraId = this.$route.params.obraId
     this.capitulo.numero = this.$route.params.numero
     this.getCapitulo()

@@ -1,8 +1,15 @@
 const { authSecret } = require("../e/.env");
 const jwt = require("jwt-simple");
 const bcrypt = require("bcrypt-nodejs");
+const crypto = require("crypto");
+const mailer = require("../config/nodemailer");
 
 module.exports = (app) => {
+  const encryptPassword = (password) => {
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(password, salt);
+  };
+
   const signin = async (req, res) => {
     if (!req.body.email || !req.body.password) {
       return res.status(400).send("Informe usuário e senha!");
@@ -64,5 +71,68 @@ module.exports = (app) => {
     res.send(false);
   };
 
-  return { signin, validateToken };
+  const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+      const usuario = await app
+        .db("usuarios")
+        .where({ email: req.body.email })
+        .first();
+
+      if (!usuario) return res.status(400).send("Usuário não encontrado!");
+
+      const token = crypto.randomBytes(20).toString("hex");
+      const now = new Date();
+      now.setHours(now.getHours() + 1);
+
+      await app
+        .db("usuarios")
+        .update({ passwordResetToken: token, passwordResetExpires: now })
+        .where({ id: usuario.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+
+      mailer.sendMail({
+        to: email,
+        from: "rapha11br@gmail.com",
+        template: "auth/forgotPassword",
+        context: { token },
+      });
+    } catch (err) {
+      res
+        .status(400)
+        .send({ error: "Erro ao recuperar a senha, tente de novo" });
+    }
+  };
+
+  const resetPassword = async (req, res) => {
+    const { email, token, password } = req.body;
+
+    const usuario = await app.db("usuarios").where({ email: email }).first();
+
+    try {
+      if (!usuario) return res.status(400).send("Usuário não encontrado!");
+
+      if (token !== usuario.passwordResetToken)
+        return res.status(400).send("Token Inválido");
+
+      const now = new Date();
+
+      if (now > usuario.passwordResetExpires)
+        return res.status(400).send("Token Expirado");
+    } catch (err) {
+      res.status(400).send({ error: "Erro ao resetar a senha" });
+    }
+
+    usuario.password = encryptPassword(password);
+
+    await app
+      .db("usuarios")
+      .update({ password: usuario.password })
+      .where({ id: usuario.id })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+  };
+  return { signin, validateToken, forgotPassword, resetPassword };
 };

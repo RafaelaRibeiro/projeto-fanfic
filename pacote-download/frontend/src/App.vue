@@ -39,7 +39,7 @@ export default {
 
       if (!userData) {
         this.validatingToken = false
-        this.$router.push({ name: 'auth' })
+        this.$router.push({ name: 'login' })
         return
       }
       const res = await axios.post(`${baseApiUrl}/validateToken`, userData)
@@ -48,7 +48,7 @@ export default {
         this.$store.commit('setUser', userData)
       } else {
         localStorage.removeItem(userKey)
-        this.$router.push({ name: 'auth' })
+        this.$router.push({ name: 'login' })
       }
       this.validatingToken = false
     },
@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style>
-#app{
+#app {
   font-family: 'Poppins';
 }
 </style>

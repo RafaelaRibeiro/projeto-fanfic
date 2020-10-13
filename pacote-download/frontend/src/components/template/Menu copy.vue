@@ -12,7 +12,7 @@
           <v-img :src="usuario.imagemPerfil"></v-img>
         </v-list-item-avatar>
 
-        <v-list-item-title>{{usuario.nome}}</v-list-item-title>
+        <v-list-item-title>{{ usuario.nome }}</v-list-item-title>
         <v-btn icon @click.stop="mini = !mini">
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
@@ -21,11 +21,7 @@
       <v-divider class="ma-0"></v-divider>
       <v-list dense>
         <template v-for="item in items">
-          <router-link
-            :to="{name:item.path, params: {user: usuario.user}}"
-            :key="item.path"
-            outline
-          >
+          <router-link :to="{ name: item.path, params: { user: usuario.user } }" :key="item.path" outline>
             <v-list-group
               v-if="item.children"
               :key="item.text"
@@ -51,12 +47,7 @@
 
             <v-list-item v-else :key="item.text" link>
               <v-list-item-action>
-                <v-badge
-                  :content="item.notificacao"
-                  :value="item.notificacao"
-                  color="error"
-                  overlap
-                >
+                <v-badge :content="item.notificacao" :value="item.notificacao" color="error" overlap>
                   <template slot="badge">{{ item.notificacao }}</template>
                   <v-icon>{{ item.icon }}</v-icon>
                 </v-badge>
@@ -82,19 +73,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { userKey } from "@/global";
+import { mapState } from 'vuex'
+import { userKey } from '@/global'
 
 export default {
-  name: "Menu",
-  computed: mapState(["isMenuVisible", "usuario"]),
+  name: 'Menu',
+  computed: mapState(['isMenuVisible', 'usuario']),
   miniNovo: {
     get() {
-      return this.$store.state.drawer;
+      return this.$store.state.drawer
     },
     set(valor) {
-      this.$store.commit("setDrawer", valor);
-    }
+      this.$store.commit('setDrawer', valor)
+    },
   },
 
   data: () => ({
@@ -105,59 +96,58 @@ export default {
 
     items: [
       {
-        icon: "mdi-account",
-        text: "Meu Perfil",
-        path: "perfil",
+        icon: 'mdi-account',
+        text: 'Meu Perfil',
+        path: 'perfil',
         notificacao: 2,
-        acao: ""
+        acao: '',
       },
       {
-        icon: "mdi-bookshelf",
-        text: "Minha Estante",
-        path: "minhaEstante",
+        icon: 'mdi-bookshelf',
+        text: 'Minha Estante',
+        path: 'minhaEstante',
         notificacao: 0,
-        acao: ""
+        acao: '',
       },
 
       {
-        icon: "mdi-chevron-up",
-        "icon-alt": "mdi-chevron-down",
-        text: "Minha Mesa",
+        icon: 'mdi-chevron-up',
+        'icon-alt': 'mdi-chevron-down',
+        text: 'Minha Mesa',
         notificacao: 0,
-        acao: "",
+        acao: '',
         model: false,
         children: [
           {
-            icon: "mdi-lock-open-variant",
-            text: "Obras Públicas",
-            path: "obrasPublicas"
+            icon: 'mdi-lock-open-variant',
+            text: 'Obras Públicas',
+            path: 'obrasPublicas',
           },
-          { icon: "mdi-lock", text: "Obras Privadas", path: "obrasPrivadas" },
-          { icon: "mdi-plus", text: "Adicionar Obra", path: "obrasPrivadas" },
+          { icon: 'mdi-lock', text: 'Obras Privadas', path: 'obrasPrivadas' },
+          { icon: 'mdi-plus', text: 'Adicionar Obra', path: 'obrasPrivadas' },
           {
-            icon: "mdi-pencil-box-multiple",
-            text: "Minhas Notas",
-            path: "notas"
-          }
-        ]
+            icon: 'mdi-pencil-box-multiple',
+            text: 'Minhas Notas',
+            path: 'notas',
+          },
+        ],
       },
-      { icon: "mdi-comment", text: "Comentários", notificacao: 0, acao: "" },
-      { icon: "mdi-send", text: "Mensagens", notificacao: 0, acao: "" },
-      { icon: "mdi-help-circle", text: "Help", notificacao: 0, acao: "" },
-      { icon: "mdi-cog", text: "Configurações", notificacao: 0, acao: "" }
-    ]
+      { icon: 'mdi-comment', text: 'Comentários', notificacao: 0, acao: '' },
+      { icon: 'mdi-send', text: 'Mensagens', notificacao: 0, acao: '' },
+      { icon: 'mdi-help-circle', text: 'Help', notificacao: 0, acao: '' },
+      { icon: 'mdi-cog', text: 'Configurações', notificacao: 0, acao: '' },
+    ],
   }),
 
   methods: {
     logout() {
-      localStorage.removeItem(userKey);
-      this.$store.commit("setUser", null);
-      this.$router.push({ name: "auth" });
-    }
-  }
-};
+      localStorage.removeItem(userKey)
+      this.$store.commit('setUser', null)
+      this.$router.push({ name: 'login' })
+    },
+  },
+}
 </script>
 
 <style>
-
 </style>

@@ -131,9 +131,9 @@ module.exports = (app) => {
       } catch (msg) {
         return res.status(401).send(msg);
       }
+
       usuario.password = encryptPassword(req.body.newPassword);
       delete usuario.confirmarPassword;
-      console.log(usuario);
 
       await app
         .db("usuarios")
