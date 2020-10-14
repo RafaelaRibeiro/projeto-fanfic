@@ -1,5 +1,5 @@
 <template id="auth">
-  <Login v-if="!cadastro" :usuario="usuario" />
+  <Login v-if="!GetCadastro" :usuario="usuario" />
   <Cadastro v-else :usuario="usuario" />
 </template>
 
@@ -14,6 +14,11 @@ export default {
       usuario: {},
       cadastro: false,
     }
+  },
+  computed: {
+    GetCadastro() {
+      return this.$store.state.cadastro
+    },
   },
 }
 </script>

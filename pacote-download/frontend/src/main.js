@@ -3,6 +3,7 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import store from './config/store'
 import router from './config/router'
+
 import './config/axios'
 import './config/msg'
 import './config/bootstrap'
@@ -15,7 +16,6 @@ import './styles/main.css'
 // import './plugins/quill_editor.js'
 
 Vue.config.productionTip = false
-
 
 new Vue({
   vuetify,

@@ -15,6 +15,7 @@ export default new Vuex.Store({
     expandir: false,
     checkTodos: false,
     intermediario: false,
+    cadastro:false
   },
 
   mutations: {
@@ -33,6 +34,10 @@ export default new Vuex.Store({
 
     setObra(state, obra) {
       state.obra = obra
+    },
+
+    setCadastro(state,payload) {
+      state.cadastro = payload
     },
 
     setUser(state, usuario) {
@@ -54,6 +59,11 @@ export default new Vuex.Store({
     expand(state) {
       return state.expandir
     },
+
+    cadastro(state) {
+      return state.cadastro
+    },
+    
     check(state) {
       return state.checkTodos
     },
