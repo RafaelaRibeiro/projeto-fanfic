@@ -16,4 +16,8 @@ export function showError(e) {
   }
 }
 
-export default { baseApiUrl, showError }
+export function erroAlert(e) {
+       e.response.data
+}
+
+export default { baseApiUrl, showError, erroAlert }

@@ -12,9 +12,7 @@
   >
     <v-col cols="12" sm="5" class="text-center">
       <v-card flat max-width="460px">
-        <div>
-          <p class="headline font-weight-medium pt-3">Entrar</p>
-        </div>
+        <span class="md-headline d-flex justify-center"> Entrar </span>
 
         <v-text-field
           v-model="usuario.email"
@@ -38,7 +36,9 @@
         ></v-text-field>
         <v-row>
           <v-col class="d-flex justify-end">
-            <v-btn color="purple darken-4" class="mb-5 mt-n10" text @click="dialog = true"> Esqueci minha Senha</v-btn>
+            <v-btn color="purple darken-4" class="mb-5 mt-n10 md-headline" text @click="dialog = true">
+              Esqueci minha Senha</v-btn
+            >
           </v-col>
         </v-row>
 
@@ -49,22 +49,20 @@
       </v-card>
 
       <v-dialog v-model="dialog" max-width="450">
-        <v-card max-height="500">
+        <v-card max-height="600">
           <v-row align="center" justify="center" no-gutters>
             <v-avatar class="ma-10" size="90">
               <v-img src="@/assets/lock-reset.png"></v-img>
             </v-avatar>
           </v-row>
 
-            <span class="md-headline d-flex justify-center"> Redefinir senha </span>
-            <br>
-         
+          <span class="md-headline d-flex justify-center"> Redefinir senha </span>
+          <br />
 
-          
-            <span class="md-body-2 d-flex justify ml-5 mr-5">Para redefiir sua senha, informe o e-mail cadastrado e lhe enviaremos um link com maiores instruções </span>
-        
+          <span class="md-body-2 d-flex justify ml-5 mr-5"
+            >Para redefinir sua senha, informe o e-mail cadastrado e lhe enviaremos um link com maiores instruções
+          </span>
 
-         
           <v-text-field
             v-model="email"
             color="purple darken-4"
@@ -72,11 +70,18 @@
             label="E-mail"
             class="mr-4 ml-4 mt-4"
             outlined
+            :rules="[rules.required, rules.email]"
           ></v-text-field>
+
+          <v-alert v-show="error" text prominent type="error" icon="mdi-alert-box" transition="scale-transition">
+            {{ error }}
+          </v-alert>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn block dark color="indigo darken-4" class="mr-3 mb-3" elevation="4">Enviar e-mail</v-btn>
+            <v-btn block dark color="indigo darken-4" class="mr-3 mb-3" @click="forgotPassword" elevation="4"
+              >Enviar e-mail</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -97,6 +102,14 @@ export default {
       cadastro: false,
       dialog: false,
       email: '',
+      error: '',
+      rules: {
+        required: (value) => !!value || 'Digite seu e-mail',
+        email: (value) => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'E-mail Invalido.'
+        },
+      },
     }
   },
 
@@ -110,6 +123,19 @@ export default {
           this.$router.push({ path: `/perfil/${res.data.user}` })
         })
         .catch(showError)
+    },
+    forgotPassword() {
+      axios
+        .put(`${baseApiUrl}/forgotPassword`, {
+          email: this.email,
+        })
+        .then((response) => {
+          this.error = response
+          this.email = ''
+        })
+        .catch((error) => {
+          this.error = error.response.data
+        })
     },
   },
 

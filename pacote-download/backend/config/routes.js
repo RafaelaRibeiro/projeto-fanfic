@@ -22,8 +22,9 @@ module.exports = (app) => {
   app.route("/usuario/:id").get(app.api.usuario.getById);
   app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
   app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword);
-  app.route("/usuario/:id/forgotPassword").put(app.api.auth.forgotPassword);
-  app.route("/usuario/:id/resetPassword").put(app.api.auth.resetPassword);
+  app.route("/forgotPassword").put(app.api.auth.forgotPassword);
+  app.route("/usuario/:token/resetPassword").put(app.api.auth.resetPassword);
+  app.route("/token/:token/").get(app.api.usuario.getUserByToken)
   app.post(
     "/perfil/:usuarioId/upload",
     multer(multerConfig).single("file"),
@@ -74,6 +75,7 @@ module.exports = (app) => {
 
   app
     .route("/perfil/:user")
+    .all(app.config.passport.authenticate())
     .post(app.api.perfil.savePerfil)
     .get(app.api.perfil.getPerfil);
 

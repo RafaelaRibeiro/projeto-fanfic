@@ -5,6 +5,8 @@ const crypto = require("crypto");
 const mailer = require("../config/nodemailer");
 
 module.exports = (app) => {
+  const { existsOrError, notExistsOrError, equalsOrError } = app.api.validacao;
+
   const encryptPassword = (password) => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
@@ -80,6 +82,7 @@ module.exports = (app) => {
         .where({ email: req.body.email })
         .first();
 
+      if (!email) return res.status(400).send("O e-mail deve ser preenchido");
       if (!usuario) return res.status(400).send("Usuário não encontrado!");
 
       const token = crypto.randomBytes(20).toString("hex");
@@ -134,5 +137,8 @@ module.exports = (app) => {
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));
   };
+
+
+
   return { signin, validateToken, forgotPassword, resetPassword };
 };

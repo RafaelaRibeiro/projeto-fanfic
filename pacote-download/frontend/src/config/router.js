@@ -13,13 +13,24 @@ import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Auth from '@/components/auth/Auth'
+import RedefinirSenha from '@/components/auth/RedefinirSenha'
 
 import Configuracoes from '../components/configuracoes/Configuracoes'
 import CadastroDados from '../components/baseDados/CadastroDados'
+import { userKey } from '@/global'
 
 Vue.use(VueRouter)
 
 const routes = [
+
+  {
+    path:'*',
+    redirect: '/perfil/:user',
+    meta: { requiresAuth: true }
+   
+
+  },
+ 
   {
     name: 'login',
     path: '/login',
@@ -30,79 +41,111 @@ const routes = [
     name: 'cadastroDados',
     path: '/basededados',
     component: CadastroDados,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'minhaEstante',
     path: '/minhaestante',
     component: MinhaEstante,
+    meta: { requiresAuth: true }
   },
   {
     name: 'perfil',
     path: '/perfil/:user',
     component: Perfil,
+    meta: { requiresAuth: true }
   },
   {
     name: 'notas',
     path: '/notas/:autor',
     component: Notas,
+    meta: { requiresAuth: true }
   },
   {
     name: 'obrasPrivadas',
     path: '/mesa/obrasprivadas',
     component: ObrasPrivadas,
+    meta: { requiresAuth: true }
   },
   {
     name: 'obrasPublicas',
     path: '/mesa/obraspublicas',
     component: ObrasPublicas,
+    meta: { requiresAuth: true }
   },
   {
     name: 'adicionarObra',
     path: '/mesa/adicionarobra',
     component: AdicionarObra,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'EditarObra',
     path: '/mesa/:id/editarobra',
     component: EditarObra,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'EditarCapitulo',
     path: '/mesa/:obraId/editarcapitulo/:numero',
     component: EditarCapitulo,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'adicionarCapitulo',
     path: '/mesa/:id/adicionarCapitulo',
     component: AdicionarCapitulo,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'CapituloById',
     path: '/obra/:obraId/capitulo/:numero',
     component: CapituloById,
+    meta: { requiresAuth: true }
   },
   {
     name: 'ObraById',
     path: '/obra/:obraId',
     component: ObraById,
+    meta: { requiresAuth: true }
   },
 
   {
     name: 'Configuracoes',
     path: '/configuracoes',
     component: Configuracoes,
+    meta: { requiresAuth: true }
+  },
+
+  {
+    name: 'RedefinirSenha',
+    path: '/redefinirsenha/:token',
+    component: RedefinirSenha,
   },
 ]
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   scrollBehavior() {
     return { x: 0, y: 0 }
   },
   routes,
 })
+
+router.beforeEach((to, from, next) => {
+  const json = localStorage.getItem(userKey)
+
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+      const user = JSON.parse(json)
+      user  ? next() : next({ path: '/login' })
+  } else {
+      next()
+  }
+})
+
+export default router

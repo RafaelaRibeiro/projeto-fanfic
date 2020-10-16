@@ -77,7 +77,7 @@
            
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" class="font-weight-bold" text @click="cadastrar">Continuar</v-btn>
+              <v-btn color="purple darken-4" class="font-weight-bold" text @click="cadastrar">Continuar</v-btn>
               
             </v-card-actions>
           </v-card>

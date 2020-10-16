@@ -25,7 +25,7 @@ const options = {
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,
-  draggable: false,
+  draggable: true,
   draggablePercent: 0.6,
   showCloseButtonOnHover: false,
   hideProgressBar: true,

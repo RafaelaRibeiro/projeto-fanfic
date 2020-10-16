@@ -2,6 +2,7 @@
   <v-app id="app">
     <Header />
     <Menu />
+    <Loading v-if="validatingToken" />
     <Content />
     <Footer />
   </v-app>
@@ -16,11 +17,12 @@ import Menu from './components/template/Menu'
 import Header from './components/template/Header'
 import Content from './components/template/Content'
 import Footer from './components/template/Footer'
+import Loading from "@/components/template/Loading"
 
 export default {
   name: 'App',
 
-  components: { Header, Menu, Footer, Content },
+  components: { Header, Menu, Footer, Content,Loading },
   computed: mapState(['isMenuVisible', 'usuario']),
   data() {
     return {
@@ -39,7 +41,7 @@ export default {
 
       if (!userData) {
         this.validatingToken = false
-        this.$router.push({ name: 'login' }).catch(()=>{})
+        // this.$router.push({ name: 'login' }).catch(()=>{})
         return
       }
       const res = await axios.post(`${baseApiUrl}/validateToken`, userData)

@@ -1,26 +1,26 @@
-const { authSecret } = require("../e/.env");
-const passport = require("passport");
-const passportJwt = require("passport-jwt");
-const { Strategy, ExtractJwt } = passportJwt;
+const { authSecret } = require('../e/.env')
+const passport = require('passport')
+const passportJwt = require('passport-jwt')
+const { Strategy, ExtractJwt } = passportJwt
 
-module.exports = (app) => {
-  const params = {
-    secretOrKey: authSecret,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  };
+module.exports = app => {
 
-  const strategy = new Strategy(params, (payload, done) => {
-    app
-      .db("usuarios")
-      .where({ id: payload.id })
-      .first()
-      .then((usuario) => done(null, usuario ? { ...payload } : false))
-      .catch((err) => done(err, false));
-  });
+    const params = {
+        secretOrKey: authSecret,
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+    }
 
-  passport.use(strategy);
+    const strategy = new Strategy(params, (payload, done) => {
+        app.db('usuarios')
+            .where({ id: payload.id })
+            .first()
+            .then(usuarios => done(null, usuarios ? { ...payload } : false))
+            .catch(err => done(err, false))
+    })
 
-  return {
-    authenticate: () => passport.authenticate("jwt", { session: false }),
-  };
-};
+    passport.use(strategy)
+
+    return {
+        authenticate: () => passport.authenticate('jwt', { session: false })
+    }
+}

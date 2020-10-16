@@ -92,6 +92,16 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const getUserByToken = (req, res) => {
+    app
+      .db("usuarios")
+      .select("nome", "passwordResetExpires")
+      .where({ passwordResetToken: req.params.token })
+      .first()
+      .then((usuario) => res.json(usuario))
+      .catch((err) => res.status(500).send(err));
+  };
+
   //*****************************************UPDATE***************************************************** */
 
   const updateUsuario = (req, res) => {
@@ -236,5 +246,6 @@ module.exports = (app) => {
     uploadPerfil,
     uploadBanner,
     updatePassword,
+    getUserByToken,
   };
 };
