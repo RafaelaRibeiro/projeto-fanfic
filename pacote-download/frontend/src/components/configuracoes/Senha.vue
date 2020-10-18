@@ -8,7 +8,7 @@
           autocomplete="new-password"
           label="Senha Atual"
           type="password"
-          color="purple darken-4"
+          color="deep-purple darken-4"
           outlined
         ></v-text-field>
       </v-col>
@@ -20,7 +20,7 @@
           autocomplete="new-password"
           label="Nova Senha"
           type="password"
-          color="purple darken-4"
+          color="deep-purple darken-4"
           outlined
         ></v-text-field>
         <v-text-field
@@ -28,14 +28,14 @@
           autocomplete="new-password"
           label="Confirmar Senha"
           type="password"
-          color="purple darken-4"
+          color="deep-purple darken-4"
           outlined
         ></v-text-field>
       </v-col>
     </v-row>
     <v-row class="ml-2" justify="end">
       <v-col cols="6" md="4">
-        <v-btn dark class="ma-3" color="purple darken-4" @click="changePassword">
+        <v-btn dark class="ma-3" color="deep-purple darken-4" @click="changePassword">
           <v-icon small left>mdi-floppy</v-icon>Salvar
         </v-btn>
       </v-col>
@@ -73,10 +73,8 @@ export default {
           this.usuario.newPassword = ''
           this.usuario.confirmarPassword = ''
           this.$toast.success('Senha Alterada com Sucesso')
-          
         })
         .catch(showError)
-
     },
   },
 }

@@ -27,7 +27,6 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send());
   };
 
-  
   const get = (req, res) => {
     app
       .db("estante")
@@ -83,10 +82,10 @@ module.exports = (app) => {
     if (req.params.id) shelf.id = req.params.id;
 
     const estante = await app
-    .db("estante")
-    .select("id", "prateleiraId")
-    .where({ id: req.params.id })
-    .first();
+      .db("estante")
+      .select("id", "prateleiraId")
+      .where({ id: req.params.id })
+      .first();
 
     if (estante.prateleiraId === 2) {
       app
@@ -115,6 +114,5 @@ module.exports = (app) => {
     getEstanteByObraId,
     getuniversosByEstante,
     updateEstante,
-   
   };
 };

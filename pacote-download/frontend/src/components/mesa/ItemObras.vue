@@ -29,11 +29,11 @@
               <!-- <b-btn size="sm" variant="light" disabled>|</b-btn> -->
 
               <b-btn size="sm" variant="light" v-b-tooltip.hover title="Comentários">
-                <v-icon color="purple darken-4" small left>mdi-comment-multiple</v-icon>58
+                <v-icon color="deep-purple darken-4" small left>mdi-comment-multiple</v-icon>58
               </b-btn>
 
               <b-btn size="sm" variant="light" v-b-tooltip.hover title="Estantes">
-                <v-icon left color="purple darken-4" small>mdi-bookshelf</v-icon>45
+                <v-icon left color="deep-purple darken-4" small>mdi-bookshelf</v-icon>45
               </b-btn>
             </v-card>
           </v-card>

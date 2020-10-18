@@ -1,10 +1,12 @@
 const { authSecret } = require("../e/.env");
 const jwt = require("jwt-simple");
 const bcrypt = require("bcrypt-nodejs");
+const crypto = require("crypto");
 const { StorageGateway } = require("aws-sdk");
 const aws = require("aws-sdk");
 const s3 = new aws.S3();
 const fs = require("fs");
+const mailer = require("../config/nodemailer");
 
 module.exports = (app) => {
   const { existsOrError, notExistsOrError, equalsOrError } = app.api.validacao;
@@ -25,7 +27,23 @@ module.exports = (app) => {
 
     try {
       existsOrError(usuario.nome, "Nome não informado");
+      existsOrError(usuario.user, "Usuario não informado");
+      const checkUser = await app
+        .db("usuarios")
+        .where({ user: usuario.user })
+        .first();
+      if (!usuario.id) {
+        notExistsOrError(checkUser, "Usuario já está em Uso");
+      }
       existsOrError(usuario.email, "E-mail não informado");
+      const userFromDB = await app
+        .db("usuarios")
+        .where({ email: usuario.email })
+        .first();
+      if (!usuario.id) {
+        notExistsOrError(userFromDB, "Este e-mail já foi cadastrado");
+      }
+
       existsOrError(usuario.password, "Senha não informada");
       existsOrError(usuario.confirmarPassword, "Necessário confirmar a senha");
       equalsOrError(
@@ -33,20 +51,15 @@ module.exports = (app) => {
         usuario.confirmarPassword,
         "Senhas não conferem"
       );
-
-      const userFromDB = await app
-        .db("usuarios")
-        .where({ email: usuario.email })
-        .first();
-      if (!usuario.id) {
-        notExistsOrError(userFromDB, "Usuário já foi cadastrado");
-      }
     } catch (msg) {
       return res.status(400).send(msg);
     }
 
-    usuario.password = encryptPassword(usuario.password);
+    if (!usuario.user) usuario.password = encryptPassword(usuario.password);
     delete usuario.confirmarPassword;
+    const token = crypto.randomBytes(20).toString("hex");
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
 
     if (usuario.id) {
       app
@@ -56,12 +69,59 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
-      app
+      await app
         .db("usuarios")
-        .insert(usuario)
+        .insert({
+          nome: usuario.nome,
+          email: usuario.email,
+          user: usuario.user,
+          password: usuario.password,
+          activeToken: token,
+          activeToken: now,
+        })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
+
+      mailer.sendMail({
+        to: usuario.email,
+        from: "no-reply@liberfans.com",
+        template: "auth/forgotPassword",
+        context: { token },
+      });
     }
+  };
+
+  const resendToken = async (req, res) => {
+    const { email } = req.body;
+    const usuario = await app
+      .db("usuarios")
+      .where({ email: req.body.email })
+      .first();
+
+    try {
+      if (!email) return res.status(400).send("O e-mail deve ser preenchido");
+      if (!usuario) return res.status(400).send("Usuário não encontrado!");
+    } catch (err) {
+      res.status(400).send({ error: "Erro ao renviar o token" });
+    }
+    const token = crypto.randomBytes(20).toString("hex");
+    const name = usuario.nome;
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    await app
+      .db("usuarios")
+      .update({ activeToken: token, activeTokenExpires: now })
+      .where({ id: usuario.id })
+
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+
+    mailer.sendMail({
+      to: email,
+      from: "no-reply@liberfans.com",
+      template: "auth/forgotPassword",
+      context: { token, name },
+    });
   };
 
   //*****************************************GET***************************************************** */
@@ -88,6 +148,26 @@ module.exports = (app) => {
     app
       .db("usuarios")
       .select("id", "nome", "email", "perfil", "autor")
+      .then((usuarios) => res.json(usuarios))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const getUser = (req, res) => {
+    app
+      .db("usuarios")
+      .select("user")
+      .where({ user: req.params.user })
+      .first()
+      .then((usuarios) => res.json(usuarios))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const getEmail = (req, res) => {
+    app
+      .db("usuarios")
+      .select("email")
+      .where({ email: req.params.email })
+      .first()
       .then((usuarios) => res.json(usuarios))
       .catch((err) => res.status(500).send(err));
   };
@@ -247,5 +327,8 @@ module.exports = (app) => {
     uploadBanner,
     updatePassword,
     getUserByToken,
+    getUser,
+    getEmail,
+    resendToken,
   };
 };

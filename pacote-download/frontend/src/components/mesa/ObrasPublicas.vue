@@ -12,15 +12,15 @@
 
       <v-row class="mb-n2">
         <v-col cols="9">
-          <v-card flat color="purple darken-4" dark>
+          <v-card flat color="deep-purple darken-4" dark>
             <v-card-title>
               <i v-for="(item, index) in filteredItems" :key="index">{{ item.text }}</i>
             </v-card-title>
           </v-card>
         </v-col>
         <v-col>
-          <v-card flat color="purple darken-4" dark>
-            <v-card-title flat color="purple darken-4" dark>Status</v-card-title>
+          <v-card flat color="deep-purple darken-4" dark>
+            <v-card-title flat color="deep-purple darken-4" dark>Status</v-card-title>
           </v-card>
         </v-col>
       </v-row>

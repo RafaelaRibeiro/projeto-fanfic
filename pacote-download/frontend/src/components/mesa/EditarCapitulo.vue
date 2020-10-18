@@ -14,7 +14,7 @@
             <v-col>
               <v-text-field
                 v-model="capitulo.nome"
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 dense
                 outlined
                 value
@@ -27,7 +27,7 @@
                 auto-grow
                 outlined
                 value
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 class="text-justfy"
               ></v-textarea>
 
@@ -57,7 +57,7 @@
                 label="Notas Finais"
                 auto-grow
                 outlined
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 class="mt-7"
                 v-model="capitulo.notasFinais"
               ></v-textarea>

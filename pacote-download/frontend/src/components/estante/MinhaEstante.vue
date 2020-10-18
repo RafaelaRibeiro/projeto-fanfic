@@ -8,22 +8,23 @@
     <v-container fluid>
       <h1 class="display-1 font-weight-light mb-4">
         <i>
-          <v-icon x-large class="pa-3">{{icon}}</v-icon>Minha Estante
+          <v-icon x-large class="pa-3">{{ icon }}</v-icon
+          >Minha Estante
         </i>
       </h1>
       <v-row>
         <v-col cols="9">
-          <v-card flat color="purple darken-4" dark class="d-flex justify-space-between mb-3 pr-3">
-            <v-card-title v-for="(item, index) in filteredItems" :key="index">{{item.nome}}</v-card-title>
+          <v-card flat color="deep-purple darken-4" dark class="d-flex justify-space-between mb-3 pr-3">
+            <v-card-title v-for="(item, index) in filteredItems" :key="index">{{ item.nome }}</v-card-title>
 
             <v-switch dense v-model="exp" label="Editar Prateleira"></v-switch>
           </v-card>
           <v-expand-transition>
-            <v-card outlined v-show="expand=exp" height="60" width="100%" class="mb-3">
+            <v-card outlined v-show="(expand = exp)" height="60" width="100%" class="mb-3">
               <v-row>
                 <v-col cols="4">
                   <v-checkbox
-                    color="indigo darken-3"
+                    color="deep-purple darken-4"
                     v-model="check"
                     :input-value="check"
                     value
@@ -33,10 +34,10 @@
                   ></v-checkbox>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn depressed outlined color="indigo darken-3">Arquivar Obra</v-btn>
+                  <v-btn depressed outlined color="deep-purple darken-4">Arquivar Obra</v-btn>
                 </v-col>
                 <v-col cols="3">
-                  <v-btn depressed outlined color=" indigo darken-3">Remover da Prateleira</v-btn>
+                  <v-btn depressed outlined color=" deep-purple darken-4">Remover da Prateleira</v-btn>
                 </v-col>
               </v-row>
             </v-card>
@@ -46,7 +47,7 @@
           </div>
         </v-col>
         <v-col cols="3">
-          <v-card flat color="purple darken-4" dark class="mb-3">
+          <v-card flat color="deep-purple darken-4" dark class="mb-3">
             <v-card-title>Prateleiras</v-card-title>
           </v-card>
           <v-card outlined>
@@ -61,11 +62,9 @@
             </v-list>-->
 
             <md-list>
-              <md-list-item
-                v-for="prateleira in lista"
-                :key="prateleira.id"
-                @click="search = prateleira.id"
-              >{{prateleira.nome}}</md-list-item>
+              <md-list-item v-for="prateleira in lista" :key="prateleira.id" @click="search = prateleira.id">{{
+                prateleira.nome
+              }}</md-list-item>
             </md-list>
           </v-card>
         </v-col>
@@ -104,7 +103,7 @@ export default {
   methods: {
     getPrateleiras() {
       const url = ` ${baseApiUrl}/prateleiras`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.lista = this.lista.concat(res.data)
       })
     },
@@ -112,7 +111,7 @@ export default {
     getObrasPrateleiras() {
       const url = ` ${baseApiUrl}/${this.usuario.user}/estante`
 
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.estante = this.estante.concat(res.data)
       })
     },
@@ -122,14 +121,14 @@ export default {
     filteredItems() {
       const id = this.search
 
-      const buscar = this.lista.filter(e => {
+      const buscar = this.lista.filter((e) => {
         return e.id === id
       })
       return buscar
     },
 
     filtershelves() {
-      const a = this.estante.filter(e => {
+      const a = this.estante.filter((e) => {
         return e.prateleiraId === this.search
       })
       return a

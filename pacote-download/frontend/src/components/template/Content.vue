@@ -8,12 +8,12 @@
       </v-col>
     </v-row>
 
-    <v-btn bottom color="purple darken-4" dark fab fixed right @click="dialog = !dialog">
+    <v-btn bottom color="deep-purple darken-4" dark fab fixed right @click="dialog = !dialog">
       <v-icon>mdi-pencil</v-icon>
     </v-btn>
     <v-dialog v-model="dialog" width="800px">
       <v-card>
-        <v-card-title color="white" class="purple darken-4 font-weight-light">
+        <v-card-title color="white" class="deep-purple darken-4 font-weight-light">
           <i class="white--text">Minhas Notas</i>
         </v-card-title>
         <v-container>
@@ -25,7 +25,7 @@
                 auto-grow
                 counter="255"
                 maxlength="255"
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 prepend-icon="mdi-text"
                 placeholder="Notas"
               />

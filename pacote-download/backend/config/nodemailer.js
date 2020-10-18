@@ -11,6 +11,15 @@ const transport = nodemailer.createTransport({
   },
 });
 
+// const transport = nodemailer.createTransport({
+//   host: process.env.HOST,
+//   port: process.env.HOST,
+//   auth: {
+//     user: process.env.SES_ACCESS_KEY_ID,
+//     pass: process.env.SES_SECRET_ACCESS_KEY,
+//   },
+// });
+
 transport.use(
   "compile",
   hbs({

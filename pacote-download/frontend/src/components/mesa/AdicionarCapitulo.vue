@@ -4,9 +4,7 @@
       <v-row>
         <v-col>
           <h1 class="display-1 font-weight-light mb-4">
-            <i>
-              <v-icon x-large class="pa-3">mdi-file-plus</v-icon>Adicionar Capítulo
-            </i>
+            <i> <v-icon x-large class="pa-3">mdi-file-plus</v-icon>Adicionar Capítulo </i>
           </h1>
         </v-col>
       </v-row>
@@ -16,7 +14,7 @@
             <v-col>
               <v-text-field
                 v-model="capitulo.nome"
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 dense
                 outlined
                 value
@@ -29,7 +27,7 @@
                 auto-grow
                 outlined
                 value
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 class="text-justfy"
               ></v-textarea>
 
@@ -47,15 +45,19 @@
                   :language="language"
                   v-model="capitulo.conteudo"
                   :buttons="botoes"
-                  :config="{uploader: {insertImageAsBase64URI: true}, askBeforePasteFromWord: false, minHeight:350}"
+                  :config="{
+                    uploader: { insertImageAsBase64URI: true },
+                    askBeforePasteFromWord: false,
+                    minHeight: 350,
+                  }"
                 ></jodit-vue>
               </div>
-              {{ WordCount}}
+              {{ WordCount }}
               <v-textarea
                 label="Notas Finais"
                 auto-grow
                 outlined
-                color="purple darken-4"
+                color="deep-purple darken-4"
                 class="mt-7"
                 v-model="capitulo.notasFinais"
               ></v-textarea>
@@ -120,12 +122,9 @@
 
           <v-row>
             <v-col cols="12" class="text-center">
-              <v-btn
-                dark
-                class="ma-3"
-                color="green darken-4"
-                @click.prevent="vizualizar=!vizualizar"
-              >Prévia do Capítulo</v-btn>
+              <v-btn dark class="ma-3" color="green darken-4" @click.prevent="vizualizar = !vizualizar"
+                >Prévia do Capítulo</v-btn
+              >
               <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>
             </v-col>
           </v-row>
@@ -137,7 +136,7 @@
         <v-col cols="11">
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light">
-              <i>{{obra.nome}}</i>
+              <i>{{ obra.nome }}</i>
             </h1>
           </v-card>
         </v-col>
@@ -147,10 +146,9 @@
         <v-col cols="11">
           <v-card flat outlined color="#EEEEEE">
             <v-card-title>Notas Iniciais</v-card-title>
-            <v-card-text
-              style="white-space: pre-line"
-              class="text--primary text-justify"
-            >{{ capitulo.notasIniciais }}</v-card-text>
+            <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
+              capitulo.notasIniciais
+            }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -158,7 +156,7 @@
         <v-col cols="11">
           <v-card flat>
             <h5 class="font-weight-light mb-4">
-              <i>Capitulo {{capitulo.numero}} - {{capitulo.nome}}</i>
+              <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
             </h5>
           </v-card>
           <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
@@ -168,22 +166,16 @@
         <v-col cols="11">
           <v-card flat outlined color="#EEEEEE">
             <v-card-title>Notas Finais</v-card-title>
-            <v-card-text
-              style="white-space: pre-line"
-              class="text--primary text-justify"
-            >{{ capitulo.notasFinais }}</v-card-text>
+            <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
+              capitulo.notasFinais
+            }}</v-card-text>
           </v-card>
         </v-col>
       </v-row>
 
       <v-row>
         <v-col>
-          <v-btn
-            dark
-            class="ma-3"
-            color="red darken-3"
-            @click.prevent="vizualizar=!vizualizar"
-          >Voltar</v-btn>
+          <v-btn dark class="ma-3" color="red darken-3" @click.prevent="vizualizar = !vizualizar">Voltar</v-btn>
           <v-btn dark class="ma-3" color="green darken-4" @click="salvarCapitulo">Salvar Capítulo</v-btn>
         </v-col>
       </v-row>
@@ -273,21 +265,21 @@ export default {
 
     getObra() {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.obra = res.data
       })
     },
 
     getAvisos() {
       const url = ` ${baseApiUrl}/avisos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.avisos = res.data
       })
     },
 
     getNumeroCapitulo() {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.ultimoCapitulo = res.data[0]
         this.ultimoCapitulo.max_numero++
         this.capitulo.numero = this.ultimoCapitulo.max_numero

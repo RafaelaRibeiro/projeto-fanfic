@@ -16,7 +16,7 @@
 
         <v-text-field
           v-model="usuario.email"
-          color="purple darken-4"
+          color="deep-purple darken-4"
           name="Email"
           label="E-mail"
           class="ml-2 mr-2 mt-6"
@@ -24,7 +24,7 @@
         ></v-text-field>
         <v-text-field
           v-model="usuario.password"
-          color="purple darken-4"
+          color="deep-purple darken-4"
           name="password"
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
           label="Senha"
@@ -36,14 +36,14 @@
         ></v-text-field>
         <v-row>
           <v-col class="d-flex justify-end">
-            <v-btn color="purple darken-4" class="mb-5 mt-n10 md-headline" text @click="dialog = true">
+            <v-btn color="deep-purple darken-4" class="mb-5 mt-n10 md-headline" text @click="dialog = true">
               Esqueci minha Senha</v-btn
             >
           </v-col>
         </v-row>
 
-        <v-btn block dark color="indigo darken-4" class="mr-3" elevation="4" @click="signin">Entrar</v-btn>
-        <v-btn block dark color="indigo darken-4" class="mr-3 mt-5" elevation="4" @click="cad = true"
+        <v-btn block dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="signin">Entrar</v-btn>
+        <v-btn block dark color="deep-purple darken-4" class="mr-3 mt-5" elevation="4" @click="cad = true"
           >Cadastrar-se</v-btn
         >
       </v-card>
@@ -65,7 +65,7 @@
 
           <v-text-field
             v-model="email"
-            color="purple darken-4"
+            color="deep-purple darken-4"
             name="Email"
             label="E-mail"
             class="mr-4 ml-4 mt-4"
@@ -79,7 +79,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn block dark color="indigo darken-4" class="mr-3 mb-3" @click="forgotPassword" elevation="4"
+            <v-btn block dark color="deep-purple darken-4" class="mr-3 mb-3" @click="forgotPassword" elevation="4"
               >Enviar e-mail</v-btn
             >
           </v-card-actions>

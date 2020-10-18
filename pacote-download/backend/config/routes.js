@@ -20,11 +20,15 @@ module.exports = (app) => {
   //**************************************Usuario*****************************************************
 
   app.route("/usuario/:id").get(app.api.usuario.getById);
+  app.route("/usuario/:user/user").get(app.api.usuario.getUser);
+  app.route("/usuario/:email/email").get(app.api.usuario.getEmail);
   app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
   app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword);
   app.route("/forgotPassword").put(app.api.auth.forgotPassword);
+  app.route("/resendToken").put(app.api.usuario.resendToken);
+  app.route("/activeRegister/:token").put(app.api.auth.activeRegister);
   app.route("/usuario/:token/resetPassword").put(app.api.auth.resetPassword);
-  app.route("/token/:token/").get(app.api.usuario.getUserByToken)
+  app.route("/token/:token/").get(app.api.usuario.getUserByToken);
   app.post(
     "/perfil/:usuarioId/upload",
     multer(multerConfig).single("file"),

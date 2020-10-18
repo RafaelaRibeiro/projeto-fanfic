@@ -13,7 +13,7 @@
           <v-col>
             <v-text-field
               v-model="obra.nome"
-              color="purple darken-4"
+              color="deep-purple darken-4"
               dense
               outlined
               value
@@ -23,7 +23,7 @@
             <v-file-input
               small-chips
               v-model="imagemObra"
-              color="purple darken-4"
+              color="deep-purple darken-4"
               label="Capa da Obra"
               dense
               outlined
@@ -34,7 +34,7 @@
 
             <v-textarea
               v-model="obra.sinopse"
-              color="purple darken-4"
+              color="deep-purple darken-4"
               dense
               outlined
               auto-grow
@@ -73,7 +73,7 @@
               dense
               small
               outlined
-              color="purple darken-4"
+              color="deep-purple darken-4"
             ></v-autocomplete>
           </v-col>
 
@@ -86,7 +86,7 @@
               item-value="cod"
               dense
               outlined
-              color="purple darken-4"
+              color="deep-purple darken-4"
             ></v-select>
             <v-autocomplete
               v-model="obra.fandonsId"

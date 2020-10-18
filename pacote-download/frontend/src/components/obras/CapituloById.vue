@@ -52,11 +52,11 @@
           <v-col cols="12" sm="10">
             <v-row no-gutters>
               <v-col v-show="lido" cols="12" sm="6">
-                <v-btn v-show="estante" dark color="purple darken-4" @click="checkRead">
+                <v-btn v-show="estante" dark color="deep-purple darken-4" @click="checkRead">
                   <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
                 </v-btn>
 
-                <v-btn v-show="!estante" color="purple darken-4" dark @click="saveEstante">
+                <v-btn v-show="!estante" color="deep-purple darken-4" dark @click="saveEstante">
                   <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
                 </v-btn>
               </v-col>
@@ -79,7 +79,7 @@
                 <router-link
                   :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero - 1 } }"
                 >
-                  <v-btn v-show="capitulo.numero != u.min_numero" dark color="purple darken-4">
+                  <v-btn v-show="capitulo.numero != u.min_numero" dark color="deep-purple darken-4">
                     <v-icon left>mdi-chevron-triple-left</v-icon>Capitulo Anterior
                   </v-btn>
                 </router-link>
@@ -105,7 +105,7 @@
           <v-col cols="12" sm="10">
             <v-textarea
               v-model="comentario"
-              color="purple darken-4"
+              color="deep-purple darken-4"
               class="text-justfy"
               outlined
               auto-grow
@@ -117,7 +117,7 @@
         </v-row>
         <v-row justify="center">
           <v-col cols="12" sm="10" class="d-flex justify-end">
-            <v-btn dark color="purple darken-4" @click="salvarComentario">Salvar</v-btn>
+            <v-btn dark color="deep-purple darken-4" @click="salvarComentario">Salvar</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -148,12 +148,12 @@
                   <p v-if="edicao">
                     <v-textarea
                       v-model="c.conteudo"
-                      color="purple darken-4"
+                      color="deep-purple darken-4"
                       class="text-justfy"
                       outlined
                       auto-grow
                     ></v-textarea>
-                    <v-btn tile large dark color="purple darken-4" depressed>Salvar Comentário</v-btn>
+                    <v-btn tile large dark color="deep-purple darken-4" depressed>Salvar Comentário</v-btn>
                   </p>
 
                   <p v-else>{{ c.conteudo }}</p>
@@ -164,7 +164,12 @@
         </v-row>
         <v-row justify="center">
           <v-col cols="12" sm="11">
-            <v-pagination color="purple darken-4" v-model="page" :total-visible="7" :length="totalPage"></v-pagination>
+            <v-pagination
+              color="deep-purple darken-4"
+              v-model="page"
+              :total-visible="7"
+              :length="totalPage"
+            ></v-pagination>
           </v-col>
         </v-row>
       </v-container>

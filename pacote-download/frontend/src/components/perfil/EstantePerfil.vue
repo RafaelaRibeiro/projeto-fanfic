@@ -109,17 +109,17 @@ export default {
   methods: {
     getUsuarios() {
       const url = `${baseApiUrl}/perfil/${this.usuarios.user}`
-      axios(url).then(res => (this.usuarios = res.data))
+      axios(url).then((res) => (this.usuarios = res.data))
     },
     getEstantePerfil() {
       const url = ` ${baseApiUrl}/perfil/${this.usuarios.user}/estante`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.estante = this.estante.concat(res.data)
       })
     },
     getUniversoEstante() {
       const url = `${baseApiUrl}/estante/${this.usuarios.user}/universos `
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.universos = res.data
       })
     },

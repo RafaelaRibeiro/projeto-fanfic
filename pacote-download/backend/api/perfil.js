@@ -3,7 +3,7 @@ const usuario = require("./usuario");
 const { StorageGateway } = require("aws-sdk");
 const aws = require("aws-sdk");
 const s3 = new aws.S3();
-const fs = require('fs')
+const fs = require("fs");
 
 module.exports = (app) => {
   const updateUser = (req, res) => {
@@ -172,7 +172,6 @@ module.exports = (app) => {
   //   }
   // };
 
-  
   return {
     getObrasPerfil,
     getEstantePerfil,
@@ -180,7 +179,6 @@ module.exports = (app) => {
     getObrasPerfilShipp,
     getPerfil,
     savePerfil,
-    updateUser
-   
+    updateUser,
   };
 };

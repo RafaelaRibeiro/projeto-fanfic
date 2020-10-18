@@ -35,18 +35,18 @@ export default {
   methods: {
     getUsuarios() {
       const url = `${baseApiUrl}/perfil/${this.usuarios.user}`
-      axios(url).then(res => (this.usuarios = res.data))
+      axios(url).then((res) => (this.usuarios = res.data))
     },
 
     getObrasPerfil() {
       const url = ` ${baseApiUrl}/perfil/${this.usuarios.user}/obras`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.obras = this.obras.concat(res.data)
       })
     },
     getObrasPerfilShipp() {
       const url = ` ${baseApiUrl}/perfil/${this.usuarios.user}/obras/shipp`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.shippObras = this.shippObras.concat(res.data)
       })
     },
@@ -65,7 +65,7 @@ export default {
       if (this.search === '') {
         return this.obras
       } else {
-        const a = this.obras.filter(e => {
+        const a = this.obras.filter((e) => {
           return e.shippId === this.search
         })
         return a

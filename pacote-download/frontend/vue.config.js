@@ -1,17 +1,15 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ],
+  transpileDependencies: ['vuetify'],
 
   pluginOptions: {
     quasar: {
       importStrategy: 'kebab',
-      rtlSupport: true
-    }
+      rtlSupport: true,
+    },
   },
-
-  transpileDependencies: [
-    'vuetify',
-    'quasar'
-  ]
+  devServer: {
+    allowedHosts: ['liberfans.com'],
+    disableHostCheck: true,
+    public: 'liberfans.com:8080',
+  },
 }

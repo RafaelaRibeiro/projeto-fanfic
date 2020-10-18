@@ -3,7 +3,7 @@
     <Header />
     <Menu />
     <Loading v-if="validatingToken" />
-    <Content />
+    <Content v-else />
     <Footer />
   </v-app>
 </template>
@@ -17,12 +17,12 @@ import Menu from './components/template/Menu'
 import Header from './components/template/Header'
 import Content from './components/template/Content'
 import Footer from './components/template/Footer'
-import Loading from "@/components/template/Loading"
+import Loading from '@/components/template/Loading'
 
 export default {
   name: 'App',
 
-  components: { Header, Menu, Footer, Content,Loading },
+  components: { Header, Menu, Footer, Content, Loading },
   computed: mapState(['isMenuVisible', 'usuario']),
   data() {
     return {

@@ -23,6 +23,8 @@ module.exports = (app) => {
       .first();
 
     if (!usuario) return res.status(400).send("Usuário não encontrado!");
+    if (usuario.verificado === 0)
+      return res.status(400).send("Seu cadastro não foi ativado");
 
     const isMatch = bcrypt.compareSync(req.body.password, usuario.password);
     if (!isMatch) return res.status(406).send("Email/Senha inválidos!");
@@ -73,6 +75,32 @@ module.exports = (app) => {
     res.send(false);
   };
 
+  const activeRegister = async (req, res) => {
+    const { token } = req.body;
+    const usuario = await app
+      .db("usuarios")
+      .where({ activeToken: req.body.token })
+      .first();
+    try {
+      if (token !== usuario.activeToken)
+        return res.status(400).send("Token Inválido");
+
+      const now = new Date();
+
+      if (now > usuario.activeTokenExpires)
+        return res.status(400).send("Token Expirado");
+    } catch (err) {
+      res.status(400).send({ error: "Erro ativar cadastro" });
+    }
+
+    await app
+      .db("usuarios")
+      .update({ verificado: 1 })
+      .where({ id: usuario.id })
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+  };
+
   const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -86,6 +114,7 @@ module.exports = (app) => {
       if (!usuario) return res.status(400).send("Usuário não encontrado!");
 
       const token = crypto.randomBytes(20).toString("hex");
+      const name = usuario.nome;
       const now = new Date();
       now.setHours(now.getHours() + 1);
 
@@ -93,14 +122,15 @@ module.exports = (app) => {
         .db("usuarios")
         .update({ passwordResetToken: token, passwordResetExpires: now })
         .where({ id: usuario.id })
+        .first()
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
 
       mailer.sendMail({
         to: email,
-        from: "rapha11br@gmail.com",
+        from: "no-reply@liberfans.com",
         template: "auth/forgotPassword",
-        context: { token },
+        context: { token, name },
       });
     } catch (err) {
       res
@@ -138,7 +168,11 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-
-
-  return { signin, validateToken, forgotPassword, resetPassword };
+  return {
+    signin,
+    validateToken,
+    forgotPassword,
+    resetPassword,
+    activeRegister,
+  };
 };

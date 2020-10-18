@@ -4,10 +4,10 @@
       <v-card-title>Meus Dados</v-card-title>
       <v-row class="ml-2 mb-0">
         <v-col cols="12" md="5">
-          <v-text-field v-model="usuario.nome" label="Nome" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="usuario.nome" label="Nome" color="deep-purple darken-4" outlined></v-text-field>
         </v-col>
         <v-col cols="12" md="5">
-          <v-text-field v-model="usuario.user" label="Usuario" color="purple darken-4" outlined></v-text-field>
+          <v-text-field v-model="usuario.user" label="Usuario" color="deep-purple darken-4" outlined></v-text-field>
         </v-col>
       </v-row>
       <v-row class="ml-2 mt-0">
@@ -17,12 +17,10 @@
             v-model="usuario.dataNasc"
             label="Data de Nascimento"
             placeholder="dd/mm/aaaa"
-            color="purple darken-4"
+            color="deep-purple darken-4"
             outlined
           ></v-text-field>
-         
         </v-col>
-     
       </v-row>
       <v-card-title>Sobre Mim</v-card-title>
       <v-row>
@@ -34,7 +32,7 @@
             auto-grow
             clearable
             outlined
-            color="purple darken-4"
+            color="deep-purple darken-4"
             :value="usuario.sobreMim"
           ></v-textarea>
         </v-col>
@@ -47,7 +45,7 @@
             label="Twitter"
             placeholder
             outlined
-            color="purple darken-4"
+            color="deep-purple darken-4"
             prefix="http://twitter.com/"
             prepend-inner-icon="mdi-twitter"
           ></v-text-field>
@@ -59,7 +57,7 @@
             prefix="http://facebook.com.br/"
             outlined
             placeholder="perfil"
-            color="purple darken-4"
+            color="deep-purple darken-4"
             prepend-inner-icon="mdi-facebook"
           ></v-text-field>
         </v-col>
@@ -72,7 +70,7 @@
             placeholder="perfil"
             prefix="http://instagram.com/"
             outlined
-            color="purple darken-4"
+            color="deep-purple darken-4"
             prepend-inner-icon="mdi-instagram"
           ></v-text-field>
         </v-col>
@@ -99,9 +97,9 @@
 </template>
 
 <script>
-import { baseApiUrl, showError,  } from '@/global'
+import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 export default {
   name: 'PerfilEditar',
@@ -115,41 +113,39 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUsuario'])
+    ...mapGetters(['getUsuario']),
   },
 
   methods: {
     updatePerfil() {
       axios
         .put(`${baseApiUrl}/usuario/${this.getUsuario.id}`, {
-          nome:this.usuario.nome,
-          user:this.usuario.user,
-          sobreMim:this.usuario.sobreMim,
-          facebook:this.usuario.facebook,
-          twitter:this.usuario.twitter,
-          instagram:this.usuario.instagram,
-          pinterest:this.usuario.pinterest,
-          tumblr:this.usuario.tumblr,
-          dataNasc:moment(this.usuario.dataNasc).format('YYYY-MM-DD')
-
+          nome: this.usuario.nome,
+          user: this.usuario.user,
+          sobreMim: this.usuario.sobreMim,
+          facebook: this.usuario.facebook,
+          twitter: this.usuario.twitter,
+          instagram: this.usuario.instagram,
+          pinterest: this.usuario.pinterest,
+          tumblr: this.usuario.tumblr,
+          dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
         })
         .then(() => {
           this.$store.commit('setUser', {
-          nome:this.usuario.nome,
-          user:this.usuario.user,
-          sobreMim:this.usuario.sobreMim,
-          facebook:this.usuario.facebook,
-          twitter:this.usuario.twitter,
-          instagram:this.usuario.instagram,
-          pinterest:this.usuario.pinterest,
-          tumblr:this.usuario.tumblr,
-          dataNasc:moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
+            nome: this.usuario.nome,
+            user: this.usuario.user,
+            sobreMim: this.usuario.sobreMim,
+            facebook: this.usuario.facebook,
+            twitter: this.usuario.twitter,
+            instagram: this.usuario.instagram,
+            pinterest: this.usuario.pinterest,
+            tumblr: this.usuario.tumblr,
+            dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
             token: this.getUsuario.token,
-          exp: this.getUsuario.exp,
-          iap: this.getUsuario.iap
-
+            exp: this.getUsuario.exp,
+            iap: this.getUsuario.iap,
           })
-      
+
           this.$toast.success('Dados do perfil atualizados')
         })
         .catch(showError)

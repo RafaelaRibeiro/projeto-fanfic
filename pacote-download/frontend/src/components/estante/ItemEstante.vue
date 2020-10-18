@@ -2,12 +2,17 @@
   <div class="item-estante">
     <v-card outlined class="d-flex align-center mb-4">
       <v-expand-x-transition>
-        <v-checkbox v-show="expand=expNovo" color="indigo darken-3" :input-value="checkNovo" value></v-checkbox>
+        <v-checkbox
+          v-show="(expand = expNovo)"
+          color="deep-deep-purple darken-4"
+          :input-value="checkNovo"
+          value
+        ></v-checkbox>
       </v-expand-x-transition>
 
       <v-card flat class="d-flex ma-2">
         <v-avatar size="100" tile class="d-none d-sm-block">
-          <v-img v-if="item.capa " :src="item.capa"></v-img>
+          <v-img v-if="item.capa" :src="item.capa"></v-img>
           <v-img v-else src="@/assets/sem_imagem.jpg"></v-img>
         </v-avatar>
       </v-card>
@@ -15,19 +20,18 @@
       <v-card flat>
         <v-card-title>
           <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
-            {{item.nome}}
-           
+            {{ item.nome }}
           </router-link>
         </v-card-title>
         <v-card-text class="d-flex flex-column font-weight-regular text--primary">
           <div>
-            <a style="color:black" v-if="item.prateleira===1">{{primeiraLinha}}</a>
-            <span v-else>{{primeiraLinha}}</span>
+            <a style="color: black" v-if="item.prateleira === 1">{{ primeiraLinha }}</a>
+            <span v-else>{{ primeiraLinha }}</span>
           </div>
 
-          <a style="color:black" v-if="item.prateleira===1">{{segundaLinha}}</a>
-          <span v-else>{{segundaLinha}}</span>
-          <p>{{terminada}}</p>
+          <a style="color: black" v-if="item.prateleira === 1">{{ segundaLinha }}</a>
+          <span v-else>{{ segundaLinha }}</span>
+          <p>{{ terminada }}</p>
         </v-card-text>
       </v-card>
 
@@ -35,7 +39,7 @@
         <v-menu  left offset-x>
           <template v-slot:activator="{ on }">
               
-            <v-btn   v-on="on" class="mx-1" fab dark small color="purple darken-4" depressed>
+            <v-btn   v-on="on" class="mx-1" fab dark small color="deep-purple darken-4" depressed>
               <v-icon  dark>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
