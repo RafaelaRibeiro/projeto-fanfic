@@ -9,7 +9,10 @@ module.exports = {
   },
   devServer: {
     allowedHosts: ['liberfans.com'],
-    disableHostCheck: true,
+    // disableHostCheck: true,
+    port: 8080,
     public: 'liberfans.com:8080',
+    https: false,
   },
+  publicPath: '/',
 }
