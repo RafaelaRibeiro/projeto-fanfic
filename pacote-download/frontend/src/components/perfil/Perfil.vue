@@ -3,26 +3,28 @@
     <v-row>
       <v-col>
         <v-card class="perfil-banner">
-          <v-img height="300px" v-for="usuario in usuarios" :key="usuario.user" :src="usuario.imageBanner"></v-img>
+          <v-img v-if="usuario.imagePerfil" height="300px" :src="usuario.imageBanner"></v-img>
+
+          <v-img v-else height="300px" src="@/assets/banner-teste.png"></v-img>
         </v-card>
       </v-col>
     </v-row>
 
     <v-row class="sub-banner">
       <v-col class="avatar" cols="3">
-        <v-avatar v-for="usuario in usuarios" :key="usuario.user" class="profile" color="grey" size="150">
+        <v-avatar class="profile" color="grey" size="150">
           <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img>
           <v-img v-else src="@/assets/profile.png"></v-img>
         </v-avatar>
       </v-col>
-      <v-col v-for="perfil in usuarios" :key="perfil.user">
+      <v-col>
         <div>
           <strong>Nome:</strong>
-          {{ perfil.nome }}
+          {{ usuario.nome }}
         </div>
         <div>
           <strong>Usuario:</strong>
-          {{ perfil.user }}
+          {{ usuario.user }}
         </div>
       </v-col>
       <v-col>
@@ -69,7 +71,7 @@
 
           <v-tabs-items v-model="tab">
             <v-tab-item :transition="false" :reverse-transition="false">
-              <div v-for="usuario in usuarios" :key="usuario.id">
+              <div>
                 <Sobre :usuario="usuario"></Sobre>
               </div>
             </v-tab-item>
@@ -117,7 +119,7 @@ export default {
       tabIndex: 0,
       tab: null,
       dialog: false,
-      usuarios: {},
+      usuario: {},
       absolute: true,
       overlay: false,
       file2: null,
@@ -140,8 +142,8 @@ export default {
 
   methods: {
     getUsuarios() {
-      const url = `${baseApiUrl}/perfil/${this.usuarios.user}`
-      axios(url).then((res) => (this.usuarios = res.data))
+      const url = `${baseApiUrl}/perfil/${this.usuario.user}`
+      axios(url).then((res) => (this.usuario = res.data))
     },
 
     editarPerfil() {
@@ -160,13 +162,13 @@ export default {
 
   watch: {
     $route(to) {
-      this.usuarios.user = to.params.user
+      this.usuario.user = to.params.user
       this.getUsuarios()
     },
   },
 
   mounted() {
-    this.usuarios.user = this.$route.params.user
+    this.usuario.user = this.$route.params.user
 
     this.getUsuarios()
   },

@@ -66,6 +66,7 @@ module.exports = (app) => {
         )
       )
       .where({ user: req.params.user })
+      .first()
 
       .then((usuarios) => res.json(usuarios))
       .catch((err) => res.status(500).send(err));

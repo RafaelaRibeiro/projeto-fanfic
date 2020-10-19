@@ -32,6 +32,9 @@ const routes = [
     name: 'login',
     path: '/login',
     component: Auth,
+    meta: {
+      requireLogin: true,
+    },
   },
 
   {
@@ -140,6 +143,13 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const user = JSON.parse(json)
     user ? next() : next({ path: '/login' })
+  } else {
+    next()
+  }
+
+  if (to.matched.some(record => record.meta.requireLogin)) {
+    const user = JSON.parse(json)
+    user ? next({ path: `/perfil/${user.user}` }) : next()
   } else {
     next()
   }
