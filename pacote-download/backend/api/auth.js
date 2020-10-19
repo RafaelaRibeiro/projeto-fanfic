@@ -104,39 +104,38 @@ module.exports = (app) => {
   const forgotPassword = async (req, res) => {
     const { email } = req.body;
 
-    try {
-      const usuario = await app
-        .db("usuarios")
-        .where({ email: req.body.email })
-        .first();
+    const usuario = await app
+      .db("usuarios")
+      .where({ email: req.body.email })
+      .first();
 
+    try {
       if (!email) return res.status(400).send("O e-mail deve ser preenchido");
       if (!usuario) return res.status(400).send("Usuário não encontrado!");
-
-      const token = crypto.randomBytes(20).toString("hex");
-      const name = usuario.nome;
-      const now = new Date();
-      now.setHours(now.getHours() + 1);
-
-      await app
-        .db("usuarios")
-        .update({ passwordResetToken: token, passwordResetExpires: now })
-        .where({ id: usuario.id })
-        .first()
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-
-      mailer.sendMail({
-        to: email,
-        from: "no-reply@liberfans.com",
-        template: "auth/forgotPassword",
-        context: { token, name },
-      });
     } catch (err) {
       res
         .status(400)
         .send({ error: "Erro ao recuperar a senha, tente de novo" });
     }
+
+    const token = crypto.randomBytes(20).toString("hex");
+    const name = usuario.nome;
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    await app
+      .db("usuarios")
+      .update({ passwordResetToken: token, passwordResetExpires: now })
+      .where({ id: usuario.id })
+
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+
+    mailer.sendMail({
+      to: email,
+      from: "no-reply@liberfans.com",
+      template: "auth/forgotPassword",
+      context: { token, name },
+    });
   };
 
   const resetPassword = async (req, res) => {
