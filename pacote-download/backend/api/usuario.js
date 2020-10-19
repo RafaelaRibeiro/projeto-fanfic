@@ -55,9 +55,10 @@ module.exports = (app) => {
       return res.status(400).send(msg);
     }
 
-    if (!usuario.user) usuario.password = encryptPassword(usuario.password);
+    usuario.password = encryptPassword(usuario.password);
     delete usuario.confirmarPassword;
     const token = crypto.randomBytes(20).toString("hex");
+    const name = usuario.nome;
     const now = new Date();
     now.setHours(now.getHours() + 1);
 
@@ -77,7 +78,7 @@ module.exports = (app) => {
           user: usuario.user,
           password: usuario.password,
           activeToken: token,
-          activeToken: now,
+          activeTokenExpires: now,
         })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
@@ -85,8 +86,9 @@ module.exports = (app) => {
       mailer.sendMail({
         to: usuario.email,
         from: "no-reply@liberfans.com",
+        subject: 'Ativar Cadastro',
         template: "auth/forgotPassword",
-        context: { token },
+        context: { token, name },
       });
     }
   };
@@ -119,6 +121,7 @@ module.exports = (app) => {
     mailer.sendMail({
       to: email,
       from: "no-reply@liberfans.com",
+      subject: 'Ativar Registro',
       template: "auth/forgotPassword",
       context: { token, name },
     });

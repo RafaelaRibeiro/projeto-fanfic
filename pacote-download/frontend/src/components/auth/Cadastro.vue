@@ -72,14 +72,12 @@
           outlined
         ></v-text-field>
 
-        <v-btn dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="dialog = true">Cadastrar</v-btn>
+        <v-btn dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="save">Cadastrar</v-btn>
         <v-btn dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="cad = false">Voltar</v-btn>
       </v-card>
     </v-col>
     <v-col cols="6" class="mt-n2">
-      <v-alert v-show="error" text prominent type="error" icon="mdi-alert-box" transition="scale-transition">
-        {{ error }}
-      </v-alert>
+     
     </v-col>
 
     <v-dialog v-model="dialog" max-width="500" height="500px">
@@ -97,7 +95,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="cadastrar">Continuar</v-btn>
+          <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="continuar">Continuar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -115,7 +113,7 @@ export default {
       usuario: {},
       cadastro: false,
       dialog: false,
-      error: '',
+    
       user: {
         user: '',
         email: '',
@@ -127,8 +125,8 @@ export default {
     save() {
       axios
         .post(`${baseApiUrl}/usuarios`, this.usuario)
-        .then((response) => {
-          this.error = response
+        .then(() => {
+        
           this.email = ''
           this.dialog = 'true'
         })
@@ -146,7 +144,7 @@ export default {
       })
     },
 
-    cadastrar() {
+    continuar() {
       this.dialog = false
       this.cad = false
     },

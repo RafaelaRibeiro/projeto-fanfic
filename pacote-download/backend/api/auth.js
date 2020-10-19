@@ -133,6 +133,7 @@ module.exports = (app) => {
     mailer.sendMail({
       to: email,
       from: "no-reply@liberfans.com",
+      subject: 'Redefinir Senha',
       template: "auth/forgotPassword",
       context: { token, name },
     });
