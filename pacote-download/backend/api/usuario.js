@@ -86,8 +86,9 @@ module.exports = (app) => {
       mailer.sendMail({
         to: usuario.email,
         from: "no-reply@liberfans.com",
-        subject: 'Ativar Cadastro',
+        subject: "Ativar Cadastro",
         template: "auth/forgotPassword",
+        defaultLayout: false,
         context: { token, name },
       });
     }
@@ -121,7 +122,7 @@ module.exports = (app) => {
     mailer.sendMail({
       to: email,
       from: "no-reply@liberfans.com",
-      subject: 'Ativar Registro',
+      subject: "Ativar Registro",
       template: "auth/forgotPassword",
       context: { token, name },
     });
@@ -289,18 +290,16 @@ module.exports = (app) => {
       .first();
 
     if (getImage) {
-      await s3
-        .deleteObject({
-          Bucket: "upload.fanbase",
-          Key: getImage.key,
-        })
-        .promise();
+      await fs.unlink(`./tmp/perfil/${getImage.key}`, (err) => {
+        if (err) throw err;
+        console.log("File deleted!");
+      });
       app
         .db("imagensBanner")
         .update({
           name: req.file.originalname,
           size: req.file.size,
-          path: req.file.location,
+          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
           key: req.file.key,
         })
         .where({ usuarioId: getImage.usuarioId })
@@ -312,7 +311,7 @@ module.exports = (app) => {
         .insert({
           name: req.file.originalname,
           size: req.file.size,
-          path: req.file.location,
+          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
           key: req.file.key,
           usuarioId: req.params.usuarioId,
         })

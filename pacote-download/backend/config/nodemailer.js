@@ -26,6 +26,7 @@ transport.use(
     viewEngine: "handlebars",
     viewPath: path.resolve("./mail/"),
     extName: ".html",
+    defaultLayout: "",
   })
 );
 module.exports = transport;

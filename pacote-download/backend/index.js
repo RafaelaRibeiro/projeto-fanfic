@@ -13,6 +13,10 @@ app.use(
   "/perfil/:id/upload",
   express.static(path.resolve(__dirname, "./tmp/perfil"))
 );
+app.use(
+  "/banner/:id/upload",
+  express.static(path.resolve(__dirname, "./tmp/perfil"))
+);
 
 consign()
   .include("./config/passport.js")

@@ -4,7 +4,7 @@
     <v-row class="ml-2 mb-0">
       <v-col cols="12" md="5">
         <v-card-title>Perfil</v-card-title>
-        {{ user}}
+        {{ user }}
         <v-row class="altura">
           <v-col>
             <v-avatar v-if="usuario.imagePerfil" size="160" tile class="mb-3">
@@ -40,7 +40,7 @@
         <v-row class="altura">
           <v-col>
             <img v-if="urlBanner" :src="urlBanner" />
-            <v-img v-else :src="usuario.imageBanner"></v-img>
+            <v-img v-else :src="url + '/' + usuario.imageBanner"></v-img>
           </v-col>
         </v-row>
         <v-row class="ml-2 mb-0" no-gutters>
@@ -76,7 +76,7 @@ export default {
       imagemPerfil: [],
       imagemBanner: [],
       url: baseApiUrl,
-      user:''
+      user: '',
     }
   },
 
@@ -101,11 +101,11 @@ export default {
       fd.append('file', this.imagemPerfil)
 
       axios
-        .post(`${baseApiUrl}/perfil/${this.$store.state.id}/upload`, fd)
-        .then((res) => {
+        .post(`${baseApiUrl}/perfil/${this.usuario.id}/upload`, fd)
+        .then(() => {
           // eslint-disable-next-line no-console
-          console.log(res)
-          this.$toasted.global.defaultSuccess()
+
+          this.$toast.success('Imagem alterada com sucesso')
         })
         .catch(showError)
     },
@@ -113,9 +113,9 @@ export default {
       var fd = new FormData()
       fd.append('file', this.imagemBanner)
       axios
-        .post(`${baseApiUrl}/banner/${this.$store.state.id}/upload`, fd)
+        .post(`${baseApiUrl}/banner/${this.usuario.id}/upload`, fd)
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this.$toast.success('Imagem alterada com sucesso')
         })
         .catch(showError)
     },
@@ -123,8 +123,7 @@ export default {
 
   mounted() {
     this.user = this.$store.getters.user
-    
-  }
+  },
 }
 </script>
 
