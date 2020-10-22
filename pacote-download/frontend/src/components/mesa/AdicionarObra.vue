@@ -18,7 +18,6 @@
               outlined
               value
               label="Título"
-              @input="ObraId"
             ></v-text-field>
 
             <v-file-input
@@ -320,9 +319,9 @@ export default {
     // /:autor/mesa/adicionarobra
     salvarObra() {
       axios
-        .post(`${baseApiUrl}/${this.usuario.user}/mesa/adicionarobra`, {
+        .post(`${baseApiUrl}/mesa/${this.usuario.id}/adicionarobra`, {
           nome: this.obra.nome,
-          autor: this.obra.autor,
+          autor: this.usuario.id,
           publica: this.obra.publica,
           categoriaId: this.obra.categoriaId,
           fandonsId: [this.obra.fandonsId].join(','),
@@ -339,10 +338,6 @@ export default {
           this.getUltimaObra()
         })
         .catch(showError)
-    },
-
-    ObraId() {
-      this.obra.autor = this.usuario.id
     },
 
     getUltimaObra() {

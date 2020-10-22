@@ -249,16 +249,24 @@ module.exports = (app) => {
       .first();
 
     if (getImage) {
-      await fs.unlink(`./tmp/perfil/${getImage.key}`, (err) => {
-        if (err) throw err;
-        console.log("File deleted!");
-      });
+      // await fs.unlink(`./tmp/perfil/${getImage.key}`, (err) => {
+      //   if (err) throw err;
+      //   console.log("File deleted!");
+      // });
+
+      await s3
+        .deleteObject({
+          Bucket: "upload.fanbase",
+          Key: getImage.key,
+        })
+        .promise();
       app
         .db("imagensPerfil")
         .update({
           name: req.file.originalname,
           size: req.file.size,
-          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          // path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          path: req.file.location,
           key: req.file.key,
         })
         .where({ usuarioId: getImage.usuarioId })
@@ -270,7 +278,8 @@ module.exports = (app) => {
         .insert({
           name: req.file.originalname,
           size: req.file.size,
-          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          // path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          path: req.file.location,
           key: req.file.key,
           usuarioId: req.params.usuarioId,
         })
@@ -290,16 +299,18 @@ module.exports = (app) => {
       .first();
 
     if (getImage) {
-      await fs.unlink(`./tmp/perfil/${getImage.key}`, (err) => {
-        if (err) throw err;
-        console.log("File deleted!");
-      });
+      await s3
+        .deleteObject({
+          Bucket: "upload.fanbase",
+          Key: getImage.key,
+        })
+        .promise();
       app
         .db("imagensBanner")
         .update({
           name: req.file.originalname,
           size: req.file.size,
-          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          path: req.file.location,
           key: req.file.key,
         })
         .where({ usuarioId: getImage.usuarioId })
@@ -311,7 +322,7 @@ module.exports = (app) => {
         .insert({
           name: req.file.originalname,
           size: req.file.size,
-          path: `perfil/${req.params.usuarioId}/upload/${req.file.key}`,
+          path: req.file.location,
           key: req.file.key,
           usuarioId: req.params.usuarioId,
         })

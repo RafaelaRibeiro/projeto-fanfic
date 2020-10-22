@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-card class="perfil-banner">
-          <v-img v-if="usuario.imagePerfil" height="300px" :src="url + '/' + usuario.imageBanner"></v-img>
+          <v-img v-if="usuario.imagePerfil" height="300px" :src="usuario.imageBanner"></v-img>
 
           <v-img v-else height="300px" src="@/assets/banner-teste.png"></v-img>
         </v-card>
@@ -13,7 +13,8 @@
     <v-row class="sub-banner">
       <v-col class="avatar" cols="3">
         <v-avatar class="profile" color="grey" size="150">
-          <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img>
+          <!-- <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img> -->
+          <v-img v-if="usuario.imagePerfil" :src="usuario.imagePerfil"></v-img>
           <v-img v-else src="@/assets/profile.png"></v-img>
         </v-avatar>
       </v-col>

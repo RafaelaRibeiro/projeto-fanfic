@@ -8,7 +8,7 @@ const aws = require("aws-sdk");
 const storageTypes = {
   local: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.resolve(__dirname, process.env.STORAGE_PATH ));
+      cb(null, path.resolve(__dirname, process.env.STORAGE_PATH));
     },
     filename: (req, file, cb) => {
       crypto.randomBytes(16, (err, hash) => {
@@ -39,7 +39,7 @@ const storageTypes = {
 
 module.exports = {
   dest: path.resolve(__dirname, "..", "tmp", "perfil"),
-  storage: storageTypes["local"],
+  storage: storageTypes["s3"],
 
   limits: {
     fileSize: 2 * 1024 * 1024,

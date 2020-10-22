@@ -22,6 +22,16 @@ module.exports = (app) => {
       .where({ email: req.body.email })
       .first();
 
+    const imagePerfil = await app
+      .db("imagensPerfil")
+      .where({ usuarioId: usuario.id })
+      .first();
+
+    const imageBanner = await app
+      .db("imagensBanner")
+      .where({ usuarioId: usuario.id })
+      .first();
+
     if (!usuario) return res.status(400).send("Usuário não encontrado!");
     if (usuario.verificado === 0)
       return res.status(400).send("Seu cadastro não foi ativado");
@@ -44,8 +54,8 @@ module.exports = (app) => {
       instagran: usuario.instagran,
       pinterest: usuario.pinterest,
       tumblr: usuario.tumblr,
-      imagemPerfil: usuario.imagemPerfil,
-      imagemCapa: usuario.imagemCapa,
+      imagemPerfil: imagePerfil.path,
+      imagemBanner: imageBanner.path,
       dataRegistro: usuario.dataRegistro,
       dataNasc: usuario.dataNasc,
 
@@ -133,7 +143,7 @@ module.exports = (app) => {
     mailer.sendMail({
       to: email,
       from: "no-reply@liberfans.com",
-      subject: 'Redefinir Senha',
+      subject: "Redefinir Senha",
       template: "auth/forgotPassword",
       context: { token, name },
     });

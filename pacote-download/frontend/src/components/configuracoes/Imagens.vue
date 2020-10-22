@@ -9,7 +9,7 @@
           <v-col>
             <v-avatar v-if="usuario.imagePerfil" size="160" tile class="mb-3">
               <img v-if="urlPerfil" :src="urlPerfil" />
-              <v-img v-else :src="url + '/' + usuario.imagePerfil"></v-img>
+              <v-img v-else :src="usuario.imagePerfil"></v-img>
             </v-avatar>
 
             <v-avatar v-else size="160" tile class="mb-3">
@@ -40,7 +40,7 @@
         <v-row class="altura">
           <v-col>
             <img v-if="urlBanner" :src="urlBanner" />
-            <v-img v-else :src="url + '/' + usuario.imageBanner"></v-img>
+            <v-img v-else :src="usuario.imageBanner"></v-img>
           </v-col>
         </v-row>
         <v-row class="ml-2 mb-0" no-gutters>

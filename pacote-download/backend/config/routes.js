@@ -95,8 +95,8 @@ module.exports = (app) => {
 
   //Minha Mesa - Obra
 
-  app.route("/:user/mesa/adicionarobra").post(app.api.mesa.save);
-  app.route("/:user/mesa/editarobra/:id").put(app.api.mesa.save);
+  app.route("/mesa/:usuarioId/adicionarobra").post(app.api.mesa.save);
+  app.route("/mesa/usuarioId/editarobra/:id").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
   app.post(
