@@ -25,9 +25,15 @@ module.exports = (app) => {
       app
         .db("obras")
         .insert(obra)
-        .then((_) => res.status(240).send())
+        .then((obra) => obra.status(240).send())
         .catch((err) => res.status(500).send());
     }
+
+    const payload = obra.id;
+
+    res.json({
+      payload,
+    });
   };
 
   const getById = (req, res) => {
@@ -55,13 +61,13 @@ module.exports = (app) => {
     const query = app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .where({ user: req.params.user })
+      .where({ "usuarios.id": req.params.id })
       .max("obras.id");
     app
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
       .select("obras.*")
-      .where({ user: req.params.user, "obras.id": query })
+      .where({ "usuarios.id": req.params.id, "obras.id": query })
 
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
@@ -180,12 +186,12 @@ module.exports = (app) => {
 
   const uploadObra = async (req, res) => {
     const image = { ...req.body };
-    if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+    if (req.params.obraId) image.obraId = req.params.obraId;
 
     var getImage = await app
-      .db("imagemObra")
-      .select("id", "key", "usuarioId")
-      .where({ usuarioId: req.params.usuarioId })
+      .db("imagensObra")
+      .select("id", "key", "obraId")
+      .where({ obraId: req.params.obraId })
       .first();
 
     if (getImage) {
@@ -196,25 +202,25 @@ module.exports = (app) => {
         })
         .promise();
       app
-        .db("imagemObra")
+        .db("imagensObra")
         .update({
           name: req.file.originalname,
           size: req.file.size,
           path: req.file.location,
           key: req.file.key,
         })
-        .where({ usuarioId: getImage.usuarioId })
+        .where({ id: getImage.id })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
       app
-        .db("imagemObra")
+        .db("imagensObra")
         .insert({
           name: req.file.originalname,
           size: req.file.size,
           path: req.file.location,
           key: req.file.key,
-          usuarioId: req.params.usuarioId,
+          obraId: req.params.obraId,
         })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));

@@ -224,10 +224,7 @@ export default {
       publica: false,
       model: null,
       desabilitado: false,
-      imagemObra: {
-        name: '',
-        size: 0,
-      },
+      imagemObra: null,
       name: 'Midnight Crew',
       shipps: [],
       categorias: [],
@@ -341,7 +338,7 @@ export default {
     },
 
     getUltimaObra() {
-      const url = ` ${baseApiUrl}/${this.usuario.user}/mesa/ultimaobra`
+      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
       axios(url)
         .then((res) => {
           this.a = res.data[0]
@@ -350,7 +347,7 @@ export default {
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
           axios
-            .post(`${baseApiUrl}obra/${this.a.id}/upload`, fd)
+            .post(`${baseApiUrl}/obra/${this.a.id}/upload`, fd)
             .then(() => {
               this.$toasted.global.defaultSuccess()
               this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
