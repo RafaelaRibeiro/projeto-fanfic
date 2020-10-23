@@ -194,6 +194,8 @@ module.exports = (app) => {
       .where({ obraId: req.params.obraId })
       .first();
 
+      console.log(getImage)
+
     if (getImage) {
       await s3
         .deleteObject({
@@ -225,6 +227,8 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
+
+    console.log(req.file)
   };
 
   return {

@@ -31,7 +31,7 @@ const storageTypes = {
         // const fileName = `${hash.toString("hex")}-${file.originalname}`;
         // const fullPath = 'imagensPerfil/'+ fileName
 
-        cb(null, fileName);
+        cb(null, fileName)
       });
     },
   }),
