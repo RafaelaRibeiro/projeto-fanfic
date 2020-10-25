@@ -43,6 +43,8 @@
           <span color="red" class="md-list-item-text">{{ item.text }}</span>
         </md-list-item>
       </md-list>
+
+      <v-divider class="ma-0"></v-divider>
       <md-list class="md-dense pa-0 mb-2">
         <md-list-item @click="dialog = true">
           <v-icon class="pr-6">mdi-logout</v-icon>

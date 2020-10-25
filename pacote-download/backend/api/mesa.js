@@ -1,3 +1,6 @@
+const aws = require("aws-sdk");
+const s3 = new aws.S3();
+
 module.exports = (app) => {
   const { existsOrError, notExistsOrError } = app.api.validacao;
   //  Obras
@@ -41,9 +44,47 @@ module.exports = (app) => {
       .db("obras")
       .join("usuarios", "obras.autor", "usuarios.id")
       .select("obras.*")
-      .where({ "obras.id": req.params.id })
+      .where({ "obras.id": req.params.id, "obras.autor": req.params.usuarioId })
       .first()
       .then((obra) => res.json(obra))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const capituloById = (req, res) => {
+    app
+      .db("capitulos")
+
+      .select(
+        "capitulos.*",
+        app.db.raw("CONVERT(capitulos.conteudo USING utf8) as conteudo")
+      )
+      .where({
+        "capitulos.obraId": req.params.obraId,
+        "capitulos.numero": req.params.numero,
+      })
+      .first()
+      .then((capitulos) => res.json(capitulos))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const listaCapitulos = (req, res) => {
+    app
+      .db("capitulos")
+      .join("obras", "capitulos.obraId", "obras.id")
+      .select(
+        "capitulos.obraId",
+        "obras.nome as nomeObra",
+        "capitulos.id",
+        "capitulos.nome",
+        "capitulos.dataPostagem",
+        "capitulos.numero",
+        "capitulos.publica",
+        app.db.raw(
+          "date_format(capitulos.dataPostagem, '%d/%m/%Y %H:%i:%s') as dataPostagem"
+        )
+      )
+      .where({ "capitulos.obraId": req.params.obraId })
+      .then((capitulos) => res.json(capitulos))
       .catch((err) => res.status(500).send(err));
   };
 
@@ -77,10 +118,18 @@ module.exports = (app) => {
   const getObrasPublicas = (req, res) => {
     app
       .db("obras")
-      .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .select("obras.*")
-      .where({ user: req.params.user, publica: true })
+      .leftJoin("capitulos", "obras.id", "capitulos.obraId")
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .select(
+        "obras.*",
+        app.db.raw(
+          "obras.id as obraId, COUNT(capitulos.id) as countCap, imagensObra.path, date_format(obras.dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado"
+        )
+      )
+
+      .where({ autor: req.params.usuarioId, "obras.publica": true })
       .orderBy("obras.id", "desc")
+      .groupBy("obras.id")
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };
@@ -88,10 +137,18 @@ module.exports = (app) => {
   const getObrasPrivadas = (req, res) => {
     app
       .db("obras")
-      .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .select("obras.*")
-      .where({ user: req.params.user, publica: false })
+      .leftJoin("capitulos", "obras.id", "capitulos.obraId")
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .select(
+        "obras.*",
+        app.db.raw(
+          "obras.id as obraId, COUNT(capitulos.id) as countCap, imagensObra.path, date_format(obras.dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado"
+        )
+      )
+
+      .where({ autor: req.params.usuarioId, "obras.publica": false })
       .orderBy("obras.id", "desc")
+      .groupBy("obras.id")
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };
@@ -133,7 +190,6 @@ module.exports = (app) => {
 
     try {
       existsOrError(capitulo.conteudo, "Conteudo não Informada");
-      existsOrError(capitulo.obraId, "Obra não Informada");
     } catch (msg) {
       res.status(400).send(msg);
     }
@@ -194,7 +250,7 @@ module.exports = (app) => {
       .where({ obraId: req.params.obraId })
       .first();
 
-      console.log(getImage)
+    console.log(getImage);
 
     if (getImage) {
       await s3
@@ -228,7 +284,7 @@ module.exports = (app) => {
         .catch((err) => res.status(500).send(err));
     }
 
-    console.log(req.file)
+    console.log(req.file);
   };
 
   return {
@@ -244,5 +300,7 @@ module.exports = (app) => {
     getCoautor,
     getAvisosByObra,
     remove,
+    capituloById,
+    listaCapitulos,
   };
 };

@@ -51,8 +51,7 @@ module.exports = (app) => {
   app.route("/:user/estante/").post(app.api.estante.save);
   app.route("/estante/:id").put(app.api.estante.updateEstante);
 
-  //Obras
-
+  //**************************************Obras*****************************************************
   app
     .route("/obra/:obraId/capitulo/:numero")
     .get(app.api.obras.getByIdCapitulo)
@@ -73,7 +72,7 @@ module.exports = (app) => {
     .route("/obra/:obraId/capitulo/:numero/comentarios")
     .get(app.api.obras.getComentarios);
 
-  //Perfil
+  //**************************************Perfil*****************************************************
 
   app.route("/perfil/:user").put(app.api.perfil.updateUser);
 
@@ -93,10 +92,10 @@ module.exports = (app) => {
     .route("/perfil/:autor/obras/shipp")
     .get(app.api.perfil.getObrasPerfilShipp);
 
-  //Minha Mesa - Obra
+  //**************************************Mesa - Obra*****************************************************
 
   app.route("/mesa/:usuarioId/adicionarobra").post(app.api.mesa.save);
-  app.route("/mesa/usuarioId/editarobra/:id").put(app.api.mesa.save);
+  app.route("/mesa/:obraId/editarobra").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
   app.post(
@@ -105,22 +104,31 @@ module.exports = (app) => {
     app.api.mesa.uploadObra
   );
 
-  app.route("/mesa/:id").get(app.api.mesa.getById).delete(app.api.mesa.remove);
+  app
+    .route("/:usuarioId/mesa/:id")
+    .get(app.api.mesa.getById)
+    .delete(app.api.mesa.remove);
+  app.route("/mesa/:obraId/capitulo/:numero").get(app.api.mesa.capituloById);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
 
-  app.route("/:user/obraspublicas").get(app.api.mesa.getObrasPublicas);
+  app
+    .route("/mesa/:usuarioId/obraspublicas")
+    .get(app.api.mesa.getObrasPublicas);
+
+  app
+    .route("/mesa/:usuarioId/obrasprivadas")
+    .get(app.api.mesa.getObrasPrivadas);
 
   app.route("/obrasTeste/:fandonsId").get(app.api.mesa.getObrasByCategoria);
 
-  app.route("/:user/mesa/obrasprivadas").get(app.api.mesa.getObrasPrivadas);
-
   app.route("/mesa/:id/ultimaobra").get(app.api.mesa.getUltimaObra);
 
-  //Minha Mesa - Capitulo
+  //**************************************Mesa - Capitulo*****************************************************
 
-  app.route("/:user/mesa/adicionarcapitulo").post(app.api.mesa.saveCapitulo);
-  app.route("/mesa/editarcapitulo/:id").put(app.api.mesa.saveCapitulo);
+  app.route("/mesa/:obraId/adicionarcapitulo").post(app.api.mesa.saveCapitulo);
+  app.route("/mesa/:obraId/editarcapitulo/:id").put(app.api.mesa.saveCapitulo);
   app.route("/mesa/:obraId/ultimocapitulo").get(app.api.mesa.getUltimoCapitulo);
+  app.route("/mesa/:obraId/listacapitulos").get(app.api.mesa.listaCapitulos);
 
   //Minha Mesa - Notas
 

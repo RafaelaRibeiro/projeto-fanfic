@@ -4,9 +4,12 @@
       <!-- titulos -->
       <v-row>
         <v-col>
-          <h1 class="display-1 font-weight-light mb-4">
+          <!-- <h1 class="display-1 font-weight-light mb-4">
             <i> <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas </i>
-          </h1>
+          </h1> -->
+          <h4 class="font-weight-light pa-2">
+            <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas
+          </h4>
         </v-col>
       </v-row>
 
@@ -104,7 +107,7 @@ export default {
 
   methods: {
     getObrasPublicas() {
-      const url = ` ${baseApiUrl}/${this.$store.state.usuario.user}/obraspublicas`
+      const url = ` ${baseApiUrl}/mesa/${this.$store.state.usuario.id}/obraspublicas`
       axios(url).then((res) => {
         this.obras = res.data
       })

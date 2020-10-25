@@ -1,7 +1,7 @@
 <template>
-  <v-content v-if="isMenuVisible" class="deep-purple lighten-5">
+  <v-main v-if="isMenuVisible" class="deep-purple lighten-5">
     <v-row justify="center" class="mx-3">
-      <v-col md="12">
+      <v-col cols="12" md="10">
         <v-card elevation="7">
           <router-view></router-view>
         </v-card>
@@ -39,7 +39,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-content>
+  </v-main>
   <router-view v-else></router-view>
 </template>
 

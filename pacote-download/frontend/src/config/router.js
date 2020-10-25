@@ -5,6 +5,7 @@ import MinhaEstante from '../components/estante/MinhaEstante'
 import Perfil from '../components/perfil/Perfil'
 import ObrasPrivadas from '../components/mesa/ObrasPrivadas'
 import ObrasPublicas from '../components/mesa/ObrasPublicas'
+import ListaCapitulos from '../components/mesa/ListaCapitulos'
 import AdicionarObra from '../components/mesa/AdicionarObra'
 import EditarObra from '../components/mesa/EditarObra'
 import EditarCapitulo from '../components/mesa/EditarCapitulo'
@@ -74,6 +75,14 @@ const routes = [
     component: ObrasPublicas,
     meta: { requiresAuth: true },
   },
+
+  {
+    name: 'listaCapitulos',
+    path: '/mesa/:obraId/listacapitulos',
+    component: ListaCapitulos,
+    meta: { requiresAuth: true },
+  },
+
   {
     name: 'adicionarObra',
     path: '/mesa/adicionarobra',

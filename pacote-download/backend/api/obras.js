@@ -60,7 +60,7 @@ module.exports = (app) => {
       .join("obras", "capitulos.obraId", "=", "obras.id")
       .select(
         app.db.raw(
-          "obras.nome as obraNome, capitulos.id, CONVERT(capitulos.conteudo USING utf8) as conteudo, capitulos.numero, capitulos.nome, capitulos.notasIniciais, capitulos.notasFinais, capitulos.obraId, capitulos.avisosId"
+          "obras.nome as obraNome, capitulos.id, CONVERT(capitulos.conteudo USING utf8) as conteudo, capitulos.numero, capitulos.nome, capitulos.notasIniciais, capitulos.notasFinais, capitulos.obraId, capitulos.avisosId, capitulos.publica, obras.terminada"
         )
       )
       .where({ obraId: req.params.obraId, numero: req.params.numero })
@@ -75,12 +75,14 @@ module.exports = (app) => {
       .join("usuarios", "obras.autor", "usuarios.id")
       .join("capitulos", "obras.id", "capitulos.obraId")
       .join("categorias", "obras.categoriaId", "categorias.id")
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
       .select(
         app.db.raw(
-          "obras.id, obras.nome, obras.autor, categorias.nome as categoriaId, obras.classificacao, case obras.terminada when 0 then 'Em Andamento' else 'Terminada' end as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user, max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s'))as ultimaPostagem"
+          "obras.id, obras.nome, obras.autor, categorias.nome as categoriaId, obras.classificacao, case obras.terminada when 0 then 'Em Andamento' else 'Terminada' end as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user, max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s'))as ultimaPostagem, imagensObra.path"
         )
       )
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
+      .first()
       .groupBy("obras.id")
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));

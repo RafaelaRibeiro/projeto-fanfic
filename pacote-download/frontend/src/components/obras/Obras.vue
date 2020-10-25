@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-content>
+    <v-main>
       <v-row>
         <v-col cols="11">
           <v-card flat height="100px">
@@ -11,7 +11,7 @@
         </v-col>
       </v-row>
       <CapituloById />
-    </v-content>
+    </v-main>
   </v-container>
 </template>
 

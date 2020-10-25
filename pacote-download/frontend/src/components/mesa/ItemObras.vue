@@ -5,7 +5,7 @@
         <v-col cols="2">
           <v-card flat class="ma-2">
             <v-avatar size="100" tile class="d-none d-sm-block">
-              <v-img v-if="item.capa" :src="item.capa"></v-img>
+              <v-img v-if="item.path" :src="item.path"></v-img>
               <v-img
                 v-else
                 src=" https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
@@ -15,7 +15,9 @@
         </v-col>
         <v-col cols="8">
           <v-card class="d-flex flex-column" flat>
-            <span class="mb-2 subtitle-2 font-weight-medium">{{ item.nome }}</span>
+            <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
+              <span class="mb-2 subtitle-2 font-weight-medium">{{ item.nome }}</span>
+            </router-link>
             <span>
               <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
               {{ item.countCap }}
@@ -47,7 +49,7 @@
             </template>
 
             <md-list class="md-dense">
-              <md-list-item>
+              <md-list-item v-if="item.countCap > 0" :to="{ name: 'listaCapitulos', params: { obraId: item.id } }">
                 <v-icon small left>mdi-view-list</v-icon>
                 <span class="md-list-item-text">Lista de Capitulos</span>
               </md-list-item>
@@ -79,7 +81,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 export default {
@@ -91,15 +92,6 @@ export default {
     }
   },
 
-  computed: {
-    dataFormatado() {
-      if (this.item.dataAdicionado) {
-        return moment(String(this.item.dataAdicionado)).format('DD/MM/YYYY HH:mm')
-      }
-
-      return this.dataAdicionado
-    },
-  },
   methods: {
     remove() {
       const id = this.item.obraId

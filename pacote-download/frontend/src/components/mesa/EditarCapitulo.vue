@@ -1,10 +1,10 @@
 <template>
   <v-container>
-    <v-content v-if="vizualizar">
+    <v-main v-if="vizualizar">
       <v-row>
         <v-col>
           <h1 class="display-1 font-weight-light mb-4">
-            <i> <v-icon x-large class="pa-3">mdi-file-plus</v-icon>Adicionar Capítulo </i>
+            <i> <v-icon x-large class="pa-3">mdi-file-edit</v-icon>Editar Capítulo </i>
           </h1>
         </v-col>
       </v-row>
@@ -68,36 +68,38 @@
             <v-col>
               <v-expansion-panels flat focusable>
                 <v-expansion-panel>
-                  <v-expansion-panel-header>Seu capítulo necessita de avisos?</v-expansion-panel-header>
+                  <v-expansion-panel-header flat outlined color="#EEEEEE"
+                    >Seu capítulo necessita de avisos?</v-expansion-panel-header
+                  >
                   <v-expansion-panel-content>
                     <v-row justify="center">
-                      <v-col cols="4">
+                      <v-col>
                         <v-checkbox
                           v-for="aviso in avisos.slice(0, 4)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
                           :value="aviso.id"
                         ></v-checkbox>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col>
                         <v-checkbox
                           v-for="aviso in avisos.slice(4, 8)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
                           :value="aviso.id"
                         ></v-checkbox>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col>
                         <v-checkbox
                           v-for="aviso in avisos.slice(8, 12)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
@@ -111,12 +113,9 @@
             </v-col>
           </v-row>
 
-          <v-row justify="center">
-            <v-col cols="4">
-              <q-checkbox v-model="capitulo.publica" label="Marcar capítulo como Publico?" />
-            </v-col>
-            <v-col cols="4">
-              <q-checkbox value="1" label="Marcar a obra como terminada?" />
+          <v-row>
+            <v-col>
+              <v-checkbox v-model="capitulo.publica" label="Marcar capítulo como Publico?"></v-checkbox>
             </v-col>
           </v-row>
 
@@ -130,8 +129,8 @@
           </v-row>
         </v-col>
       </v-row>
-    </v-content>
-    <v-content v-else>
+    </v-main>
+    <v-main v-else>
       <v-row>
         <v-col cols="11">
           <v-card flat height="100px">
@@ -179,7 +178,7 @@
           <v-btn dark class="ma-3" color="green darken-4" @click="salvarCapitulo">Salvar Capítulo</v-btn>
         </v-col>
       </v-row>
-    </v-content>
+    </v-main>
   </v-container>
 </template>
 
@@ -243,9 +242,8 @@ export default {
       publica: false,
       desabilitado: false,
       capitulo: {
-        publica: false,
-
         conteudo: '',
+        avisosId: [],
         dataPostagem: moment().format('YYYY-MM-DD HH:mm:ss'),
       },
       ultimoCapitulo: [],
@@ -256,18 +254,20 @@ export default {
   methods: {
     salvarCapitulo() {
       axios
-        .post(`${baseApiUrl}/${this.usuario.user}/mesa/adicionarcapitulo`, this.capitulo)
+        .put(`${baseApiUrl}/mesa/${this.capitulo.obraId}/editarcapitulo/${this.capitulo.id}`, {
+          nome: this.capitulo.nome,
+          publica: this.capitulo.publica,
+          conteudo: this.capitulo.conteudo,
+          notasIniciais: this.capitulo.notasIniciais,
+          notasFinais: this.capitulo.notasFinais,
+          obraId: this.obraId,
+          avisosId: [this.capitulo.avisosId].join(','),
+        })
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this.$toast.success('Capítulo Editado com Sucesso')
+          this.$router.push({ path: `/obra/${this.capitulo.obraId}/capitulo/${this.capitulo.numero}` })
         })
         .catch(showError)
-    },
-
-    getObra() {
-      const url = ` ${baseApiUrl}/${this.usuario.user}/mesa/${this.$route.params.id}`
-      axios(url).then((res) => {
-        this.obra = res.data
-      })
     },
 
     getAvisos() {
@@ -278,31 +278,25 @@ export default {
     },
 
     getCapitulo() {
-      const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
+      const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
       axios.get(url).then((res) => {
         this.capitulo = res.data
+
+        if (this.capitulo.avisosId) {
+          this.capitulo.avisosId = this.capitulo.avisosId.split(',')
+          this.capitulo.avisosId = this.capitulo.avisosId.map(Number)
+        } else {
+          this.capitulo.avisosId = []
+        }
       })
     },
   },
 
   computed: {
     ...mapState(['usuario']),
-
-    WordCount() {
-      return this.capitulo.conteudo.split(' ').length
-    },
-  },
-
-  watch: {
-    $route(to) {
-      this.capitulo.obraId = to.params.obraId
-      this.getObra()
-    },
   },
 
   mounted() {
-    this.capitulo.obraId = this.$route.params.obraId
-    this.getObra()
     this.getAvisos()
 
     this.getCapitulo()

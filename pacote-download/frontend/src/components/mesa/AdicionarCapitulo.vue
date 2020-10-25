@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-content v-if="vizualizar">
+    <v-main v-if="vizualizar">
       <v-row>
         <v-col>
           <h1 class="display-1 font-weight-light mb-4">
@@ -52,7 +52,7 @@
                   }"
                 ></jodit-vue>
               </div>
-              {{ WordCount }}
+
               <v-textarea
                 label="Notas Finais"
                 auto-grow
@@ -75,7 +75,7 @@
                         <v-checkbox
                           v-for="aviso in avisos.slice(0, 4)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
@@ -86,7 +86,7 @@
                         <v-checkbox
                           v-for="aviso in avisos.slice(4, 8)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
@@ -97,7 +97,7 @@
                         <v-checkbox
                           v-for="aviso in avisos.slice(8, 12)"
                           :key="aviso.id"
-                          v-model="selected"
+                          v-model="capitulo.avisosId"
                           dense
                           class="ma-0"
                           :label="aviso.nome"
@@ -112,11 +112,8 @@
           </v-row>
 
           <v-row justify="center">
-            <v-col cols="4">
-              <q-checkbox v-model="capitulo.publica" label="Marcar capítulo como Publico?" />
-            </v-col>
-            <v-col cols="4">
-              <q-checkbox value="1" label="Marcar a obra como terminada?" />
+            <v-col>
+              <v-checkbox v-model="capitulo.publica" label="Marcar capítulo como Publico?"></v-checkbox>
             </v-col>
           </v-row>
 
@@ -130,14 +127,15 @@
           </v-row>
         </v-col>
       </v-row>
-    </v-content>
-    <v-content v-else>
+    </v-main>
+    <v-main v-else>
       <v-row>
         <v-col cols="11">
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light">
               <i>{{ obra.nome }}</i>
             </h1>
+            {{ capitulo.obraId }} - {{ capitulo.numero }}
           </v-card>
         </v-col>
       </v-row>
@@ -179,7 +177,7 @@
           <v-btn dark class="ma-3" color="green darken-4" @click="salvarCapitulo">Salvar Capítulo</v-btn>
         </v-col>
       </v-row>
-    </v-content>
+    </v-main>
   </v-container>
 </template>
 
@@ -243,10 +241,9 @@ export default {
       publica: false,
       desabilitado: false,
       capitulo: {
-        publica: false,
-
         conteudo: '',
         dataPostagem: moment().format('YYYY-MM-DD HH:mm:ss'),
+        avisosId: [],
       },
       ultimoCapitulo: [],
       obra: {},
@@ -256,17 +253,27 @@ export default {
   methods: {
     salvarCapitulo() {
       axios
-        .post(`${baseApiUrl}/${this.usuario.user}/mesa/adicionarcapitulo`, this.capitulo)
+        .post(`${baseApiUrl}/mesa/${this.obra.id}/adicionarcapitulo`, {
+          numero: this.capitulo.numero,
+          nome: this.capitulo.nome,
+          obraId: this.capitulo.obraId,
+          publica: this.capitulo.publica,
+          conteudo: this.capitulo.conteudo,
+          notasIniciais: this.capitulo.notasIniciais,
+          notasFinais: this.capitulo.notasFinais,
+          avisosId: [this.capitulo.avisosId].join(','),
+        })
         .then(() => {
-          this.$toasted.global.defaultSuccess()
+          this.$router.push({ path: `/obra/${this.capitulo.obraId}/capitulo/${this.capitulo.numero}` })
         })
         .catch(showError)
     },
 
     getObra() {
-      const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}`
+      const url = ` ${baseApiUrl}/mesa/${this.$route.params.id}`
       axios(url).then((res) => {
         this.obra = res.data
+        this.capitulo.obraId = this.obra.id
       })
     },
 
@@ -278,7 +285,7 @@ export default {
     },
 
     getNumeroCapitulo() {
-      const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo`
+      const url = ` ${baseApiUrl}/mesa/${this.$route.params.id}/ultimocapitulo`
       axios(url).then((res) => {
         this.ultimoCapitulo = res.data[0]
         this.ultimoCapitulo.max_numero++
@@ -297,13 +304,13 @@ export default {
 
   watch: {
     $route(to) {
-      this.capitulo.obraId = to.params.obraId
+      this.capitulo.obraId = to.params.id
       this.getObra()
     },
   },
 
   mounted() {
-    this.capitulo.obraId = this.$route.params.obraId
+    this.capitulo.obraId = this.$route.params.id
     this.getObra()
     this.getAvisos()
     this.getNumeroCapitulo()

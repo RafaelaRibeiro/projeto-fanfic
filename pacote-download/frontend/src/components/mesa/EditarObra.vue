@@ -256,7 +256,7 @@ export default {
   methods: {
     // /:autor/mesa/adicionarobra
     getObras() {
-      const url = ` ${baseApiUrl}/mesa/${this.$route.params.id}/`
+      const url = ` ${baseApiUrl}/${this.$store.state.user.id}/mesa/${this.$route.params.id}/`
       axios.get(url).then((res) => {
         this.obra = res.data
         this.obra.avisosId = this.obra.avisosId.split(',')
@@ -272,7 +272,7 @@ export default {
 
     salvarObra() {
       axios
-        .put(`${baseApiUrl}/${this.usuario.user}/mesa/editarobra/${this.$route.params.obraId}/`, {
+        .put(`${baseApiUrl}/mesa/${this.$route.params.obraId}/editarobra`, {
           nome: this.obra.nome,
           autor: this.obra.autor,
           publica: this.obra.publica,
@@ -293,7 +293,7 @@ export default {
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
           axios
-            .post(`${baseApiUrl}/upload/${this.obra.id}`, fd)
+            .post(`${baseApiUrl}/obra/${this.obra.id}/upload`, fd)
             .then(() => {
               this.$toasted.global.defaultSuccess()
               this.$router.push({ path: `/obra/${this.obra.id}/` })
@@ -357,7 +357,6 @@ export default {
   },
 
   mounted() {
-    this.user.user = 'ADM'
     this.getObras()
     this.getCategorias()
     this.getUniversos()
