@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container >
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
@@ -256,7 +256,7 @@ export default {
   methods: {
     // /:autor/mesa/adicionarobra
     getObras() {
-      const url = ` ${baseApiUrl}/${this.$store.state.user.id}/mesa/${this.$route.params.id}/`
+      const url = ` ${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
       axios.get(url).then((res) => {
         this.obra = res.data
         this.obra.avisosId = this.obra.avisosId.split(',')
