@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container >
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
