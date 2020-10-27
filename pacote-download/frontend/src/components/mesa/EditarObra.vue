@@ -8,9 +8,8 @@
       </v-col>
     </v-row>
 
-    {{ autor }}
+    
 
-    {{ obra }}
     <v-row justify="center">
       <v-col cols="10">
         <v-row>
@@ -254,30 +253,12 @@ export default {
       items: [],
       searchA: null,
       select: null,
-      autor: null,
+   
     }
   },
 
   methods: {
-    // /:autor/mesa/adicionarobra
-    // getObras() {
-    //   if (this.obra.autor) {
-    //     const url = ` ${baseApiUrl}/${this.$store.state.usuario.id}/mesa/${this.$route.params.id}/`
-    //     axios.get(url).then((res) => {
-    //       this.obra = res.data
-    //       this.obra.avisosId = this.obra.avisosId.split(',')
-    //       this.obra.avisosId = this.obra.avisosId.map(Number)
-    //       this.obra.caracteristicasId = this.obra.caracteristicasId.split(',')
-    //       this.obra.caracteristicasId = this.obra.caracteristicasId.map(Number)
-    //       this.obra.fandonsId = this.obra.fandonsId.split(',')
-    //       this.obra.fandonsId = this.obra.fandonsId.map(Number)
-    //       this.obra.shippSecundario = this.obra.shippSecundario.split(',')
-    //       this.obra.shippSecundario = this.obra.shippSecundario.map(Number)
-    //     })
-    //   } else {
-    //     this.$router.push({ path: `/` })
-    //   }
-    // },
+ 
 
     getObras() {
       const url = ` ${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
@@ -290,7 +271,12 @@ export default {
         this.obra.fandonsId = this.obra.fandonsId.split(',')
         this.obra.fandonsId = this.obra.fandonsId.map(Number)
         this.obra.shippSecundario = this.obra.shippSecundario.split(',')
-        this.obra.shippSecundario = this.obra.shippSecundario.map(Number)
+        this.obra.shippSecundario = this.obra.shippSecundario.map(Number),
+        this.imagemObra.name = this.obra.name
+        this.imagemObra.size = this.obra.size
+        this.imagemObra.path = this.obra.path
+        this.imagemObra.key = this.obra.key
+        this.imagemObra.obraId = this.obra.obraId
       })
     },
 
@@ -312,14 +298,14 @@ export default {
         })
         .then(() => {
           if (this.imagemObra.size === 0) {
-            this.$toasted.global.defaultSuccess()
+           
             this.$router.push({ path: `/obra/${this.obra.id}/` })
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
           axios
             .post(`${baseApiUrl}/obra/${this.obra.id}/upload`, fd)
             .then(() => {
-              this.$toasted.global.defaultSuccess()
+              this.$toast.success("Obra editada com sucesso")
               this.$router.push({ path: `/obra/${this.obra.id}/` })
             })
             .catch(showError)

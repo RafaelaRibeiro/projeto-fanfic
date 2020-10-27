@@ -42,7 +42,6 @@ module.exports = (app) => {
   const getById = (req, res) => {
     app
       .db("obras")
-      .join("usuarios", "obras.autor", "usuarios.id")
       .select("obras.*")
       .where({ "obras.id": req.params.id })
       .first()
@@ -50,15 +49,25 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  const getByIdUser = (req, res) => {
+  const getByIdUser = async (req, res) => {
+    const autor = await app
+      .db("obras")
+      .select("obras.autor")
+      .where({ id: req.params.id })
+      .first();
+
+    if (autor.autor !== parseInt(req.params.usuarioId))
+      return res.status(403).send("Você não tem permissão");
+
     app
       .db("obras")
-      .join("usuarios", "obras.autor", "usuarios.id")
-      .select("obras.*")
-      .where({ "obras.id": req.params.id, "obras.autor": req.params.usuarioId })
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .select("obras.*", "imagensObra.*")
+      .where({ "obras.id": req.params.id })
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
+    console.log(autor, req.params.usuarioId);
   };
 
   const capituloById = (req, res) => {

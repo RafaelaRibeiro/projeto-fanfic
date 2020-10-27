@@ -1,6 +1,6 @@
 const multer = require("multer");
 const multerConfig = require("./multer");
-const admin = require("./admin");
+const autor = require("./autor");
 
 module.exports = (app) => {
   app.post("/signin", app.api.auth.signin);
@@ -109,7 +109,7 @@ module.exports = (app) => {
     .route("/:usuarioId/mesa/:id")
     .all(app.config.passport.authenticate())
 
-    .get(admin(app.api.mesa.getByIdUser))
+    .get(autor(app.api.mesa.getByIdUser))
     .delete(app.api.mesa.remove);
   app.route("/mesa/:obraId/capitulo/:numero").get(app.api.mesa.capituloById);
   app.route("/Coautor").get(app.api.mesa.getCoautor);
