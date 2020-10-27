@@ -44,6 +44,17 @@ module.exports = (app) => {
       .db("obras")
       .join("usuarios", "obras.autor", "usuarios.id")
       .select("obras.*")
+      .where({ "obras.id": req.params.id })
+      .first()
+      .then((obra) => res.json(obra))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const getByIdUser = (req, res) => {
+    app
+      .db("obras")
+      .join("usuarios", "obras.autor", "usuarios.id")
+      .select("obras.*")
       .where({ "obras.id": req.params.id, "obras.autor": req.params.usuarioId })
       .first()
       .then((obra) => res.json(obra))
@@ -302,5 +313,6 @@ module.exports = (app) => {
     remove,
     capituloById,
     listaCapitulos,
+    getByIdUser,
   };
 };

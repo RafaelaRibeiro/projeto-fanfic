@@ -7,6 +7,10 @@
         </h1>
       </v-col>
     </v-row>
+
+    {{ autor }}
+
+    {{ obra }}
     <v-row justify="center">
       <v-col cols="10">
         <v-row>
@@ -250,13 +254,33 @@ export default {
       items: [],
       searchA: null,
       select: null,
+      autor: null,
     }
   },
 
   methods: {
     // /:autor/mesa/adicionarobra
+    // getObras() {
+    //   if (this.obra.autor) {
+    //     const url = ` ${baseApiUrl}/${this.$store.state.usuario.id}/mesa/${this.$route.params.id}/`
+    //     axios.get(url).then((res) => {
+    //       this.obra = res.data
+    //       this.obra.avisosId = this.obra.avisosId.split(',')
+    //       this.obra.avisosId = this.obra.avisosId.map(Number)
+    //       this.obra.caracteristicasId = this.obra.caracteristicasId.split(',')
+    //       this.obra.caracteristicasId = this.obra.caracteristicasId.map(Number)
+    //       this.obra.fandonsId = this.obra.fandonsId.split(',')
+    //       this.obra.fandonsId = this.obra.fandonsId.map(Number)
+    //       this.obra.shippSecundario = this.obra.shippSecundario.split(',')
+    //       this.obra.shippSecundario = this.obra.shippSecundario.map(Number)
+    //     })
+    //   } else {
+    //     this.$router.push({ path: `/` })
+    //   }
+    // },
+
     getObras() {
-      const url = ` ${baseApiUrl}/${this.$store.state.user.id}/mesa/${this.$route.params.id}/`
+      const url = ` ${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
       axios.get(url).then((res) => {
         this.obra = res.data
         this.obra.avisosId = this.obra.avisosId.split(',')
