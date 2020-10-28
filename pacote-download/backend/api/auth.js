@@ -19,6 +19,9 @@ module.exports = (app) => {
 
     const usuario = await app
       .db("usuarios")
+      .select("usuarios.*", app.db.raw("imagensPerfil.path as imagemPerfil, imagensBanner.path as imagemBanner"))
+      .leftJoin("imagensPerfil", 'usuarios.id', "imagensPerfil.usuarioId")
+      .leftJoin("imagensBanner", 'usuarios.id', "imagensBanner.usuarioId")
       .where({ email: req.body.email })
       .first();
 
@@ -44,6 +47,8 @@ module.exports = (app) => {
       instagran: usuario.instagran,
       pinterest: usuario.pinterest,
       tumblr: usuario.tumblr,
+      imagemPerfil: usuario.imagemPerfil,
+      imagemBanner: usuario.imagemBanner,
 
       dataRegistro: usuario.dataRegistro,
       dataNasc: usuario.dataNasc,

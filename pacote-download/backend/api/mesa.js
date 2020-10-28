@@ -62,7 +62,7 @@ module.exports = (app) => {
     app
       .db("obras")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
-      .select("obras.*", "imagensObra.*")
+      .select("obras.*", app.db.raw( "ifnull(imagensObra.name,'') as name,ifnull(imagensObra.size,0) as size,imagensObra.path,imagensObra.key,imagensObra.obraId"))
       .where({ "obras.id": req.params.id })
       .first()
       .then((obra) => res.json(obra))

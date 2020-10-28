@@ -99,13 +99,13 @@
     </v-row>
 
     <v-row>
-      <v-col cols="9">
+      <v-col cols="12" md="10">
         <v-card flat>
           <v-card-title>Índice</v-card-title>
-          <v-list class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
-            <v-list-item link>
+          <!-- <v-list class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
+            <v-list-item color="#EEEEEE" link>
               <v-list-item-content>
-                <v-list-item-title>
+                <v-list-item-title >
                   <router-link
                     :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }"
                     >{{ capitulo.numero }} - {{ capitulo.nome }}</router-link
@@ -113,7 +113,14 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-          </v-list>
+          </v-list> -->
+
+          <md-list  v-for="capitulo in capitulos" :key="capitulo.numero" class="md-dense pa-0 mb-2">
+        <md-list-item  :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }" >
+        
+          <span class="md-subheading" >{{ capitulo.numero }} - {{ capitulo.nome }}</span>
+        </md-list-item>
+      </md-list>
         </v-card>
       </v-col>
     </v-row>
