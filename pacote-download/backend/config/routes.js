@@ -100,7 +100,7 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
   app.post(
-    "/obra/:obraId/upload",
+    "/mesa/:obraId/upload",
     multer(multerConfig).single("file"),
     app.api.mesa.uploadObra
   );

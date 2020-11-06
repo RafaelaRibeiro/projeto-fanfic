@@ -6,7 +6,7 @@ module.exports = (app) => {
   //  Obras
   const save = (req, res) => {
     const obra = { ...req.body };
-    if (req.params.id) obra.id = req.params.id;
+    if (req.params.obraId) obra.id = req.params.obraId;
 
     try {
       existsOrError(obra.nome, "Título não informado");
@@ -62,12 +62,16 @@ module.exports = (app) => {
     app
       .db("obras")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
-      .select("obras.*", app.db.raw( "ifnull(imagensObra.name,'') as name,ifnull(imagensObra.size,0) as size,imagensObra.path,imagensObra.key,imagensObra.obraId"))
+      .select(
+        "obras.*",
+        app.db.raw(
+          "ifnull(imagensObra.name,'') as name,ifnull(imagensObra.size,0) as size,imagensObra.path,imagensObra.key,imagensObra.obraId"
+        )
+      )
       .where({ "obras.id": req.params.id })
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
-    console.log(autor, req.params.usuarioId);
   };
 
   const capituloById = (req, res) => {
@@ -246,20 +250,6 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  // const upload = (req, res) => {
-  //   app
-  //     .db("imagemObras")
-  //     .insert({
-  //       name: req.file.originalname,
-  //       size: req.file.size,
-  //       path: req.file.location,
-  //       key: req.file.key,
-  //       obraId: req.params.id,
-  //     })
-  //     .then((_) => res.status(204).send())
-  //     .catch((err) => res.status(500).send(err));
-  // };
-
   const uploadObra = async (req, res) => {
     const image = { ...req.body };
     if (req.params.obraId) image.obraId = req.params.obraId;
@@ -271,8 +261,9 @@ module.exports = (app) => {
       .first();
 
     console.log(getImage);
+    console.log(req.file);
 
-    if (getImage) {
+    if (getImage && getImage.key !== image.key) {
       await s3
         .deleteObject({
           Bucket: "upload.fanbase",

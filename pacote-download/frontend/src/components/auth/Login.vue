@@ -11,7 +11,7 @@
     justify="center"
   >
     <v-col cols="12" sm="5" class="text-center">
-      <v-card flat max-width="460px">
+      <v-card flat max-width="460px" class="mt-7">
         <span class="md-headline d-flex justify-center"> Entrar </span>
 
         <v-text-field

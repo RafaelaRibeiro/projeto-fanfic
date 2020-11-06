@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="obra.id">
+  <v-container v-if="page">
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
@@ -23,7 +23,7 @@
 
             <v-file-input
               small-chips
-              v-model="imagemObra"
+              v-model="imagemUpload"
               color="deep-purple darken-4"
               label="Capa da Obra"
               dense
@@ -235,6 +235,8 @@ export default {
         name: '',
         size: 0,
       },
+
+      imagemUpload: {},
       name: 'Midnight Crew',
       shipps: [],
       categorias: [],
@@ -256,32 +258,40 @@ export default {
       items: [],
       searchA: null,
       select: null,
+      page: true,
     }
   },
 
   methods: {
     getObras() {
       const url = ` ${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
-      axios.get(url).then((res) => {
-        this.obra = res.data
-        this.obra.avisosId = this.obra.avisosId.split(',')
-        this.obra.avisosId = this.obra.avisosId.map(Number)
-        this.obra.caracteristicasId = this.obra.caracteristicasId.split(',')
-        this.obra.caracteristicasId = this.obra.caracteristicasId.map(Number)
-        this.obra.fandonsId = this.obra.fandonsId.split(',')
-        this.obra.fandonsId = this.obra.fandonsId.map(Number)
-        this.obra.shippSecundario = this.obra.shippSecundario.split(',')
-        this.obra.shippSecundario = this.obra.shippSecundario.map(Number)
-        ;(this.imagemObra.name = this.obra.name), (this.imagemObra.size = this.obra.size)
-        this.imagemObra.path = this.obra.path
-        this.imagemObra.key = this.obra.key
-        this.imagemObra.obraId = this.obra.obraId
-        this.getCategorias()
-        this.getUniversos()
-        this.getShipps()
-        this.getCaracteristicas()
-        this.getAvisos()
-      })
+      axios
+        .get(url)
+        .then((res) => {
+          this.obra = res.data
+          this.obra.avisosId = this.obra.avisosId.split(',')
+          this.obra.avisosId = this.obra.avisosId.map(Number)
+          this.obra.caracteristicasId = this.obra.caracteristicasId.split(',')
+          this.obra.caracteristicasId = this.obra.caracteristicasId.map(Number)
+          this.obra.fandonsId = this.obra.fandonsId.split(',')
+          this.obra.fandonsId = this.obra.fandonsId.map(Number)
+          this.obra.shippSecundario = this.obra.shippSecundario.split(',')
+          this.obra.shippSecundario = this.obra.shippSecundario.map(Number)
+          this.imagemObra.originalname = this.obra.originalname
+          this.imagemObra.size = this.obra.size
+          this.imagemObra.path = this.obra.path
+          this.imagemObra.key = this.obra.key
+          this.imagemObra.obraId = this.obra.obraId
+          this.getCategorias()
+          this.getUniversos()
+          this.getShipps()
+          this.getCaracteristicas()
+          this.getAvisos()
+          this.page = true
+        })
+        .catch(() => {
+          this.page = false
+        })
     },
 
     salvarObra() {
@@ -304,11 +314,12 @@ export default {
           if (this.imagemObra.size === 0) {
             this.$router.push({ path: `/obra/${this.obra.id}/` })
           } else var fd = new FormData()
-          fd.append('file', this.imagemObra)
+          fd.append('file', this.imagemUpload)
+
           axios
-            .post(`${baseApiUrl}/obra/${this.obra.id}/upload`, fd)
+            .post(`${baseApiUrl}/mesa/${this.obra.id}/upload`, fd)
             .then(() => {
-              this.$toast.success('Obra editada com sucesso')
+              this.$toast.success('Obra alterada com sucesso')
               this.$router.push({ path: `/obra/${this.obra.id}/` })
             })
             .catch(showError)

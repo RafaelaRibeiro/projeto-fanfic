@@ -347,7 +347,7 @@ export default {
           } else var fd = new FormData()
           fd.append('file', this.imagemObra)
           axios
-            .post(`${baseApiUrl}/obra/${this.a.id}/upload`, fd)
+            .post(`${baseApiUrl}/mesa/${this.a.id}/upload`, fd)
             .then(() => {
               this.$toasted.global.defaultSuccess()
               this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })

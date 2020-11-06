@@ -5,13 +5,13 @@
     class="pt-7"
     justify="center"
     :style="{
-      backgroundImage: 'url(' + require('@/assets/cadastro.png') + ')',
-      backgroundSize: '60%',
+      backgroundImage: 'url(' + require('@/assets/cadastro-5.jpg') + ')',
+      backgroundSize: '100%',
       backgroundPosition: 'right',
     }"
   >
     <v-col cols="12" sm="5" class="text-center">
-      <v-card flat max-width="700px">
+      <v-card flat max-width="700px" class="mt-7">
         <div>
           <span class="md-headline d-flex justify-center"> Faça seu cadastro </span>
         </div>
@@ -76,9 +76,7 @@
         <v-btn dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="cad = false">Voltar</v-btn>
       </v-card>
     </v-col>
-    <v-col cols="6" class="mt-n2">
-     
-    </v-col>
+    <v-col cols="6" class="mt-n2"> </v-col>
 
     <v-dialog v-model="dialog" max-width="500" height="500px">
       <!-- <template v-slot:activator="{ on }">
@@ -113,7 +111,7 @@ export default {
       usuario: {},
       cadastro: false,
       dialog: false,
-    
+
       user: {
         user: '',
         email: '',
@@ -126,7 +124,6 @@ export default {
       axios
         .post(`${baseApiUrl}/usuarios`, this.usuario)
         .then(() => {
-        
           this.email = ''
           this.dialog = 'true'
         })
