@@ -62,7 +62,7 @@ module.exports = (app) => {
       .leftJoin("imagensBanner", "usuarios.id", "=", "imagensBanner.usuarioId")
       .select(
         app.db.raw(
-          "usuarios.id,nome,email,user,perfil,autor, sobreMim,facebook, twitter, pinterest, tumblr, instagram, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner"
+          "usuarios.id,nome,email,user,perfil,autor, sobreMim,facebook, spotify, twitter, pinterest, tumblr, instagram, imagensPerfil.path as imagePerfil, imagensBanner.path as imageBanner"
         )
       )
       .where({ user: req.params.user })

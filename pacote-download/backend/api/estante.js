@@ -56,11 +56,12 @@ module.exports = (app) => {
     app
       .db("estante")
       .join("usuarios", "estante.usuarioId", "usuarios.id")
-      .select("estante.*")
-      .where({ "usuarios.user": req.params.user, obraId: req.params.obraId })
+      .leftJoin("capitulos","estante.ultimoCapituloId", "capitulos.id")
+      .select("estante.*", "capitulos.numero")
+      .where({ "usuarios.id": req.params.id, "estante.obraId": req.params.obraId })
       .andWhere("estante.prateleiraId", "<>", 3)
       .first()
-      .then((obra) => res.json(obra))
+      .then((estante) => res.json(estante))
       .catch((err) => res.status(500).send(err));
   };
 

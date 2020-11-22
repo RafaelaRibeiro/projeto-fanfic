@@ -62,7 +62,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row class="ml-2">
+      <v-row class="ml-2 mb-n2">
         <v-col cols="12" md="5">
           <v-text-field
             v-model="usuario.instagram"
@@ -82,6 +82,17 @@
             prefix="http://pinterest.com/"
             outlined
             prepend-inner-icon="mdi-pinterest"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="ml-2">
+        <v-col cols="12" md="5">
+          <v-text-field
+            v-model="usuario.spotify"
+            label="Spotify"
+            placeholder="Playlist"
+            outlined
+            prepend-inner-icon="mdi-spotify"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -128,6 +139,7 @@ export default {
           instagram: this.usuario.instagram,
           pinterest: this.usuario.pinterest,
           tumblr: this.usuario.tumblr,
+          spotify: this.usuario.spotify,
           dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
         })
         .then(() => {

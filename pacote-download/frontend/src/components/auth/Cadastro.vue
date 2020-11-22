@@ -143,6 +143,7 @@ export default {
 
     continuar() {
       this.dialog = false
+
       this.cad = false
     },
   },

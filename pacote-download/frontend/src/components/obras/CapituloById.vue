@@ -17,7 +17,7 @@
       </v-row>
       <v-row justify="center">
         <v-col cols="12" sm="10">
-          <v-card v-show="capitulo.notasIniciais" flat outlined color="#EEEEEE">
+          <v-card v-show="capitulo.notasIniciais" flat outlined color="deep-purple lighten-5">
             <v-card-title>Notas Iniciais</v-card-title>
             <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
               capitulo.notasIniciais
@@ -38,7 +38,7 @@
 
       <v-row v-show="capitulo.notasFinais" justify="center">
         <v-col cols="12" sm="10">
-          <v-card flat outlined color="#EEEEEE">
+          <v-card flat outlined color="deep-purple lighten-5">
             <v-card-title>Notas Finais</v-card-title>
             <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
               capitulo.notasFinais
@@ -47,58 +47,45 @@
         </v-col>
       </v-row>
 
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12" sm="10">
-            <v-row no-gutters>
-              <v-col v-show="lido" cols="12" sm="6">
-                <v-btn v-show="estante" dark color="deep-purple darken-4" @click="checkRead">
-                  <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
-                </v-btn>
+      <v-row justify="center">
+        <v-col cols="12" sm="5">
+          <router-link :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero - 1 } }">
+            <v-btn v-show="capitulo.numero != ultimo.min_numero" dark color="deep-purple darken-4">
+              <v-icon left>mdi-chevron-triple-left</v-icon>Capitulo Anterior
+            </v-btn>
+          </router-link>
+        </v-col>
 
-                <v-btn v-show="!estante" color="deep-purple darken-4" dark @click="saveEstante">
-                  <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
-                </v-btn>
-              </v-col>
-              <v-col v-show="testeStatus != null" cols="12" sm="6">
-                <v-card flat outlined color="#EEEEEE">
-                  <v-card-text class="text--primary text-justify">
-                    <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
-                    {{ testeStatus }} - {{ estante.ultimoCapituloId }} - {{ capitulo.id }}
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+        <v-col cols="12" sm="5" class="d-flex justify-end">
+          <router-link :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }">
+            <v-btn v-show="capitulo.numero != ultimo.max_numero" dark color=" deep-purple darken-4">
+              proximo capitulo
+              <v-icon right>mdi-chevron-triple-right</v-icon>
+            </v-btn>
+          </router-link>
+        </v-col>
+      </v-row>
 
-        <v-row justify="center">
-          <v-col cols="12 " sm="10" v-for="u in ultimo" :key="u.id">
-            <v-row no-gutters>
-              <v-col cols="12" sm="10">
-                <router-link
-                  :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero - 1 } }"
-                >
-                  <v-btn v-show="capitulo.numero != u.min_numero" dark color="deep-purple darken-4">
-                    <v-icon left>mdi-chevron-triple-left</v-icon>Capitulo Anterior
-                  </v-btn>
-                </router-link>
-              </v-col>
+      <v-row justify="center">
+        <v-col cols="12" sm="10">
+          <v-btn v-show="botaoLido" dark color="deep-purple darken-4" @click="checkRead">
+            <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
+          </v-btn>
 
-              <v-col cols="12" sm="10" class="d-flex justify-end">
-                <router-link
-                  :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
-                >
-                  <v-btn v-show="capitulo.numero != u.max_numero" dark color=" blue darken-2">
-                    proximo capitulo
-                    <v-icon right>mdi-chevron-triple-right</v-icon>
-                  </v-btn>
-                </router-link>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-container>
+          <v-btn v-show="!estante" color="deep-purple darken-4" dark @click="saveEstante">
+            <v-icon left>mdi-bookshelf</v-icon>Colocar na Estante
+          </v-btn>
+        </v-col>
+        <v-col v-show="testeStatus != null" cols="12" sm="10">
+          <v-card flat outlined color="deep-purple lighten-5">
+            <v-card-text class="text--primary text-justify">
+              <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
+              <v-icon color="deep-purple darken-4">mdi-check-bold</v-icon>
+              {{ testeStatus }}
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
       <v-container>
         <v-row justify="center">
@@ -141,7 +128,8 @@
               <v-row>
                 <v-col cols="12" sm="2">
                   <v-avatar size="108" tile>
-                    <v-img :src="c.imagemPerfil"></v-img>
+                    <v-img v-if="c.path" :src="c.path"></v-img>
+                    <v-img v-else src="@/assets/profile.png"></v-img>
                   </v-avatar>
                 </v-col>
                 <v-col>
@@ -175,10 +163,36 @@
       </v-container>
 
       <v-row align="center" justify="center">
-        <v-dialog v-model="dialog" persistent max-width="355">
-          <!-- <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
-        </template>-->
+        <v-dialog v-model="dialog" max-width="500" height="500px">
+          <v-card align="center">
+            <v-row align="center" justify="center" no-gutters>
+              <v-avatar class="ma-10" size="90">
+                <v-img src="@/assets/alert-circle.png"></v-img>
+              </v-avatar>
+            </v-row>
+            <span class="md-headline d-flex justify-center mb-5">Esse capítulo contém avisos:</span>
+
+            <span v-for="aviso in avisos" :key="aviso.nome" class="md-title d-flex justify-center mb-5">{{
+              aviso.nome
+            }}</span>
+
+            <v-card-actions class="justify-center">
+              <router-link
+                :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
+              >
+                <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false"
+                  >Próximo Capítulo</v-btn
+                >
+              </router-link>
+              <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false"
+                >Continuar</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- <v-dialog v-model="dialog" persistent max-width="355">
+         
           <v-card align="center">
             <v-row align="center" justify="center" no-gutters>
               <v-icon color="red" x-large class="ma-5">mdi-alert-circle-outline</v-icon>
@@ -193,7 +207,7 @@
               <v-btn color="green darken-1" text @click="dialog = false">Voltar</v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>
+        </v-dialog> -->
       </v-row>
     </v-container>
   </v-card>
@@ -208,21 +222,7 @@ import axios from 'axios'
 // import 'highlight.js/styles/monokai-sublime.css'
 export default {
   name: 'CapituloById',
-  computed: {
-    testeStatus() {
-      let status = ''
-      if (this.estante.ultimoCapituloId === this.capitulo.id) {
-        status = 'Este foi o último capítulo lido'
-      } else {
-        if (this.estante.ultimoCapituloId > this.capitulo.id) {
-          status = `Você leu até o capítulo ${this.estante.ultimoCapituloId} dessa obra`
-        } else {
-          status = null
-        }
-      }
-      return status
-    },
-  },
+
   data() {
     return {
       menu: false,
@@ -244,12 +244,42 @@ export default {
     }
   },
 
+  computed: {
+    testeStatus() {
+      let status = ''
+      if (this.estante.ultimoCapituloId === this.capitulo.id) {
+        status = 'Este foi o último capítulo lido'
+      } else {
+        if (this.estante.ultimoCapituloId > this.capitulo.id) {
+          status = `Você leu até o capítulo ${this.estante.numero} dessa obra`
+        } else {
+          status = null
+        }
+      }
+      return status
+    },
+
+    botaoLido() {
+      let varLido = false
+      if (!this.estante) {
+        varLido = false
+      } else {
+        if (this.capitulo.id <= this.estante.ultimoCapituloId) {
+          varLido = false
+        } else {
+          varLido = true
+        }
+      }
+      return varLido
+    },
+  },
+
   methods: {
     salvarComentario() {
       const url = ` ${baseApiUrl}/obra/${this.capitulo.obraId}/capitulo/${this.capitulo.numero}`
       axios
         .post(url, {
-          usuarioId: this.usuario.id,
+          usuarioId: this.$store.state.usuario.id,
           obraId: this.capitulo.obraId,
           capituloId: this.capitulo.id,
           conteudo: this.comentario,
@@ -281,7 +311,7 @@ export default {
     },
 
     getEstante() {
-      const url = `${baseApiUrl}/${this.$store.state.user}/estante/${this.$route.params.obraId} `
+      const url = `${baseApiUrl}/${this.$store.state.usuario.id}/estante/${this.$route.params.obraId} `
       axios.get(url).then((res) => {
         this.estante = res.data
       })
@@ -321,7 +351,7 @@ export default {
           ultimoCapituloId: this.capitulo.id,
         })
         .then(() => {
-          this.lido = true
+          this.getEstante()
           this.$toast.success('Capítulo Marcado como Lido')
         })
         .catch(showError)

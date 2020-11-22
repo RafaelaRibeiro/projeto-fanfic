@@ -36,9 +36,10 @@ module.exports = (app) => {
       .db("comentarios")
       .join("capitulos", "comentarios.capituloId", "capitulos.id")
       .join("usuarios", "comentarios.usuarioId", "usuarios.id")
+      .leftJoin("imagensPerfil","comentarios.usuarioId", "imagensPerfil.usuarioId")
       .select(
         app.db.raw(
-          "comentarios.id, comentarios.usuarioId, usuarios.nome, usuarios.imagemPerfil, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
+          "comentarios.id, comentarios.usuarioId, usuarios.nome, imagensPerfil.path, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
         )
       )
       .where({

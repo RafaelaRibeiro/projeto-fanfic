@@ -246,6 +246,7 @@ module.exports = (app) => {
       .where({
         "obras.id": req.params.obraId,
       })
+      .first()
       .then((capitulos) => res.json(capitulos))
       .catch((err) => res.status(500).send(err));
   };
