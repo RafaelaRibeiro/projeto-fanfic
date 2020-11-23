@@ -264,7 +264,7 @@ export default {
 
   methods: {
     getObras() {
-      const url = ` ${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
+      const url = `${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
       axios
         .get(url)
         .then((res) => {
@@ -287,10 +287,10 @@ export default {
           this.getShipps()
           this.getCaracteristicas()
           this.getAvisos()
-          this.page = true
+          // this.page = true
         })
         .catch(() => {
-          this.page = false
+          // this.page = false
         })
     },
 

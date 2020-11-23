@@ -72,7 +72,10 @@ module.exports = (app) => {
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
+
+
   };
+
 
   const capituloById = (req, res) => {
     app
@@ -115,9 +118,9 @@ module.exports = (app) => {
   const getCoautor = (req, res) => {
     app
       .db("usuarios")
-      .select("user")
-      .where({ autor: true })
-      .orderBy("nome", "asc")
+      .select("id", "user")
+
+      .orderBy("user", "asc")
       .then((user) => res.json(user))
       .catch((err) => res.status(500).send());
   };
@@ -296,7 +299,8 @@ module.exports = (app) => {
         .catch((err) => res.status(500).send(err));
     }
 
-    console.log(req.file);
+
+
   };
 
   return {
@@ -315,5 +319,6 @@ module.exports = (app) => {
     capituloById,
     listaCapitulos,
     getByIdUser,
+
   };
 };

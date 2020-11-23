@@ -64,7 +64,7 @@
                 <span class="md-list-item-text">Editar Obra</span>
               </md-list-item>
 
-              <md-list-item @click="active = true">
+              <md-list-item @click="dialog = true">
                 <v-icon small left>mdi-delete</v-icon>
                 <span class="md-list-item-text">Deletar Obra</span>
               </md-list-item>
@@ -73,10 +73,26 @@
         </v-col>
       </v-row>
     </v-card>
-    <md-dialog :md-active.sync="active">
-      <md-dialog-title>Solicictação de Exclusão</md-dialog-title>
-      <v-card>teste</v-card>
-    </md-dialog>
+    <v-dialog v-model="dialog" max-width="500" height="500px">
+      <v-card align="center">
+        <v-row align="center" justify="center" no-gutters>
+          <v-avatar class="mt-8 mb-6" size="90">
+            <v-img src="@/assets/delete-alert.png"></v-img>
+          </v-avatar>
+        </v-row>
+        <span class="md-subheading d-flex justify-center ma-5"
+          >A obra ficará suspensa por 30 dias, após esse período será excluída defitivamente.</span
+        >
+        <span class="md-subheading d-flex justify-center ma-5">Confirma excluir a obra e todos os seus capítulos?</span>
+
+        <v-row align="center" justify="center" no-gutters>
+          <v-card-actions>
+            <v-btn dark color="deep-purple darken-4" class="mr-3 mb-3" @click="dialog = false" elevation="4">Sim</v-btn>
+            <v-btn dark color="deep-purple darken-4" class="mr-3 mb-3" @click="dialog = false" elevation="4">Não</v-btn>
+          </v-card-actions>
+        </v-row>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -88,7 +104,7 @@ export default {
   props: ['item'],
   data() {
     return {
-      active: false,
+      dialog: false,
     }
   },
 

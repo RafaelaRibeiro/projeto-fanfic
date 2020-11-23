@@ -99,6 +99,7 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/editarobra").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
+
   app.post(
     "/mesa/:obraId/upload",
     multer(multerConfig).single("file"),
@@ -112,7 +113,7 @@ module.exports = (app) => {
     .get(autor(app.api.mesa.getByIdUser))
     .delete(app.api.mesa.remove);
   app.route("/mesa/:obraId/capitulo/:numero").get(app.api.mesa.capituloById);
-  app.route("/Coautor").get(app.api.mesa.getCoautor);
+  app.route("/mesa/Coautor").get(app.api.mesa.getCoautor)
   app.route("/mesa/:id").get(app.api.mesa.getById);
 
   app

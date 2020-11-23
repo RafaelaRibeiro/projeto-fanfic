@@ -47,7 +47,9 @@
               </template>
 
               <md-list class="md-dense">
-                <md-list-item>
+                <md-list-item
+                  :to="{ name: 'EditarCapitulo', params: { obraId: capitulo.obraId, numero: capitulo.numero } }"
+                >
                   <v-icon small left>mdi-file-edit</v-icon>
 
                   <span class="md-list-item-text">Editar Capitulo</span>

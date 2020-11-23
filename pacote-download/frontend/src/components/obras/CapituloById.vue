@@ -87,69 +87,32 @@
         </v-col>
       </v-row>
 
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12" sm="10">
-            <v-textarea
-              v-model="comentario"
-              color="deep-purple darken-4"
-              class="text-justfy"
-              outlined
-              auto-grow
-              clearable
-              label="Deixe seu Comentário"
-              clear-icon="cancel"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="12" sm="10" class="d-flex justify-end">
-            <v-btn dark color="deep-purple darken-4" @click="salvarComentario">Salvar</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12" sm="10" v-for="c in comentarios" :key="c.i">
-            <v-card class="px-5 text--primary text-justify" color="#EDE7F6" flat outlined>
-              <v-row>
-                <v-col cols="12" sm="6">
-                  <v-card-title class="subtitle-1 font-weight-bold">{{ c.nome }}</v-card-title>
-                </v-col>
-                <v-col cols="12" sm="6">
-                  <v-card-subtitle class="d-flex justify-end">
-                    <i>
-                      Comentado em {{ c.dataComentario }}
-                      <!-- <the-mask v-model="c.dataComentario" :mask="'####/##/## ##:##:##'" /> -->
-                    </i>
-                  </v-card-subtitle>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="12" sm="2">
-                  <v-avatar size="108" tile>
-                    <v-img v-if="c.path" :src="c.path"></v-img>
-                    <v-img v-else src="@/assets/profile.png"></v-img>
-                  </v-avatar>
-                </v-col>
-                <v-col>
-                  <p v-if="edicao">
-                    <v-textarea
-                      v-model="c.conteudo"
-                      color="deep-purple darken-4"
-                      class="text-justfy"
-                      outlined
-                      auto-grow
-                    ></v-textarea>
-                    <v-btn tile large dark color="deep-purple darken-4" depressed>Salvar Comentário</v-btn>
-                  </p>
+      <v-row justify="center">
+        <v-col cols="12" sm="10">
+          <v-textarea
+            v-model="comentar"
+            color="deep-purple darken-4"
+            class="text-justfy"
+            outlined
+            auto-grow
+            clearable
+            label="Deixe seu Comentário"
+            clear-icon="cancel"
+          ></v-textarea>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="12" sm="10" class="d-flex justify-end">
+          <v-btn dark color="deep-purple darken-4" @click="salvarComentario">Salvar</v-btn>
+        </v-col>
+      </v-row>
 
-                  <p v-else>{{ c.conteudo }}</p>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-        </v-row>
+      <v-row justify="center">
+        <v-col cols="12" sm="10" v-for="comentario in comentarios" :key="comentario.id">
+          <ItemComentarios :comentario="comentario" />
+        </v-col>
+      </v-row>
+      <v-container>
         <v-row justify="center">
           <v-col cols="12" sm="11">
             <v-pagination
@@ -190,24 +153,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-
-        <!-- <v-dialog v-model="dialog" persistent max-width="355">
-         
-          <v-card align="center">
-            <v-row align="center" justify="center" no-gutters>
-              <v-icon color="red" x-large class="ma-5">mdi-alert-circle-outline</v-icon>
-            </v-row>
-            <v-card-subtitle class="headline">Esse capítulo contém</v-card-subtitle>
-            <v-card-text v-for="aviso in avisos" :key="aviso.nome" class="title text-center">{{
-              aviso.nome
-            }}</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="dialog = false">Continuar</v-btn>
-              <v-btn color="green darken-1" text @click="dialog = false">Voltar</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog> -->
       </v-row>
     </v-container>
   </v-card>
@@ -215,13 +160,16 @@
 
 <script>
 import moment from 'moment'
+import ItemComentarios from './ItemComentarios'
 
 import { baseApiUrl, showError } from '@/global'
+import { mapState } from 'vuex'
 import axios from 'axios'
 // import hljs from 'highlight.js'
 // import 'highlight.js/styles/monokai-sublime.css'
 export default {
   name: 'CapituloById',
+  components: { ItemComentarios },
 
   data() {
     return {
@@ -233,7 +181,7 @@ export default {
       count: 0,
       totalPage: 0,
       capitulo: {},
-      comentario: null,
+      comentar: null,
       comentarios: [],
       edicao: false,
       // mask: '##/##/####',
@@ -245,6 +193,7 @@ export default {
   },
 
   computed: {
+    ...mapState(['usuario']),
     testeStatus() {
       let status = ''
       if (this.estante.ultimoCapituloId === this.capitulo.id) {
@@ -282,12 +231,12 @@ export default {
           usuarioId: this.$store.state.usuario.id,
           obraId: this.capitulo.obraId,
           capituloId: this.capitulo.id,
-          conteudo: this.comentario,
+          conteudo: this.comentar,
           dataComentario: this.now,
         })
         .then(() => {
           this.$toast.success('Seu comentário foi salvo')
-          this.comentario = null
+          this.comentar = null
           this.loadComentarios()
         })
         .catch(showError)

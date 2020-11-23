@@ -44,16 +44,75 @@
         </v-row>
         <v-row>
           <v-col cols="6">
-            <v-autocomplete
-              v-model="select"
-              :loading="loading"
+            <!-- <v-autocomplete
+              v-model="model"
               :items="items"
-              :search-input.sync="searchA"
-              cache-items
+              :loading="isLoading"
+              :search-input.sync="buscar"
+              chips
+              multiple
+              small
+              clearable
+              hide-details
+              hide-selected
+              item-text="name"
+              item-value="symbol"
+              label="Co-autor"
+              outlined
+              dense
+            >
+              <template v-slot:no-data>
+                <v-list-item>
+                  <v-list-item-title> Buscar por nome de usuário </v-list-item-title>
+                </v-list-item>
+              </template>
+
+              <template v-slot:item="{ item }">
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete> -->
+            <v-autocomplete
+              v-model="model"
+              :items="items"
+              :loading="isLoading"
+              :search-input.sync="buscar"
+              multiple
+              clearable
+              chips
+              small-chips
+              item-text="user"
+              item-value="id"
+              hide-no-data
+              hide-selected
               outlined
               dense
               label="Co-Autor"
-            ></v-autocomplete>
+              placeholder="Digite o usuário..."
+            >
+              <template v-slot:selection="data">
+                <v-chip
+                  v-bind="data.attrs"
+                  :input-value="data.selected"
+                  @click="data.select"
+                  color="deep-purple lighten-5"
+                  small
+                >
+                  {{ data.item.user }}
+                </v-chip>
+              </template>
+              <template v-slot:no-data> </template>
+
+              <template v-slot:item="{ item }">
+                <v-list dense>
+                  <v-list-item-content dense>
+                    <v-list-item-title v-text="item.user"></v-list-item-title>
+                  </v-list-item-content>
+                </v-list>
+              </template>
+            </v-autocomplete>
+
             <v-select
               v-model="obra.categoriaId"
               :items="categorias"
@@ -93,6 +152,8 @@
               cache-items
               :items="list"
               outlined
+              small-chips
+              clearable
               dense
               multiple
               item-text="nome"
@@ -244,71 +305,12 @@ export default {
       ],
       now: moment().format('YYYY-MM-DD HH:mm:ss'),
 
-      loading: false,
+      isLoading: false,
       items: [],
-      searchA: null,
+
+      buscar: null,
       select: null,
-      states: [
-        'Alabama',
-        'Alaska',
-        'American Samoa',
-        'Arizona',
-        'Arkansas',
-        'California',
-        'Colorado',
-        'Connecticut',
-        'Delaware',
-        'District of Columbia',
-        'Federated States of Micronesia',
-        'Florida',
-        'Georgia',
-        'Guam',
-        'Hawaii',
-        'Idaho',
-        'Illinois',
-        'Indiana',
-        'Iowa',
-        'Kansas',
-        'Kentucky',
-        'Louisiana',
-        'Maine',
-        'Marshall Islands',
-        'Maryland',
-        'Massachusetts',
-        'Michigan',
-        'Minnesota',
-        'Mississippi',
-        'Missouri',
-        'Montana',
-        'Nebraska',
-        'Nevada',
-        'New Hampshire',
-        'New Jersey',
-        'New Mexico',
-        'New York',
-        'North Carolina',
-        'North Dakota',
-        'Northern Mariana Islands',
-        'Ohio',
-        'Oklahoma',
-        'Oregon',
-        'Palau',
-        'Pennsylvania',
-        'Puerto Rico',
-        'Rhode Island',
-        'South Carolina',
-        'South Dakota',
-        'Tennessee',
-        'Texas',
-        'Utah',
-        'Vermont',
-        'Virgin Island',
-        'Virginia',
-        'Washington',
-        'West Virginia',
-        'Wisconsin',
-        'Wyoming',
-      ],
+      tab: null,
     }
   },
 
@@ -390,27 +392,38 @@ export default {
     },
 
     getCoautor() {
-      const url = ` ${baseApiUrl}/Coautor`
+      const url = ` ${baseApiUrl}/mesa/Coautor`
       axios(url).then((res) => {
         this.coautor = res.data
       })
     },
-
-    querySelections(v) {
-      this.loading = true
-      // Simulated ajax query
-      setTimeout(() => {
-        this.items = this.states.filter((e) => {
-          return e.toLowerCase().indexOf((v || '').toLowerCase()) > -1
-        })
-        this.loading = false
-      }, 500)
-    },
   },
 
   watch: {
-    searchA(val) {
-      val && val !== this.select && this.querySelections(val)
+    model(val) {
+      if (val != null) this.tab = 0
+      else this.tab = null
+    },
+
+    buscar() {
+      // Items have already been loaded
+      if (this.items.length > 0) return
+
+      this.isLoading = true
+
+      // Lazily load input items
+      // fetch('https://api.coingecko.com/api/v3/coins/list')
+      const url = ` ${baseApiUrl}/mesa/Coautor`
+      fetch(url)
+        .then((res) => res.clone().json())
+        .then((res) => {
+          this.items = res
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err)
+        })
+        .finally(() => (this.isLoading = false))
     },
   },
 
