@@ -78,6 +78,8 @@
 import { mapState } from 'vuex'
 import { userKey, baseApiUrl } from '@/global'
 
+import axios from 'axios'
+
 export default {
   name: 'Menu',
   computed: mapState(['isMenuVisible', 'usuario']),
@@ -156,6 +158,16 @@ export default {
       this.mini = !this.mini
       this.expandNews = false
     },
+
+       getUsuarios() {
+      const url = `${baseApiUrl}/usuario/${this.getUsuario.id}`
+      axios(url).then(res => {
+        this.user = res.data
+      })
+    },
+  },
+   mounted() {
+    this.getUsuarios()
   },
 }
 </script>

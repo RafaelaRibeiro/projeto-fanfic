@@ -94,6 +94,8 @@
             outlined
             prepend-inner-icon="mdi-spotify"
           ></v-text-field>
+
+          {{usuario}}
         </v-col>
       </v-row>
       <v-row class="ml-2" justify="end">
@@ -143,21 +145,7 @@ export default {
           dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
         })
         .then(() => {
-          this.$store.commit('setUser', {
-            nome: this.usuario.nome,
-            user: this.usuario.user,
-            sobreMim: this.usuario.sobreMim,
-            facebook: this.usuario.facebook,
-            twitter: this.usuario.twitter,
-            instagram: this.usuario.instagram,
-            pinterest: this.usuario.pinterest,
-            tumblr: this.usuario.tumblr,
-            dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
-            token: this.getUsuario.token,
-            exp: this.getUsuario.exp,
-            iap: this.getUsuario.iap,
-          })
-
+         
           this.$toast.success('Dados do perfil atualizados')
         })
         .catch(showError)

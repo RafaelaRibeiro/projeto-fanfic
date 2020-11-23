@@ -40,6 +40,8 @@ export default new Vuex.Store({
       state.cadastro = payload
     },
 
+   
+
     setUser(state, usuario) {
       state.usuario = usuario
       if (usuario) {
