@@ -94,13 +94,11 @@
             outlined
             prepend-inner-icon="mdi-spotify"
           ></v-text-field>
-
-          {{usuario}}
         </v-col>
       </v-row>
       <v-row class="ml-2" justify="end">
         <v-col md="4">
-          <v-btn dark class="ma-3" color="purple darken-4" @click="updatePerfil">
+          <v-btn dark class="ma-3" color="deep-purple darken-4" @click="updatePerfil">
             <v-icon small left>mdi-floppy</v-icon>Salvar
           </v-btn>
         </v-col>
@@ -145,7 +143,6 @@ export default {
           dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
         })
         .then(() => {
-         
           this.$toast.success('Dados do perfil atualizados')
         })
         .catch(showError)

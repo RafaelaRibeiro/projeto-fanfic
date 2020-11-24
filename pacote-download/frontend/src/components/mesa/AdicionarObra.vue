@@ -132,6 +132,8 @@
               dense
               small
               outlined
+              v-show="!disabled"
+              :disabled="disabled"
               color="deep-purple darken-4"
             ></v-autocomplete>
           </v-col>
@@ -155,6 +157,8 @@
               small-chips
               clearable
               dense
+              v-show="!disabled"
+              :disabled="disabled"
               multiple
               item-text="nome"
               item-value="id"
@@ -168,6 +172,8 @@
               multiple
               outlined
               dense
+              v-show="!disabled"
+              :disabled="disabled"
               item-text="nome"
               item-value="id"
               label="Shipp Secundário"
@@ -254,8 +260,8 @@
 
         <v-row>
           <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="green darken-4" @click="salvarObra">Prosseguir</v-btn>
-            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>
+            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Prosseguir</v-btn>
+            <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -444,6 +450,14 @@ export default {
       return a
     },
     ...mapState(['usuario']),
+
+    disabled() {
+      let disabled = false
+      if (this.obra.categoriaId === 1) {
+        disabled = true
+      }
+      return disabled
+    },
   },
 
   mounted() {

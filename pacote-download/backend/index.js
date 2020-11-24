@@ -5,6 +5,8 @@ const consign = require("consign");
 const db = require("./config/db");
 const app = express();
 const path = require("path");
+const http = require('http');
+const https = require('https');
 app.db = db;
 
 app.use(express.json());
@@ -27,6 +29,10 @@ consign()
 
   .into(app);
 
-app.listen(3000, () => {
-  console.log("Backend executando...");
-});
+const httpApp = express();
+app.all('*', (req, res) => res.redirect(300, 'https://localhost:3000'));
+const httpServer = http.createServer(app);
+httpServer.listen(3000, () => console.log(`HTTP server listening: http://localhost`));
+// app.listen(3000, () => {
+//   console.log("Backend executando...");
+// });
