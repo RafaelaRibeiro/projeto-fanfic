@@ -1,0 +1,20 @@
+.v-list-item__title a,
+.v-list-item__title a:hover {
+  text-decoration: none;
+  color: black;
+}
+.routerLink:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.router-link-active:hover {
+  text-decoration: none;
+  color: #000;
+}
+
+a,
+a:hover {
+  color: #000 !important;
+  text-decoration: none !important;
+}
