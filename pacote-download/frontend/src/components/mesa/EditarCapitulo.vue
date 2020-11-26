@@ -68,7 +68,7 @@
             <v-col>
               <v-expansion-panels flat focusable>
                 <v-expansion-panel>
-                  <v-expansion-panel-header flat outlined color="#EEEEEE"
+                  <v-expansion-panel-header flat outlined color="deep-purple lighten-5"
                     >Seu capítulo necessita de avisos?</v-expansion-panel-header
                   >
                   <v-expansion-panel-content>

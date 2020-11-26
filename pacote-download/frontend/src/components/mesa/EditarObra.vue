@@ -71,6 +71,8 @@
               label="Shipp Principal"
               item-text="nome"
               item-value="id"
+              v-show="!disabled"
+              :disabled="disabled"
               dense
               small
               outlined
@@ -95,6 +97,8 @@
               :items="list"
               outlined
               dense
+              v-show="!disabled"
+              :disabled="disabled"
               multiple
               item-text="nome"
               item-value="id"
@@ -107,6 +111,8 @@
               :items="shippLista"
               multiple
               outlined
+              v-show="!disabled"
+              :disabled="disabled"
               dense
               item-text="nome"
               item-value="id"
@@ -194,8 +200,8 @@
 
         <v-row>
           <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="green darken-4" @click="salvarObra">Salvar</v-btn>
-            <v-btn dark class="ma-3" color="red darken-3">Cancelar</v-btn>
+            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Prosseguir</v-btn>
+            <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -375,6 +381,14 @@ export default {
     shippLista() {
       const a = this.shipps.filter((e) => this.obra.fandonsId.includes(e.fandonsId))
       return a
+    },
+
+    disabled() {
+      let disabled = false
+      if (this.obra.categoriaId === 1) {
+        disabled = true
+      }
+      return disabled
     },
 
     ...mapState(['usuario']),

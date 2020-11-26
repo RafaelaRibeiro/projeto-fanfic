@@ -98,7 +98,7 @@
       </v-row>
       <v-row class="ml-2" justify="end">
         <v-col md="4">
-          <v-btn dark class="ma-3" color="purple darken-4" @click="updatePerfil">
+          <v-btn dark class="ma-3" color="deep-purple darken-4" @click="updatePerfil">
             <v-icon small left>mdi-floppy</v-icon>Salvar
           </v-btn>
         </v-col>
@@ -151,10 +151,6 @@ export default {
           dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
         })
         .then(() => {
-         this.$store.commit('setUser', this.usuario.nome)
-              localStorage.setItem(userKey, JSON.stringify(this.usuario.nome))
-        
-
           this.$toast.success('Dados do perfil atualizados')
         })
         .catch(showError)
