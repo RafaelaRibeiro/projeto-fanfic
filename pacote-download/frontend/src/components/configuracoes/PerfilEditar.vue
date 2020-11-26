@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { baseApiUrl, showError, userKey } from '@/global'
+import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
