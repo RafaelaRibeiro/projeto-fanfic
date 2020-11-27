@@ -152,13 +152,15 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="11">
-          <v-card flat>
-            <h5 class="font-weight-light mb-4">
-              <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
-            </h5>
+        <v-card flat>
+          <h5 class="font-weight-light mb-4">
+            <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
+          </h5>
+        </v-card>
+        <v-col class="d-flex align-center flex-column" cols="11">
+          <v-card class="pa-5" width="21cm" outlined flat>
+            <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
           </v-card>
-          <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
         </v-col>
       </v-row>
       <v-row>
@@ -202,6 +204,8 @@ export default {
       language: 'pt_br',
 
       botoes: [
+        'source',
+        '|',
         'bold',
         'strikethrough',
         'underline',
@@ -233,6 +237,7 @@ export default {
         'copy',
         'paste',
         'copyformat',
+        'find',
         '|',
         'fullsize',
       ],

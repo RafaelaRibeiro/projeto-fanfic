@@ -3,7 +3,7 @@ import Vue from 'vue'
 export const userKey = '__fanbase'
 export const obraId = '__obra'
 
-export const baseApiUrl = 'http://18.209.229.198:3000'
+export const baseApiUrl = 'https://backend.liberfans.com:3000'
 // export const baseApiUrl = 'http://localhost:3000'
 
 export function showError(e) {

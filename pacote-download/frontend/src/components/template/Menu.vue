@@ -19,8 +19,8 @@
 
       <v-divider class="ma-0"></v-divider>
 
-      <md-list class="md-dense pa-0 mb-2" v-for="item in items" :key="item.text">
-        <md-list-item v-if="item.children" md-expand :md-expanded.sync="expandNews">
+      <md-list class="md-dense pa-0 mb-2" v-for="item in items" :key="item.text" >
+        <md-list-item v-if="item.children" md-expand :md-expanded.sync="expandNews" @mouseleave="expandNews=false" >
           <v-icon class="pr-6">{{ item.icon }}</v-icon>
           <span class="md-list-item-text md-headline">{{ item.text }}</span>
 

@@ -201,6 +201,7 @@ export default {
       language: 'pt_br',
 
       botoes: [
+        'source', '|',
         'bold',
         'strikethrough',
         'underline',
@@ -234,6 +235,7 @@ export default {
         'copyformat',
         '|',
         'fullsize',
+        'find'
       ],
 
       vizualizar: true,

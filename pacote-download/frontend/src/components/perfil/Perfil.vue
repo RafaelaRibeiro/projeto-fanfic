@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-card class="perfil-banner">
-          <v-img v-if="usuario.imagePerfil" height="300px" :src="usuario.imageBanner"></v-img>
+          <v-img v-if="usuario.imageBanner" height="300px" :src="usuario.imageBanner"></v-img>
 
           <v-img v-else height="300px" src="@/assets/banner-teste.png"></v-img>
         </v-card>
@@ -20,11 +20,11 @@
       </v-col>
       <v-col>
         <div>
-          <strong>Nome:</strong>
+          <strong>Nome: </strong>
           {{ usuario.nome }}
         </div>
         <div>
-          <strong>Usuario:</strong>
+          <strong>Usuario: </strong>
           {{ usuario.user }}
         </div>
       </v-col>

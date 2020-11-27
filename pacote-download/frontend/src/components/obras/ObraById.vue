@@ -182,4 +182,10 @@ export default {
 
 
 <style>
+
+[dir] .md-list.md-theme-default .md-list-item-container:not(.md-list-item-default):not(.md-list-item-expand):not([disabled]):hover {
+  background-color:#EDE7F6 !important
+}
+
+
 </style>

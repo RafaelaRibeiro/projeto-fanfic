@@ -1,8 +1,10 @@
 <template>
-  <v-card flat class="pt-5">
+ 
     <v-container>
-      <v-row justify="center">
-        <v-col cols="12" sm="10">
+
+    
+        <v-row justify="center" class="mt-10">
+        <v-col cols="12" sm="11" >
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light" id="top">
               <i>
@@ -16,7 +18,7 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col cols="12" sm="10">
+        <v-col cols="12" sm="11">
           <v-card v-show="capitulo.notasIniciais" flat outlined color="deep-purple lighten-5">
             <v-card-title>Notas Iniciais</v-card-title>
             <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
@@ -25,14 +27,22 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row class="mb-12" justify="center">
-        <v-col cols="12" sm="10">
+      <v-row justify="center">
+        <v-col cols="11">
           <v-card flat>
-            <h5 class="font-weight-light mb-7">
-              <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
-            </h5>
+           <h5 class="font-weight-light mb-4">
+            <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
+          </h5>
           </v-card>
-          <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
+
+        </v-col>
+      </v-row>
+      <v-row justify="center" >
+        
+       <v-col class="d-flex align-center flex-column" cols="11">
+          <v-card class="pa-5" width="21cm" outlined flat>
+            <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -46,6 +56,8 @@
           </v-card>
         </v-col>
       </v-row>
+    
+      
 
       <v-row justify="center">
         <v-col cols="12" sm="5">
@@ -155,7 +167,7 @@
         </v-dialog>
       </v-row>
     </v-container>
-  </v-card>
+
 </template>
 
 <script>
