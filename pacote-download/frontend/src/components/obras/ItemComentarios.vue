@@ -1,6 +1,44 @@
 <template>
   <div>
-    <v-row justify="center">
+    <v-card class="px-5 text--primary text-justify" color="deep-purple lighten-5" flat outlined>
+      <v-row>
+        <v-col cols="12" md="1" class="mr-3 mt-3">
+          <v-avatar size="75">
+            <v-img v-if="comentario.path" :src="comentario.path"></v-img>
+            <v-img v-else src="@/assets/profile.png"></v-img>
+          </v-avatar>
+        </v-col>
+        <v-col>
+          <v-row>
+            <v-col>
+              <span class="md-body-2"> {{ comentario.nome }}</span>
+            </v-col>
+
+            <v-col class="d-flex justify-end md-caption">
+              <i> Comentado em {{ comentario.dataComentario }} </i>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="10">
+              <span>{{ comentario.conteudo }}</span>
+            </v-col>
+            <v-col>
+              <v-btn v-show="edit" text small @click="edicao = !edicao">
+                <v-icon color="deep-purple darken-4">mdi-pencil</v-icon>
+                <md-tooltip md-direction="top">Editar</md-tooltip>
+              </v-btn>
+               <v-btn v-show="edit" text small>
+                <v-icon color="deep-purple darken-4">mdi-delete</v-icon>
+                <md-tooltip md-direction="top">Deletar</md-tooltip>
+              </v-btn>
+            </v-col>
+          </v-row>
+          
+        </v-col>
+      </v-row>
+    </v-card>
+
+    <!-- <v-row justify="center">
       <v-col>
         <v-card class="px-5 text--primary text-justify" color="deep-purple lighten-5" flat outlined>
           <v-row>
@@ -52,9 +90,9 @@
           </v-row>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
-    <v-row justify="end">
+    <!-- <v-row justify="end">
       <v-col cols="11">
         <v-card class="px-5 text--primary text-justify" color="blue lighten-5" flat outlined>
           <v-row>
@@ -106,7 +144,7 @@
           </v-row>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
   </div>
 </template>
 

@@ -32,15 +32,6 @@
               ></v-textarea>
 
               <div>
-                <!-- <vue-editor
-                  class="editor"
-                  id="conteudo"
-                  :editor-toolbar=" customToolbar"
-                  :editorOptions="editorSettings"
-                  :customModules="customModulesForEditor"
-                  v-model="capitulo.conteudo"
-                />-->
-
                 <jodit-vue
                   :language="language"
                   v-model="capitulo.conteudo"
@@ -73,7 +64,7 @@
                     <v-row justify="center">
                       <v-col cols="4">
                         <v-checkbox
-                          v-for="aviso in avisos.slice(0, 4)"
+                          v-for="aviso in avisos.slice(0, 5)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
@@ -84,7 +75,7 @@
                       </v-col>
                       <v-col cols="4">
                         <v-checkbox
-                          v-for="aviso in avisos.slice(4, 8)"
+                          v-for="aviso in avisos.slice(5, 10)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
@@ -95,7 +86,7 @@
                       </v-col>
                       <v-col cols="4">
                         <v-checkbox
-                          v-for="aviso in avisos.slice(8, 12)"
+                          v-for="aviso in avisos.slice(10, 15)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
@@ -150,14 +141,21 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="11">
+      <v-row justify="center">
+        <v-col cols="12">
           <v-card flat>
             <h5 class="font-weight-light mb-4">
               <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
             </h5>
           </v-card>
-          <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col class="d-flex align-center flex-column" cols="11">
+          <v-card class="pa-5" width="21cm" outlined flat>
+            <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
+          </v-card>
         </v-col>
       </v-row>
       <v-row>
@@ -201,7 +199,8 @@ export default {
       language: 'pt_br',
 
       botoes: [
-        'source', '|',
+        'source',
+        '|',
         'bold',
         'strikethrough',
         'underline',
@@ -235,7 +234,7 @@ export default {
         'copyformat',
         '|',
         'fullsize',
-        'find'
+        'find',
       ],
 
       vizualizar: true,
@@ -289,7 +288,7 @@ export default {
     getNumeroCapitulo() {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.id}/ultimocapitulo`
       axios(url).then((res) => {
-        this.ultimoCapitulo = res.data[0]
+        this.ultimoCapitulo = res.data
         this.ultimoCapitulo.max_numero++
         this.capitulo.numero = this.ultimoCapitulo.max_numero
       })

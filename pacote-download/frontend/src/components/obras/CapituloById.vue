@@ -90,10 +90,12 @@
         </v-col>
         <v-col v-show="testeStatus != null" cols="12" sm="10">
           <v-card flat outlined color="deep-purple lighten-5">
-            <v-card-text class="text--primary text-justify">
+            <v-card-text class="text--primary text-justify " c>
               <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
               <v-icon color="deep-purple darken-4">mdi-check-bold</v-icon>
               {{ testeStatus }}
+
+        
             </v-card-text>
           </v-card>
         </v-col>

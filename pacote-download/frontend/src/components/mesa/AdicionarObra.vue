@@ -203,7 +203,18 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="c in caracteristicas.slice(5, 9)"
+              v-for="c in caracteristicas.slice(4, 8)"
+              :key="c.id"
+              v-model="obra.caracteristicasId"
+              dense
+              class="ma-0"
+              :label="c.nome"
+              :value="c.id"
+            ></v-checkbox>
+          </v-col>
+           <v-col>
+            <v-checkbox
+              v-for="c in caracteristicas.slice(8, 12)"
               :key="c.id"
               v-model="obra.caracteristicasId"
               dense
@@ -225,7 +236,7 @@
         <v-row justify="center">
           <v-col>
             <v-checkbox
-              v-for="aviso in avisos.slice(0, 4)"
+              v-for="aviso in avisos.slice(0, 5)"
               :key="aviso.id"
               v-model="obra.avisosId"
               dense
@@ -236,7 +247,7 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="aviso in avisos.slice(4, 8)"
+              v-for="aviso in avisos.slice(5, 10)"
               :key="aviso.id"
               v-model="obra.avisosId"
               dense
@@ -247,7 +258,7 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="aviso in avisos.slice(8, 12)"
+              v-for="aviso in avisos.slice(10, 15)"
               :key="aviso.id"
               v-model="obra.avisosId"
               dense
@@ -357,12 +368,12 @@ export default {
           axios
             .post(`${baseApiUrl}/mesa/${this.a.id}/upload`, fd)
             .then(() => {
-              this.$toasted.global.defaultSuccess()
+              
               this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
             })
-            .catch(showError)
+            .catch()
         })
-        .catch(showError)
+        .catch()
     },
 
     getCategorias() {

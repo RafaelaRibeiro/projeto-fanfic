@@ -4,7 +4,7 @@ const s3 = new aws.S3();
 module.exports = (app) => {
   const { existsOrError, notExistsOrError } = app.api.validacao;
   //  Obras
-  const save = (req, res) => {
+  const save = async (req, res) => {
     const obra = { ...req.body };
     if (req.params.obraId) obra.id = req.params.obraId;
 
@@ -18,25 +18,21 @@ module.exports = (app) => {
     }
 
     if (obra.id) {
-      app
+    await app
         .db("obras")
         .update(obra)
         .where({ id: obra.id })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
-      app
+      await app
         .db("obras")
         .insert(obra)
-        .then((obra) => obra.status(240).send())
-        .catch((err) => res.status(500).send());
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
     }
 
-    const payload = obra.id;
-
-    res.json({
-      payload,
-    });
+    
   };
 
   const getById = (req, res) => {

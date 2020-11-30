@@ -75,7 +75,7 @@
                     <v-row justify="center">
                       <v-col>
                         <v-checkbox
-                          v-for="aviso in avisos.slice(0, 4)"
+                          v-for="aviso in avisos.slice(0, 5)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
@@ -86,7 +86,7 @@
                       </v-col>
                       <v-col>
                         <v-checkbox
-                          v-for="aviso in avisos.slice(4, 8)"
+                          v-for="aviso in avisos.slice(5, 10)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
@@ -97,7 +97,7 @@
                       </v-col>
                       <v-col>
                         <v-checkbox
-                          v-for="aviso in avisos.slice(8, 12)"
+                          v-for="aviso in avisos.slice(10, 15)"
                           :key="aviso.id"
                           v-model="capitulo.avisosId"
                           dense
