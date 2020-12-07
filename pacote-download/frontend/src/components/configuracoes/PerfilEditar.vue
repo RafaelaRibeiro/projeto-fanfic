@@ -13,12 +13,12 @@
       <v-row class="ml-2 mt-0">
         <v-col cols="12" md="5">
           <v-text-field
-            v-mask="mask"
             v-model="usuario.dataNasc"
             label="Data de Nascimento"
             placeholder="dd/mm/aaaa"
             color="deep-purple darken-4"
             outlined
+            type="date"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -115,7 +115,7 @@ import moment from 'moment'
 export default {
   name: 'PerfilEditar',
   props: ['usuario'],
-    perfil: {
+  perfil: {
     get() {
       return this.$store.state.usuario.nome
     },
@@ -148,7 +148,7 @@ export default {
           pinterest: this.usuario.pinterest,
           tumblr: this.usuario.tumblr,
           spotify: this.usuario.spotify,
-          dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD'),
+          dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD HH:MM:SS'),
         })
         .then(() => {
           this.$toast.success('Dados do perfil atualizados')

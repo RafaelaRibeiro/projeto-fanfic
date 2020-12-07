@@ -42,8 +42,8 @@ module.exports = (app) => {
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
       .join("capitulos", "obras.id", "capitulos.obraId")
-      .column("obras.nome", { obraId: "obras.id" })
-      .select()
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .select({ obraId: "obras.id" }, "obras.nome", "imagensObra.path")
       .where({
         user: req.params.user,
         "obras.publica": true,
@@ -90,11 +90,13 @@ module.exports = (app) => {
       .db("estante")
       .join("obras", "estante.obraId", "=", "obras.id")
       .join("usuarios", "estante.usuarioId", "=", "usuarios.id")
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
       .select({
         estanteId: "estante.id",
         nome: "obras.nome",
         obraId: "obras.id",
-      })
+
+      }, "imagensObra.path")
       .where({ user: req.params.user })
       .whereNot({ prateleiraId: 4 })
       .orderBy("estante.id", "desc")

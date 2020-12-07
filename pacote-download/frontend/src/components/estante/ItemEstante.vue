@@ -1,63 +1,113 @@
 <template>
   <div class="item-estante">
     <v-card outlined class="d-flex align-center mb-4">
-      <v-expand-x-transition>
+      <!-- <v-expand-x-transition>
         <v-checkbox
           v-show="(expand = expNovo)"
           color="deep-deep-purple darken-4"
           :input-value="checkNovo"
           value
         ></v-checkbox>
-      </v-expand-x-transition>
+      </v-expand-x-transition> -->
 
-      <v-card flat class="d-flex ma-2">
-        <v-avatar size="100" tile class="d-none d-sm-block">
-          <v-img v-if="item.capa" :src="item.capa"></v-img>
-          <v-img v-else src="@/assets/sem_imagem.jpg"></v-img>
-        </v-avatar>
-      </v-card>
+      <v-row class="mr-1">
+        <v-col cols="12" sm="2" class="d-flex child-flex" align-self="center">
+          <v-card flat class="ma-2">
+            <v-img
+              max-height="125"
+              max-width="125"
+              in-height="45"
+              min-width="45"
+              contain
+              v-if="item.path"
+              :src="item.path"
+            ></v-img>
+            <v-img
+              max-height="125"
+              max-width="125"
+              contain
+              min-height="45"
+              min-width="45"
+              v-else
+              src="@/assets/sem_imagem.jpg"
+            ></v-img>
+          </v-card>
+        </v-col>
+        <v-col cols="9" sm="9">
+          <v-card class="d-flex flex-column" flat>
+            <router-link class="mb-3" :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
+              <span class="mb-2 subtitle-2 font-weight-medium">Título: </span>
+              {{ item.nome }}
+            </router-link>
+            <span>
+              <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
+              {{ item.countCap }}
+            </span>
+            <span v-if="item.prateleiraId === 1">
+              <span class="subtitle-2 font-weight-medium">Ultimo Capitulo Lido:</span>
+              {{ item.uNumero }}
+            </span>
 
-      <v-card flat>
-        <v-card-title>
-          <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
-            {{ item.nome }}
-          </router-link>
-        </v-card-title>
-        <v-card-text class="d-flex flex-column font-weight-regular text--primary">
-          <div>
-            <a style="color: black" v-if="item.prateleira === 1">{{ primeiraLinha }}</a>
-            <span v-else>{{ primeiraLinha }}</span>
-          </div>
+            <span>
+              <span class="subtitle-2 font-weight-medium">Terminada:</span>
+              {{ item.terminada }}
+            </span>
+          </v-card>
+        </v-col>
+        <v-col cols="1">
+          <v-menu bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
 
-          <a style="color: black" v-if="item.prateleira === 1">{{ segundaLinha }}</a>
-          <span v-else>{{ segundaLinha }}</span>
-          <p>{{ terminada }}</p>
-        </v-card-text>
-      </v-card>
+            <md-list class="md-dense">
+              <md-list-item @click="dialog = true">
+                <v-icon small left>mdi-playlist-remove</v-icon>
+                <span class="md-list-item-text">Remover da Estante</span>
+              </md-list-item>
 
-      <!-- <v-col cols="1">
-        <v-menu  left offset-x>
-          <template v-slot:activator="{ on }">
-              
-            <v-btn   v-on="on" class="mx-1" fab dark small color="deep-purple darken-4" depressed>
-              <v-icon  dark>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item link dense v-for="item in menu" :key="item.title">
-              
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-col>-->
+              <md-list-item v-if="item.prateleiraId != 4" @click="arquivarObra">
+                <v-icon small left>mdi-dresser</v-icon>
+
+                <span class="md-list-item-text">Arquivar Obra</span>
+              </md-list-item>
+              <md-list-item v-show="item.prateleiraId === 4">
+                <v-icon small left>mdi-restore</v-icon>
+
+                <span class="md-list-item-text">Restaurar Obra</span>
+              </md-list-item>
+            </md-list>
+          </v-menu>
+        </v-col>
+      </v-row>
     </v-card>
 
-    <!-- <v-checkbox v-model="item.terminada" :value="item.terminada"></v-checkbox> -->
+    <v-dialog v-model="dialog" max-width="500" height="500px">
+      <v-card align="center">
+        <v-row align="center" justify="center" no-gutters>
+          <v-avatar class="mt-8 mb-1" size="90">
+            <v-img src="@/assets/playlist-remove.png"></v-img>
+          </v-avatar>
+        </v-row>
+
+        <span class="md-subheading d-flex justify-center ma-5">Confirma remover a obra da sua estante?</span>
+
+        <v-row align="center" justify="center" no-gutters>
+          <v-card-actions>
+            <v-btn dark color="deep-purple darken-4" class="mr-3 mb-3" @click="removeEstante" elevation="4">Sim</v-btn>
+            <v-btn dark color="deep-purple darken-4" class="mr-3 mb-3" @click="dialog = false" elevation="4">Não</v-btn>
+          </v-card-actions>
+        </v-row>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { baseApiUrl, showError } from '@/global'
 export default {
   name: 'ItemEstante',
   props: ['item'],
@@ -68,84 +118,49 @@ export default {
         { id: 1, title: 'Marcar como Lida' },
         { id: 1, title: 'Marcar como Predileto' },
       ],
+      dialog: false,
     }
   },
 
-  computed: {
-    primeiraLinha() {
-      if (this.item.prateleiraId === 1) {
-        // return `Ultimo Capítulo Lido: ${this.item.ultimo} `;
-        return 'Ultimo Capítulo Lido'
-      } else if (this.item.prateleiraId === 2 || this.item.prateleiraId === 4) {
-        return `Total de Capítulos: ${this.item.totalCapitulos} `
-      } else {
-        return ''
-      }
-    },
-    segundaLinha() {
-      if (this.item.prateleira === 1) {
-        return `Próximo Capítulo: ${this.item.proximo} `
-      } else if (this.item.prateleira === 2 || this.item.prateleira === 4) {
-        return `Total de Palavras: ${this.item.totalPalavras} `
-      } else {
-        return ''
-      }
+  methods: {
+    removeEstante() {
+      axios
+        .delete(`${baseApiUrl}/${this.$store.state.usuario.id}/estante/${this.item.id}`)
+        .then(() => {
+          this.dialog = false
+          this.$toast.success('Obra retirada da estante')
+        })
+        .catch(showError)
     },
 
-    terminada() {
-      if (this.item.prateleira !== 3) {
-        if (this.item.terminada === false) {
-          return 'Terminada: Não'
-        } else {
-          return 'Terminada: Sim'
-        }
-      } else {
-        return ''
-      }
+    arquivarObra() {
+      axios
+        .put(`${baseApiUrl}/${this.$store.state.usuario.id}/estante/${this.item.id}`)
+        .then(() => {
+          this.$toast.success('Obra Arquiva')
+        })
+        .catch(showError)
     },
-    expNovo() {
-      return this.$store.state.expandir
-    },
-    checkNovo() {
-      return this.$store.state.checkTodos
-    },
-    intermed: {
-      get() {
-        return this.$store.state.intermediario
-      },
-      set(valor) {
-        this.$store.commit('setIntermed', valor)
-      },
-    },
+  },
+
+  computed: {
+    // expNovo() {
+    //   return this.$store.state.expandir
+    // },
+    // checkNovo() {
+    //   return this.$store.state.checkTodos
+    // },
+    // intermed: {
+    //   get() {
+    //     return this.$store.state.intermediario
+    //   },
+    //   set(valor) {
+    //     this.$store.commit('setIntermed', valor)
+    //   },
+    // },
   },
 }
 </script>
 
 <style >
-/* .item-estante {
-  border-radius: 8px;
-  margin-bottom: 10px;
-  background: #fff;
-  padding: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.item-estante-info a,
-.item-estante-info a:hover {
-  text-decoration: none;
-  display: flex;
-  align-items: flex-start;
-  color: #000;
-}
-
-.item-estante-image img {
-  border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.item-estante-info {
-  display: flex;
-  align-self: stretch;
-  flex-direction: column;
-} */
 </style>

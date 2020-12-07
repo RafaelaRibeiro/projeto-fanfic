@@ -18,7 +18,7 @@ module.exports = (app) => {
     }
 
     if (obra.id) {
-    await app
+      await app
         .db("obras")
         .update(obra)
         .where({ id: obra.id })
@@ -32,7 +32,7 @@ module.exports = (app) => {
         .catch((err) => res.status(500).send(err));
     }
 
-    
+
   };
 
   const getById = (req, res) => {
@@ -138,6 +138,16 @@ module.exports = (app) => {
   };
   const limit = 10; // usado para paginação
 
+  const getObraPublicasStatus = (req, res) => {
+    app.db("obras")
+      .select({ id: "obras.terminada" }, app.db.raw("case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"))
+      .count({ count: "obras.terminada" })
+      .groupBy("obras.terminada")
+      .where({ autor: req.params.usuarioId, "obras.publica": true })
+      .then((status) => res.json(status))
+      .catch((err) => res.status(500).send(err));
+  }
+
   const getObrasPublicas = (req, res) => {
     app
       .db("obras")
@@ -157,6 +167,15 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const getObraPrivadasStatus = (req, res) => {
+    app.db("obras")
+      .select({ id: "obras.terminada" }, app.db.raw("case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"))
+      .count({ count: "obras.terminada" })
+      .groupBy("obras.terminada")
+      .where({ autor: req.params.usuarioId, "obras.publica": false })
+      .then((status) => res.json(status))
+      .catch((err) => res.status(500).send(err));
+  }
   const getObrasPrivadas = (req, res) => {
     app
       .db("obras")
@@ -274,7 +293,6 @@ module.exports = (app) => {
         .db("imagensObra")
         .update({
           name: req.file.originalname,
-          size: req.file.size,
           path: req.file.location,
           key: req.file.key,
         })
@@ -315,6 +333,8 @@ module.exports = (app) => {
     capituloById,
     listaCapitulos,
     getByIdUser,
+    getObraPublicasStatus,
+    getObraPrivadasStatus
 
   };
 };

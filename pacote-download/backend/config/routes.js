@@ -42,7 +42,7 @@ module.exports = (app) => {
   );
 
   //**************************************Estante*****************************************************
-  app.route("/:user/estante").get(app.api.estante.get);
+  app.route("/estante/:usuarioId").get(app.api.estante.get);
   app
     .route("/:user/estante/prateleira/:prateleiraId")
     .get(app.api.estante.getById);
@@ -51,6 +51,9 @@ module.exports = (app) => {
   app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
   app.route("/estante/:id").put(app.api.estante.updateEstante);
+  app.route("/estante/:usuarioId/prateleiras").get(app.api.estante.getEstantePrateleira)
+  app.route("/:usuarioId/estante/:id").delete(app.api.estante.removeEstante).put(app.api.estante.arquivarObra)
+
 
   //**************************************Obras*****************************************************
   app
@@ -119,6 +122,9 @@ module.exports = (app) => {
   app
     .route("/mesa/:usuarioId/obraspublicas")
     .get(app.api.mesa.getObrasPublicas);
+
+  app.route("/mesa/:usuarioId/obraspublicas/status").get(app.api.mesa.getObraPublicasStatus)
+  app.route("/mesa/:usuarioId/obrasprivadas/status").get(app.api.mesa.getObraPrivadasStatus)
 
   app
     .route("/mesa/:usuarioId/obrasprivadas")

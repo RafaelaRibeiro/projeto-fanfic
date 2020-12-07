@@ -19,21 +19,23 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" md="10">
-              <span>{{ comentario.conteudo }}</span>
+            <v-col cols="12" md="10" class="d-flex flex-column">
+              <span class="mb-4">{{ comentario.conteudo }}</span>
+              <span>
+                <v-btn color="deep-purple darken-4" text small> Responder </v-btn>
+              </span>
             </v-col>
             <v-col>
               <v-btn v-show="edit" text small @click="edicao = !edicao">
                 <v-icon color="deep-purple darken-4">mdi-pencil</v-icon>
                 <md-tooltip md-direction="top">Editar</md-tooltip>
               </v-btn>
-               <v-btn v-show="edit" text small>
+              <v-btn v-show="edit" text small>
                 <v-icon color="deep-purple darken-4">mdi-delete</v-icon>
                 <md-tooltip md-direction="top">Deletar</md-tooltip>
               </v-btn>
             </v-col>
           </v-row>
-          
         </v-col>
       </v-row>
     </v-card>

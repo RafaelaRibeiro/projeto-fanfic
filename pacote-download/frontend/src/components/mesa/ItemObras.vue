@@ -2,18 +2,29 @@
   <div>
     <v-card outlined>
       <v-row class="mr-1">
-        <v-col cols="2">
+        <v-col cols="12" sm="2" class="d-flex child-flex" align-self="center">
           <v-card flat class="ma-2">
-            <v-avatar size="100" tile class="d-none d-sm-block">
-              <v-img v-if="item.path" :src="item.path"></v-img>
-              <v-img
-                v-else
-                src=" https://omextemplates.content.office.net/support/templates/pt-br/lt22301254.png"
-              ></v-img>
-            </v-avatar>
+            <v-img
+              max-height="125"
+              max-width="125"
+              in-height="45"
+              min-width="45"
+              contain
+              v-if="item.path"
+              :src="item.path"
+            ></v-img>
+            <v-img
+              max-height="125"
+              max-width="125"
+              contain
+              min-height="45"
+              min-width="45"
+              v-else
+              src="@/assets/sem_imagem.jpg"
+            ></v-img>
           </v-card>
         </v-col>
-        <v-col cols="8">
+        <v-col cols="9" sm="9">
           <v-card class="d-flex flex-column" flat>
             <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
               <span class="mb-2 subtitle-2 font-weight-medium">{{ item.nome }}</span>
@@ -40,11 +51,11 @@
             </v-card>
           </v-card>
         </v-col>
-        <v-col cols="2" align="end">
+        <v-col cols="1" sm="1" align="end">
           <v-menu bottom left>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" v-on="on">
-                <v-icon>mdi-menu</v-icon>
+                <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
 

@@ -20,7 +20,7 @@
               label="Título"
             ></v-text-field>
 
-            <v-file-input
+            <!-- <v-file-input
               small-chips
               v-model="imagemObra"
               color="deep-purple darken-4"
@@ -30,7 +30,7 @@
               prepend-icon="mdi-camera"
               show-size
               accept="image/png, image/jpeg, image/bmp"
-            ></v-file-input>
+            ></v-file-input> -->
 
             <v-textarea
               v-model="obra.sinopse"
@@ -44,35 +44,6 @@
         </v-row>
         <v-row>
           <v-col cols="6">
-            <!-- <v-autocomplete
-              v-model="model"
-              :items="items"
-              :loading="isLoading"
-              :search-input.sync="buscar"
-              chips
-              multiple
-              small
-              clearable
-              hide-details
-              hide-selected
-              item-text="name"
-              item-value="symbol"
-              label="Co-autor"
-              outlined
-              dense
-            >
-              <template v-slot:no-data>
-                <v-list-item>
-                  <v-list-item-title> Buscar por nome de usuário </v-list-item-title>
-                </v-list-item>
-              </template>
-
-              <template v-slot:item="{ item }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item-content>
-              </template>
-            </v-autocomplete> -->
             <v-autocomplete
               v-model="model"
               :items="items"
@@ -212,7 +183,7 @@
               :value="c.id"
             ></v-checkbox>
           </v-col>
-           <v-col>
+          <v-col>
             <v-checkbox
               v-for="c in caracteristicas.slice(8, 12)"
               :key="c.id"
@@ -351,30 +322,53 @@ export default {
           dataAdicionado: this.now,
         })
         .then(() => {
-          this.getUltimaObra()
+          this.postarCapitulo()
         })
         .catch(showError)
     },
 
     getUltimaObra() {
-      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
-      axios(url)
-        .then((res) => {
-          this.a = res.data[0]
-          if (this.imagemObra.size === 0) {
-            this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
-          } else var fd = new FormData()
-          fd.append('file', this.imagemObra)
-          axios
-            .post(`${baseApiUrl}/mesa/${this.a.id}/upload`, fd)
-            .then(() => {
-              
-              this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
-            })
-            .catch()
+      let fd = new FormData()
+      fd.append('file', this.imagemObra)
+      // eslint-disable-next-line no-console
+      console.log(this.imagemObra)
+
+      axios
+        .post(`${baseApiUrl}/mesa/145/upload`, fd)
+        .then(() => {
+          // eslint-disable-next-line no-console
+          console.log(this.imagemObra)
         })
-        .catch()
+        .catch('erro')
     },
+
+    postarCapitulo() {
+      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
+      axios(url).then((res) => {
+        this.a = res.data[0]
+        this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
+      })
+    },
+
+    // getUltimaObra() {
+    //   const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
+    //   axios(url)
+    //     .then((res) => {
+    //       this.a = res.data[0]
+    //       if (this.imagemObra.size === 0|| this.imagemObra == null) {
+    //         this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
+    //       } else var fd = new FormData()
+    //       fd.append('file', this.imagemObra)
+    //       axios
+    //         .post(`${baseApiUrl}/mesa/${this.a.id}/upload`, fd)
+    //         .then(() => {
+
+    //           this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
+    //         })
+    //         .catch()
+    //     })
+    //     .catch()
+    // },
 
     getCategorias() {
       const url = ` ${baseApiUrl}/categorias`

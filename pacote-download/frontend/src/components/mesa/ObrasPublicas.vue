@@ -1,23 +1,18 @@
 <template>
   <v-card flat>
     <v-container fluid>
-      <!-- titulos -->
       <v-row>
         <v-col>
-          <!-- <h1 class="display-1 font-weight-light mb-4">
-            <i> <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas </i>
-          </h1> -->
           <h4 class="font-weight-light pa-2">
             <v-icon x-large class="pa-3">mdi-lock-open-variant</v-icon>Minhas Obras Públicas
           </h4>
         </v-col>
       </v-row>
-
       <v-row class="mb-n2">
-        <v-col cols="9">
+        <v-col cols="12" md="9">
           <v-card flat color="deep-purple darken-4" dark>
             <v-card-title>
-              <i v-for="(item, index) in filteredItems" :key="index">{{ item.text }}</i>
+              <i v-for="(item, index) in filteredItems" :key="index">{{ item.status }}</i>
             </v-card-title>
           </v-card>
         </v-col>
@@ -29,7 +24,7 @@
       </v-row>
       <!-- conteudos -->
       <v-row>
-        <v-col cols="9">
+        <v-col cols="12" md="9">
           <v-row>
             <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
               <ItemObras :item="item"></ItemObras>
@@ -41,7 +36,10 @@
             <v-col>
               <v-card outlined>
                 <md-list>
-                  <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">{{ s.text }}</md-list-item>
+                  <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">
+                    {{ s.status }}
+                    <md-badge class="md-primary" :md-content="s.count" />
+                  </md-list-item>
                 </md-list>
                 <!-- <v-list>
                   <v-list-item-group>
@@ -77,11 +75,7 @@ export default {
       limit: 0,
       count: 0,
       totalPage: 0,
-      status: [
-        { id: 'A', text: 'Em Andamento' },
-        { id: 'T', text: 'Terminada' },
-        { id: 'S', text: 'Suspensa' },
-      ],
+      status: [],
     }
   },
 
@@ -112,13 +106,24 @@ export default {
         this.obras = res.data
       })
     },
+
+    getstatus() {
+      const url = ` ${baseApiUrl}/mesa/${this.$store.state.usuario.id}/obraspublicas/status`
+      axios(url).then((res) => {
+        this.status = res.data
+      })
+    },
   },
 
   mounted() {
     this.getObrasPublicas()
+    this.getstatus()
   },
 }
 </script>
 
 <style>
+.md-badge.md-theme-default.md-primary {
+  background-color: #311b92;
+}
 </style>

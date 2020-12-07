@@ -42,8 +42,9 @@ module.exports = (app) => {
       .db("obras")
       .join("usuarios", "obras.autor", "=", "usuarios.id")
       .join("capitulos", "obras.id", "capitulos.obraId")
-      .column("obras.nome", { obraId: "obras.id" })
-      .select()
+
+
+      .select("obras.nome")
       .where({
         user: req.params.user,
         "obras.publica": true,

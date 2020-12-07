@@ -1,3 +1,5 @@
+const prateleiras = require("./prateleiras");
+
 module.exports = (app) => {
   const { existsOrError, notExistsOrError } = app.api.validacao;
 
@@ -31,9 +33,13 @@ module.exports = (app) => {
     app
       .db("estante")
       .join("obras", "estante.obraId", "obras.id")
-      .join("usuarios", "estante.usuarioId", "usuarios.id")
-      .select("estante.id", "estante.obraId", "obras.nome", "prateleiraId")
-      .where({ "usuarios.user": req.params.user })
+      .join("capitulos", "estante.obraId", "capitulos.obraId")
+      .leftJoin({ u: "capitulos" }, "estante.ultimoCapituloId", "u.id")
+      .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .select("estante.id", "estante.obraId", "obras.nome", "prateleiraId", "imagensObra.path", app.db.raw("case obras.terminada when 'T' then 'Sim' else 'Não' end as terminada, count(capitulos.id) as countCap, u.numero as uNumero, u.id as uId "))
+      .where({ "estante.usuarioId": req.params.usuarioId })
+      .groupBy("estante.obraId", "estante.prateleiraId")
+      .orderBy("obras.id", "desc")
       .then((estante) => res.json(estante))
       .catch((err) => res.status(500).send(err));
   };
@@ -56,7 +62,7 @@ module.exports = (app) => {
     app
       .db("estante")
       .join("usuarios", "estante.usuarioId", "usuarios.id")
-      .leftJoin("capitulos","estante.ultimoCapituloId", "capitulos.id")
+      .leftJoin("capitulos", "estante.ultimoCapituloId", "capitulos.id")
       .select("estante.*", "capitulos.numero")
       .where({ "usuarios.id": req.params.id, "estante.obraId": req.params.obraId })
       .andWhere("estante.prateleiraId", "<>", 3)
@@ -108,6 +114,75 @@ module.exports = (app) => {
     }
   };
 
+  const getEstantePrateleira = (req, res) => {
+    app.db.queryBuilder()
+      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
+      .from({ p: app.db("prateleiras").select("id", "nome") })
+      .leftJoin({ e: app.db("estante").select("estante.prateleiraId").count({ total: "estante.id" }).where({ "estante.usuarioId": req.params.usuarioId }).groupBy("estante.prateleiraId") }, "p.id", "e.prateleiraId")
+      .then((estante) => res.json(estante))
+      .catch((err) => res.status(500).send(err))
+  }
+
+  const removeEstante = async (req, res) => {
+
+    try {
+      const login = await app
+        .db("estante")
+        .select("id", "usuarioId")
+        .where({ id: req.params.id })
+        .first()
+
+      try {
+        existsOrError(login, "Obra não está na estante.");
+      } catch (msg) {
+        return res.status(400).send(msg);
+      }
+
+      if (login.usuarioId !== parseInt(req.params.usuarioId))
+        return res.status(403).send("Você não tem permissão")
+
+      app.db("estante")
+        .where({ id: req.params.id })
+        .del()
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } catch (msg) {
+      res.status(500).send(msg);
+    }
+  }
+
+  const arquivarObra = async (req, res) => {
+    try {
+      const estante = await app
+        .db("estante")
+        .select("id", "usuarioId")
+        .where({ id: req.params.id })
+        .first()
+
+      try {
+        existsOrError(estante, "Obra não está na estante.");
+      } catch (msg) {
+        return res.status(400).send(msg);
+      }
+
+      if (estante.usuarioId !== parseInt(req.params.usuarioId))
+        return res.status(403).send("Você não tem permissão")
+
+      app.db("estante")
+        .where({ id: req.params.id })
+        .update({ prateleiraId: 4 })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } catch (msg) {
+      res.status(500).send(msg);
+    }
+  }
+
+
+
+
+
+
   return {
     get,
     getById,
@@ -115,5 +190,9 @@ module.exports = (app) => {
     getEstanteByObraId,
     getuniversosByEstante,
     updateEstante,
+    getEstantePrateleira,
+    removeEstante,
+    arquivarObra
+
   };
 };
