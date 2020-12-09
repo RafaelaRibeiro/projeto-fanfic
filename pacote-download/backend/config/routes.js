@@ -2,14 +2,13 @@ const multer = require("multer");
 const multerConfig = require("./multer");
 const autor = require("./autor");
 
+
 module.exports = (app) => {
   app.post("/signin", app.api.auth.signin);
   app.post("/validateToken", app.api.auth.validateToken);
 
-  app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get);
-
+  app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get)
   app.route("/categorias").get(app.api.categorias.getCategoria);
-
   app.route("/universos").get(app.api.universo.getUniverso);
   app.route("/avisos").get(app.api.avisos.getAvisos);
   app.route("/caracteristicas").get(app.api.caracteristicas.getCaracteristicas);
@@ -140,6 +139,7 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/editarcapitulo/:id").put(app.api.mesa.saveCapitulo);
   app.route("/mesa/:obraId/ultimocapitulo").get(app.api.mesa.getUltimoCapitulo);
   app.route("/mesa/:obraId/listacapitulos").get(app.api.mesa.listaCapitulos);
+  app.route("/views/:obraId/capitulo/:capituloId/usuario/:usuarioId").post(app.api.mesa.contadorViews)
 
   //Minha Mesa - Notas
 

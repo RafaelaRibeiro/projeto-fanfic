@@ -148,13 +148,17 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  const get = (req, res) => {
+  const get = async (req, res) => {
     app
       .db("usuarios")
       .select("id", "nome", "email", "perfil", "autor")
       .then((usuarios) => res.json(usuarios))
-      .catch((err) => res.status(500).send(err));
+      .catch((err) => res.status(500).send(err))
+
+
   };
+
+
 
   const getUser = (req, res) => {
     app
@@ -288,6 +292,8 @@ module.exports = (app) => {
     }
   };
 
+
+
   const uploadBanner = async (req, res) => {
     const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
@@ -329,6 +335,8 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
+
+
   };
 
   return {
@@ -342,6 +350,6 @@ module.exports = (app) => {
     getUserByToken,
     getUser,
     getEmail,
-    resendToken,
+    resendToken
   };
 };

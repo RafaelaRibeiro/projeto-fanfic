@@ -3,7 +3,7 @@ const s3 = new aws.S3();
 
 module.exports = (app) => {
   const { existsOrError, notExistsOrError } = app.api.validacao;
-  //  Obras
+  //************************************************** */  Obras**********************************************************
   const save = async (req, res) => {
     const obra = { ...req.body };
     if (req.params.obraId) obra.id = req.params.obraId;
@@ -71,6 +71,41 @@ module.exports = (app) => {
 
 
   };
+
+  //  ***********************************************************Capitulos**********************************************************************
+
+  const contadorViews = async (res, req) => {
+
+
+    let cont = await app
+      .db("contador")
+      .where({ "contador.obraId": req.params.obraId, capituloId: req.params.capituloId, usuarioId: req.params.usuarioId })
+      .first();
+
+    console.log('passou')
+
+    if (cont.id) {
+      app.db("contador")
+        .update({ views: cont.views + 1 })
+        .where({ id: cont.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err))
+    } else {
+      app.db("contador")
+        .insert({
+          views: 1,
+          obraId: req.params.obraId,
+          capituloId: req.params.capituloId,
+          usuarioId: req.params.usuarioId
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err))
+    }
+
+
+
+
+  }
 
 
   const capituloById = (req, res) => {
@@ -334,7 +369,8 @@ module.exports = (app) => {
     listaCapitulos,
     getByIdUser,
     getObraPublicasStatus,
-    getObraPrivadasStatus
+    getObraPrivadasStatus,
+    contadorViews
 
   };
 };
