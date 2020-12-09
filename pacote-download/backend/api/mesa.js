@@ -31,8 +31,6 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
-
-
   };
 
   const getById = (req, res) => {
@@ -68,45 +66,71 @@ module.exports = (app) => {
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
-
-
   };
 
   //  ***********************************************************Capitulos**********************************************************************
 
-  const contadorViews = async (res, req) => {
+  const contadorViews = async (req, res) => {
+    const contador = { ...req.body };
 
+    try {
+      existsOrError(contador.obraId, "Obra não informada");
+      existsOrError(contador.capituloId, "Capitulo não informado");
+      existsOrError(contador.usuarioId, "Usuario não informado");
+    } catch (msg) {
+      res.status(400).send(msg);
+    }
 
     let cont = await app
       .db("contador")
-      .where({ "contador.obraId": req.params.obraId, capituloId: req.params.capituloId, usuarioId: req.params.usuarioId })
+      .select("id", "views")
+      .where({
+        obraId: contador.obraId,
+        capituloId: contador.capituloId,
+        usuarioId: contador.usuarioId,
+      })
       .first();
 
-    console.log('passou')
-
-    if (cont.id) {
-      app.db("contador")
+    if (cont) {
+      app
+        .db("contador")
         .update({ views: cont.views + 1 })
         .where({ id: cont.id })
         .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err))
+        .catch((err) => res.status(500).send(err));
     } else {
-      app.db("contador")
+      app
+        .db("contador")
         .insert({
           views: 1,
-          obraId: req.params.obraId,
-          capituloId: req.params.capituloId,
-          usuarioId: req.params.usuarioId
+          obraId: contador.obraId,
+          capituloId: contador.capituloId,
+          usuarioId: contador.usuarioId,
         })
         .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err))
+        .catch((err) => res.status(500).send(err));
     }
 
-
-
-
-  }
-
+    // if (cont.id) {
+    //   app
+    //     .db("contador")
+    //     .update({ views: cont.views })
+    //     .where({ id: cont.id })
+    //     .then((_) => res.status(204).send())
+    //     .catch((err) => res.status(500).send(err));
+    // } else {
+    //   app
+    //     .db("contador")
+    //     .insert({
+    //       views: 1,
+    //       obraId: contador.obraId,
+    //       capituloId: contador.capituloId,
+    //       usuarioId: contador.usuarioId,
+    //     })
+    //     .then((_) => res.status(204).send())
+    //     .catch((err) => res.status(500).send(err));
+    // }
+  };
 
   const capituloById = (req, res) => {
     app
@@ -174,14 +198,20 @@ module.exports = (app) => {
   const limit = 10; // usado para paginação
 
   const getObraPublicasStatus = (req, res) => {
-    app.db("obras")
-      .select({ id: "obras.terminada" }, app.db.raw("case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"))
+    app
+      .db("obras")
+      .select(
+        { id: "obras.terminada" },
+        app.db.raw(
+          "case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"
+        )
+      )
       .count({ count: "obras.terminada" })
       .groupBy("obras.terminada")
       .where({ autor: req.params.usuarioId, "obras.publica": true })
       .then((status) => res.json(status))
       .catch((err) => res.status(500).send(err));
-  }
+  };
 
   const getObrasPublicas = (req, res) => {
     app
@@ -203,14 +233,20 @@ module.exports = (app) => {
   };
 
   const getObraPrivadasStatus = (req, res) => {
-    app.db("obras")
-      .select({ id: "obras.terminada" }, app.db.raw("case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"))
+    app
+      .db("obras")
+      .select(
+        { id: "obras.terminada" },
+        app.db.raw(
+          "case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"
+        )
+      )
       .count({ count: "obras.terminada" })
       .groupBy("obras.terminada")
       .where({ autor: req.params.usuarioId, "obras.publica": false })
       .then((status) => res.json(status))
       .catch((err) => res.status(500).send(err));
-  }
+  };
   const getObrasPrivadas = (req, res) => {
     app
       .db("obras")
@@ -347,9 +383,6 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
-
-
-
   };
 
   return {
@@ -370,7 +403,6 @@ module.exports = (app) => {
     getByIdUser,
     getObraPublicasStatus,
     getObraPrivadasStatus,
-    contadorViews
-
+    contadorViews,
   };
 };
