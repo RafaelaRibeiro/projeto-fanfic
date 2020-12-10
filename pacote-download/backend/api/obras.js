@@ -36,7 +36,7 @@ module.exports = (app) => {
       .db("comentarios")
       .join("capitulos", "comentarios.capituloId", "capitulos.id")
       .join("usuarios", "comentarios.usuarioId", "usuarios.id")
-      .leftJoin("imagensPerfil","comentarios.usuarioId", "imagensPerfil.usuarioId")
+      .leftJoin("imagensPerfil", "comentarios.usuarioId", "imagensPerfil.usuarioId")
       .select(
         app.db.raw(
           "comentarios.id, comentarios.usuarioId, usuarios.nome, imagensPerfil.path, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
@@ -77,11 +77,13 @@ module.exports = (app) => {
       .join("capitulos", "obras.id", "capitulos.obraId")
       .join("categorias", "obras.categoriaId", "categorias.id")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .leftJoin("contador", "obras.id", "contador.obraId")
       .select(
         app.db.raw(
-          "obras.id, obras.nome, obras.autor, categorias.nome as categoriaId, obras.classificacao, case obras.terminada when 0 then 'Em Andamento' else 'Terminada' end as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user, max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s'))as ultimaPostagem, imagensObra.path"
+          "obras.id, obras.nome, obras.autor, categorias.nome as categoriaId, obras.classificacao, case obras.terminada when 0 then 'Em Andamento' else 'Terminada' end as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user, max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s'))as ultimaPostagem, imagensObra.path, COUNT(DISTINCT contador.id) as views"
         )
       )
+
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
       .first()
       .groupBy("obras.id")
@@ -93,12 +95,16 @@ module.exports = (app) => {
     app
       .db("capitulos")
       .join("obras", "capitulos.obraId", "obras.id")
+      .leftJoin("contador", function () {
+        this.on("capitulos.obraId", "contador.obraId").andOn("capitulos.id", "contador.capituloId")
+      })
       .select(
         app.db.raw(
-          "capitulos.numero, capitulos.nome, capitulos.obraId,  ROUND ((LENGTH(CONVERT(capitulos.conteudo USING utf8)) - LENGTH( REPLACE (CONVERT(capitulos.conteudo USING utf8), ' ','') ) ) / LENGTH(' ')) + 1 as contador"
+          "capitulos.numero, capitulos.nome, capitulos.obraId, count(contador.views) as views"
         )
       )
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
+      .groupBy("capitulos.numero", "capitulos.nome", "capitulos.obraId")
       .orderBy("capitulos.numero", "asc")
       .then((capitulo) => res.json(capitulo))
       .catch((err) => res.status(500).send(err));

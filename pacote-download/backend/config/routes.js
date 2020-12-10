@@ -2,11 +2,12 @@ const multer = require("multer");
 const multerConfig = require("./multer");
 const autor = require("./autor");
 
+
 module.exports = (app) => {
   app.post("/signin", app.api.auth.signin);
   app.post("/validateToken", app.api.auth.validateToken);
 
-  app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get);
+  app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get)
   app.route("/categorias").get(app.api.categorias.getCategoria);
   app.route("/universos").get(app.api.universo.getUniverso);
   app.route("/avisos").get(app.api.avisos.getAvisos);
@@ -49,13 +50,9 @@ module.exports = (app) => {
   app.get("/estante/:user/universos", app.api.estante.getuniversosByEstante);
   app.route("/:user/estante/").post(app.api.estante.save);
   app.route("/estante/:id").put(app.api.estante.updateEstante);
-  app
-    .route("/estante/:usuarioId/prateleiras")
-    .get(app.api.estante.getEstantePrateleira);
-  app
-    .route("/:usuarioId/estante/:id")
-    .delete(app.api.estante.removeEstante)
-    .put(app.api.estante.arquivarObra);
+  app.route("/estante/:usuarioId/prateleiras").get(app.api.estante.getEstantePrateleira)
+  app.route("/:usuarioId/estante/:id").delete(app.api.estante.removeEstante).put(app.api.estante.arquivarObra)
+
 
   //**************************************Obras*****************************************************
   app
@@ -104,6 +101,7 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/editarobra").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
 
+
   app.post(
     "/mesa/:obraId/upload",
     multer(multerConfig).single("file"),
@@ -117,19 +115,15 @@ module.exports = (app) => {
     .get(autor(app.api.mesa.getByIdUser))
     .delete(app.api.mesa.remove);
   app.route("/mesa/:obraId/capitulo/:numero").get(app.api.mesa.capituloById);
-  app.route("/mesa/Coautor").get(app.api.mesa.getCoautor);
+  app.route("/mesa/Coautor").get(app.api.mesa.getCoautor)
   app.route("/mesa/:id").get(app.api.mesa.getById);
 
   app
     .route("/mesa/:usuarioId/obraspublicas")
     .get(app.api.mesa.getObrasPublicas);
 
-  app
-    .route("/mesa/:usuarioId/obraspublicas/status")
-    .get(app.api.mesa.getObraPublicasStatus);
-  app
-    .route("/mesa/:usuarioId/obrasprivadas/status")
-    .get(app.api.mesa.getObraPrivadasStatus);
+  app.route("/mesa/:usuarioId/obraspublicas/status").get(app.api.mesa.getObraPublicasStatus)
+  app.route("/mesa/:usuarioId/obrasprivadas/status").get(app.api.mesa.getObraPrivadasStatus)
 
   app
     .route("/mesa/:usuarioId/obrasprivadas")
@@ -145,7 +139,7 @@ module.exports = (app) => {
   app.route("/mesa/:obraId/editarcapitulo/:id").put(app.api.mesa.saveCapitulo);
   app.route("/mesa/:obraId/ultimocapitulo").get(app.api.mesa.getUltimoCapitulo);
   app.route("/mesa/:obraId/listacapitulos").get(app.api.mesa.listaCapitulos);
-  app.route("/views").post(app.api.mesa.contadorViews);
+  app.route("/views/").post(app.api.mesa.contadorViews)
 
   //Minha Mesa - Notas
 

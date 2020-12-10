@@ -66,6 +66,10 @@
               {{ obras.ultimaPostagem }}
             </p>
             <p class="text--primary text-justify">
+              <strong>Visualizações:</strong>
+              {{ obras.views }}
+            </p>
+            <p class="text--primary text-justify">
               <strong>Categoria:</strong>
               {{ obras.categoriaId }}
             </p>
@@ -115,12 +119,17 @@
             </v-list-item>
           </v-list> -->
 
-          <md-list  v-for="capitulo in capitulos" :key="capitulo.numero" class="md-dense pa-0 mb-2">
-        <md-list-item  :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }" >
-        
-          <span class="md-subheading" >{{ capitulo.numero }} - {{ capitulo.nome }}</span>
-        </md-list-item>
-      </md-list>
+          <md-list v-for="capitulo in capitulos" :key="capitulo.numero" class="md-dense pa-0 mb-2 ma-n1">
+            <md-list-item :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }">
+              <v-row>
+                <v-col cols="10" class="md-subheading"> {{ capitulo.numero }} - {{ capitulo.nome }} </v-col>
+                <v-col>
+                  <v-icon small class="mr-2"> mdi-eye </v-icon>
+                  <span class="md-subheading">{{ capitulo.views }} </span>
+                </v-col>
+              </v-row>
+            </md-list-item>
+          </md-list>
         </v-card>
       </v-col>
     </v-row>
@@ -182,10 +191,9 @@ export default {
 
 
 <style>
-
-[dir] .md-list.md-theme-default .md-list-item-container:not(.md-list-item-default):not(.md-list-item-expand):not([disabled]):hover {
-  background-color:#EDE7F6 !important
+[dir]
+  .md-list.md-theme-default
+  .md-list-item-container:not(.md-list-item-default):not(.md-list-item-expand):not([disabled]):hover {
+  background-color: #ede7f6 !important;
 }
-
-
 </style>

@@ -81,7 +81,7 @@ module.exports = (app) => {
       res.status(400).send(msg);
     }
 
-    let cont = await app
+    const cont = await app
       .db("contador")
       .select("id", "views")
       .where({
@@ -94,7 +94,7 @@ module.exports = (app) => {
     if (cont) {
       app
         .db("contador")
-        .update({ views: cont.views + 1 })
+        .update({ views: cont.views })
         .where({ id: cont.id })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));

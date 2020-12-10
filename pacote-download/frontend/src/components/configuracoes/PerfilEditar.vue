@@ -15,10 +15,8 @@
           <v-text-field
             v-model="usuario.dataNasc"
             label="Data de Nascimento"
-            placeholder="dd/mm/aaaa"
             color="deep-purple darken-4"
             outlined
-            type="date"
           ></v-text-field>
         </v-col>
       </v-row>

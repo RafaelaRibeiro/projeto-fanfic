@@ -294,6 +294,7 @@ export default {
       axios.get(url).then((res) => {
         this.capitulo = res.data
         if (this.capitulo.avisosId) this.dialog = true
+        this.views()
       })
     },
 
@@ -319,6 +320,16 @@ export default {
         })
         .catch(showError)
     },
+
+     views() {
+      
+      axios.post(`${baseApiUrl}/views `, {
+        obraId: this.capitulo.obraId,
+        capituloId: this.capitulo.id,
+        usuarioId:this.$store.state.usuario.id
+      }).then().catch()
+    }
+
   },
 
   watch: {
@@ -345,6 +356,7 @@ export default {
     this.ultimoCapitulo()
     this.getAvisos()
     this.getEstante()
+    
   },
 }
 </script>
