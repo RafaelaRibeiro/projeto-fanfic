@@ -181,17 +181,14 @@ module.exports = (app) => {
   };
 
   const getUltimaObra = (req, res) => {
-    const query = app
-      .db("obras")
-      .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .where({ "usuarios.id": req.params.id })
-      .max("obras.id");
     app
       .db("obras")
-      .join("usuarios", "obras.autor", "=", "usuarios.id")
-      .select("obras.*")
-      .where({ "usuarios.id": req.params.id, "obras.id": query })
-
+      .select("id")
+      .where({
+        "obras.autor": req.params.id,
+        "obras.nome": req.params.obraNome,
+      })
+      .first()
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };

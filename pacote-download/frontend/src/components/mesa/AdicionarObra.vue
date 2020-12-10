@@ -240,9 +240,11 @@
           </v-col>
         </v-row>
 
+        {{ obra }}
+
         <v-row>
           <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Prosseguir</v-btn>
+            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Avançar</v-btn>
             <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
           </v-col>
         </v-row>
@@ -278,7 +280,7 @@ export default {
       shipps: [],
       categorias: [],
       obra: { fandonsId: [], caracteristicasId: [], avisosId: [] },
-      a: [0],
+      ultimaObra: null,
       universos: [],
       caracteristicas: [],
       avisos: [],
@@ -322,7 +324,7 @@ export default {
           dataAdicionado: this.now,
         })
         .then(() => {
-          this.postarCapitulo()
+          this.uploadImagem()
         })
         .catch(showError)
     },
@@ -343,32 +345,31 @@ export default {
     },
 
     postarCapitulo() {
-      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
+      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra/${this.obra.nome}`
       axios(url).then((res) => {
-        this.a = res.data[0]
-        this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
+        this.ultimaObra = res.data
+        this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
       })
     },
 
-    // getUltimaObra() {
-    //   const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra`
-    //   axios(url)
-    //     .then((res) => {
-    //       this.a = res.data[0]
-    //       if (this.imagemObra.size === 0|| this.imagemObra == null) {
-    //         this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
-    //       } else var fd = new FormData()
-    //       fd.append('file', this.imagemObra)
-    //       axios
-    //         .post(`${baseApiUrl}/mesa/${this.a.id}/upload`, fd)
-    //         .then(() => {
-
-    //           this.$router.push({ path: `/mesa/${this.a.id}/adicionarcapitulo` })
-    //         })
-    //         .catch()
-    //     })
-    //     .catch()
-    // },
+    uploadImagem() {
+      const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra/${this.obra.nome}`
+      axios(url)
+        .then((res) => {
+          this.ultimaObra = res.data
+          if (this.imagemObra.size === 0 || this.imagemObra == null) {
+            this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+          } else var fd = new FormData()
+          fd.append('file', this.imagemObra)
+          axios
+            .post(`${baseApiUrl}/mesa/${this.ultimaObra.id}/upload`, fd)
+            .then(() => {
+              this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+            })
+            .catch()
+        })
+        .catch()
+    },
 
     getCategorias() {
       const url = ` ${baseApiUrl}/categorias`
