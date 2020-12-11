@@ -8,12 +8,13 @@ import './config/axios'
 import './config/msg'
 import './config/bootstrap'
 import './config/vueMaterial'
+import './config/fish-ui'
 import './quasar'
 import './config/mask'
 import './config/JoditVue'
 import './config/VueScrollTo'
 import './styles/main.css'
-// import './plugins/quill_editor.js'
+
 
 Vue.config.productionTip = false
 

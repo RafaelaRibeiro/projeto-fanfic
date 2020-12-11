@@ -12,12 +12,40 @@
       </v-row>
       <v-row class="ml-2 mt-0">
         <v-col cols="12" md="5">
-          <v-text-field
+          <!-- <v-text-field
             v-model="usuario.dataNasc"
             label="Data de Nascimento"
             color="deep-purple darken-4"
             outlined
-          ></v-text-field>
+          ></v-text-field> -->
+
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="computedDateFormatted"
+                label="Data de Nascimento"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              ref="picker"
+              v-model="usuario.dataNasc"
+              locale="pt-br"
+              :max="new Date().toISOString().substr(0, 10)"
+              min="1950-01-01"
+              @change="save"
+            ></v-date-picker>
+          </v-menu>
         </v-col>
       </v-row>
       <v-card-title>Sobre Mim</v-card-title>
@@ -109,7 +137,7 @@
 import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import moment from 'moment'
+
 export default {
   name: 'PerfilEditar',
   props: ['usuario'],
@@ -127,9 +155,13 @@ export default {
       tab: null,
       dialog: false,
       mask: '##/##/####',
+      menu: false,
     }
   },
   computed: {
+    computedDateFormatted() {
+      return this.formatDate(this.usuario.dataNasc)
+    },
     ...mapGetters(['getUsuario']),
   },
 
@@ -146,7 +178,7 @@ export default {
           pinterest: this.usuario.pinterest,
           tumblr: this.usuario.tumblr,
           spotify: this.usuario.spotify,
-          dataNasc: moment(this.usuario.dataNasc).format('YYYY-MM-DD HH:MM:SS'),
+          dataNasc: this.usuario.dataNasc,
         })
         .then(() => {
           this.$toast.success('Dados do perfil atualizados')
@@ -159,6 +191,22 @@ export default {
       axios.get(url).then((res) => {
         this.usuario = res.data
       })
+    },
+    save(date) {
+      this.$refs.menu.save(date)
+    },
+
+    formatDate(date) {
+      if (!date) return null
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+  },
+
+  watch: {
+    menu(val) {
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
     },
   },
 }
