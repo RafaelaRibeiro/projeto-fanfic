@@ -79,8 +79,14 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn block dark color="deep-purple darken-4" class="mr-3 mb-3" @click="forgotPassword" elevation="4"
+            <v-btn block dark color="deep-purple darken-4" class="mr-3" @click="forgotPassword" elevation="4"
               >Enviar e-mail</v-btn
+            >
+          </v-card-actions>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn block dark color="deep-purple darken-4" class="mr-3 mb-3" @click="cancelar" elevation="4"
+              >Cancelar</v-btn
             >
           </v-card-actions>
         </v-card>
@@ -129,13 +135,21 @@ export default {
         .put(`${baseApiUrl}/forgotPassword`, {
           email: this.email,
         })
-        .then((response) => {
-          this.error = response
+        .then(() => {
+          this.error = ''
           this.email = ''
+          this.dialog = false
+          this.$toast.success('E-mail enviado com sucesso')
         })
         .catch((error) => {
           this.error = error.response.data
         })
+    },
+
+    cancelar() {
+      this.dialog = false
+      this.email = ''
+      this.error = ''
     },
   },
 

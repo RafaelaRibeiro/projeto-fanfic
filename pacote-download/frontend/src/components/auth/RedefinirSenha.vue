@@ -1,7 +1,7 @@
 <template>
   <v-row
     :style="{
-      backgroundImage: 'url(' + require('@/assets/login_new.jpg') + ')',
+      backgroundImage: 'url(' + require('@/assets/reset_password_4.jpg') + ')',
       backgroundSize: 'cover',
       backgroundPosition: 'right',
     }"
@@ -39,11 +39,23 @@
               type="password"
               color="deep-purple darken-4"
               outlined
+              :rules="[passwordConfirmationRule]"
             ></v-text-field>
           </v-col>
         </v-row>
 
-        <v-btn block dark color="deep-deep-purple darken-4" class="mr-3" elevation="4">Entrar</v-btn>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn block dark color="deep-purple darken-4" class="mr-3" elevation="4" @click="resetPassword"
+            >Mudar minha senha</v-btn
+          >
+        </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn block dark color="deep-purple darken-4" class="mr-3 mb-3" elevation="4" @click="telaLogin"
+            >Login</v-btn
+          >
+        </v-card-actions>
       </v-card>
     </v-col>
 
@@ -52,30 +64,45 @@
 </template>
 
 <script>
-import { baseApiUrl } from '../../global'
+import { baseApiUrl, showError } from '../../global'
 import axios from 'axios'
 export default {
   data() {
     return {
       show1: false,
       usuario: {},
-
-      rules: {
-        required: (value) => !!value || 'Digite seu e-mail',
-        email: (value) => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'E-mail Invalido.'
-        },
-      },
     }
   },
 
   methods: {
     getUserByToken() {
       const url = ` ${baseApiUrl}/token/${this.$route.params.token}`
-      axios.get(url).then((res) => {
-        this.usuario = res.data
-      })
+      axios
+        .get(url)
+        .then((res) => {
+          this.usuario = res.data
+        })
+        .catch(showError, this.$router.push({ path: `/login/` }))
+    },
+
+    resetPassword() {
+      const url = ` ${baseApiUrl}/usuario/${this.$route.params.token}/resetPassword `
+      axios
+        .put(url, {
+          password: this.usuario.newPassword,
+        })
+        .then(() => {
+          this.$toast.success('Senha alterada com sucesso')
+        })
+        .catch(showError)
+    },
+
+    passwordConfirmationRule() {
+      return this.usuario.newPassword === this.usuario.confirmarPassword || 'Senhas não conferem'
+    },
+
+    telaLogin() {
+      this.$router.push({ path: `/login/` })
     },
   },
 

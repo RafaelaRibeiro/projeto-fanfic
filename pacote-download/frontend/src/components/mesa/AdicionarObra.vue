@@ -20,17 +20,28 @@
               label="Título"
             ></v-text-field>
 
-            <!-- <v-file-input
+            <v-file-input
               small-chips
               v-model="imagemObra"
               color="deep-purple darken-4"
               label="Capa da Obra"
               dense
+              counter
               outlined
               prepend-icon="mdi-camera"
               show-size
               accept="image/png, image/jpeg, image/bmp"
-            ></v-file-input> -->
+            >
+              <template v-slot:selection="{ index, text }">
+                <v-chip v-if="index < 2" color="deep-purple accent-4" dark label small>
+                  {{ text }}
+                </v-chip>
+
+                <span v-else-if="index === 2" class="overline grey--text text--darken-3 mx-2">
+                  +{{ files.length - 2 }} File(s)
+                </span>
+              </template>
+            </v-file-input>
 
             <v-textarea
               v-model="obra.sinopse"
@@ -240,8 +251,6 @@
           </v-col>
         </v-row>
 
-        {{ obra }}
-
         <v-row>
           <v-col cols="12" class="text-center">
             <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Avançar</v-btn>
@@ -324,7 +333,7 @@ export default {
           dataAdicionado: this.now,
         })
         .then(() => {
-          this.uploadImagem()
+          this.postarCapitulo()
         })
         .catch(showError)
     },

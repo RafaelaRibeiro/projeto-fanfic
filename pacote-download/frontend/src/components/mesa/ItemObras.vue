@@ -69,7 +69,7 @@
                 <span class="md-list-item-text">Adicionar Capítulos</span>
               </md-list-item>
 
-              <md-list-item :to="{ name: 'EditarObra', params: { id: item.id } }">
+              <md-list-item :to="{ name: 'EditarObra', params: { obraId: item.obraId } }">
                 <v-icon small left>mdi-file-edit</v-icon>
 
                 <span class="md-list-item-text">Editar Obra</span>

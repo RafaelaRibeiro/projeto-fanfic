@@ -69,7 +69,7 @@
           <v-text-field
             v-model="usuario.twitter"
             label="Twitter"
-            placeholder
+            placeholder="perfil"
             outlined
             color="deep-purple darken-4"
             prefix="http://twitter.com/"

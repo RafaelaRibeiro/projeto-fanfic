@@ -86,7 +86,7 @@
             <span class="text--primary text-justify">
               <strong>Classificação:</strong>
               <v-avatar class="ml-1" size="20" tile>
-                <v-img src="@/assets/18-anos.png"></v-img>
+                <v-img :src="require('@/assets/' + classificacao)"></v-img>
               </v-avatar>
             </span>
           </v-card-text>
@@ -176,6 +176,20 @@ export default {
     getCapitulosByObra() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulos`
       axios.get(url).then((res) => (this.capitulos = res.data))
+    },
+  },
+
+  computed: {
+    classificacao() {
+      let imagemClass = ''
+      if (this.obras.classificacao === 'livre') return (imagemClass = 'livre.png')
+      if (this.obras.classificacao === '10+') return (imagemClass = '10-anos.png')
+      if (this.obras.classificacao === '12+') return (imagemClass = '12-anos.png')
+      if (this.obras.classificacao === '14+') return (imagemClass = '14-anos.png')
+      if (this.obras.classificacao === '16+') return (imagemClass = '16-anos.png')
+      if (this.obras.classificacao === '18+') return (imagemClass = '18-anos.png')
+
+      return imagemClass
     },
   },
 

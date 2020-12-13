@@ -270,7 +270,7 @@ export default {
 
   methods: {
     getObras() {
-      const url = `${baseApiUrl}/${this.user.id}/mesa/${this.$route.params.id}/`
+      const url = `${baseApiUrl}/${this.$store.state.usuario.id}/mesa/${this.$route.params.obraId}/`
       axios
         .get(url)
         .then((res) => {
@@ -288,11 +288,7 @@ export default {
           this.imagemObra.path = this.obra.path
           this.imagemObra.key = this.obra.key
           this.imagemObra.obraId = this.obra.obraId
-          this.getCategorias()
-          this.getUniversos()
-          this.getShipps()
-          this.getCaracteristicas()
-          this.getAvisos()
+
           // this.page = true
         })
         .catch(() => {
@@ -396,6 +392,11 @@ export default {
 
   mounted() {
     this.getObras()
+    this.getCategorias()
+    this.getUniversos()
+    this.getShipps()
+    this.getCaracteristicas()
+    this.getAvisos()
   },
 }
 </script>

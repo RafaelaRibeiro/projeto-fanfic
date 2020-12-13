@@ -87,46 +87,14 @@ module.exports = (app) => {
         to: usuario.email,
         from: "no-reply@liberfans.com",
         subject: "Ativar Cadastro",
-        template: "auth/forgotPassword",
+        template: "auth/activeRegister",
         defaultLayout: false,
         context: { token, name },
       });
     }
   };
 
-  const resendToken = async (req, res) => {
-    const { email } = req.body;
-    const usuario = await app
-      .db("usuarios")
-      .where({ email: req.body.email })
-      .first();
 
-    try {
-      if (!email) return res.status(400).send("O e-mail deve ser preenchido");
-      if (!usuario) return res.status(400).send("Usuário não encontrado!");
-    } catch (err) {
-      res.status(400).send({ error: "Erro ao renviar o token" });
-    }
-    const token = crypto.randomBytes(20).toString("hex");
-    const name = usuario.nome;
-    const now = new Date();
-    now.setHours(now.getHours() + 1);
-    await app
-      .db("usuarios")
-      .update({ activeToken: token, activeTokenExpires: now })
-      .where({ id: usuario.id })
-
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
-
-    mailer.sendMail({
-      to: email,
-      from: "no-reply@liberfans.com",
-      subject: "Ativar Registro",
-      template: "auth/forgotPassword",
-      context: { token, name },
-    });
-  };
 
   //*****************************************GET***************************************************** */
 
@@ -180,10 +148,15 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  const getUserByToken = (req, res) => {
+  const getUserByToken = async (req, res) => {
+
+    const usuario = await app.db("usuarios").where({ passwordResetToken: req.params.token }).first()
+
+    if (!usuario) return res.status(400).send("Usuário não encontrado!");
+
     app
       .db("usuarios")
-      .select("nome", "passwordResetExpires")
+      .select("nome", "passwordResetExpires", "email")
       .where({ passwordResetToken: req.params.token })
       .first()
       .then((usuario) => res.json(usuario))
@@ -350,6 +323,6 @@ module.exports = (app) => {
     getUserByToken,
     getUser,
     getEmail,
-    resendToken
+
   };
 };

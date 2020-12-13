@@ -47,7 +47,7 @@ module.exports = (app) => {
     const autor = await app
       .db("obras")
       .select("obras.autor")
-      .where({ id: req.params.id })
+      .where({ id: req.params.obraId })
       .first();
 
     if (autor.autor !== parseInt(req.params.usuarioId))
@@ -62,7 +62,7 @@ module.exports = (app) => {
           "ifnull(imagensObra.name,'') as name,ifnull(imagensObra.size,0) as size,imagensObra.path,imagensObra.key,imagensObra.obraId"
         )
       )
-      .where({ "obras.id": req.params.id })
+      .where({ "obras.id": req.params.obraId })
       .first()
       .then((obra) => res.json(obra))
       .catch((err) => res.status(500).send(err));
@@ -347,8 +347,7 @@ module.exports = (app) => {
       .where({ obraId: req.params.obraId })
       .first();
 
-    console.log(getImage);
-    console.log(req.file);
+
 
     if (getImage && getImage.key !== image.key) {
       await s3

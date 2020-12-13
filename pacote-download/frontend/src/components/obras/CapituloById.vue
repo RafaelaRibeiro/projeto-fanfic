@@ -1,10 +1,8 @@
-<template>
- 
+<template >
+  <div oncontextmenu="return false">
     <v-container>
-
-    
-        <v-row justify="center" class="mt-10">
-        <v-col cols="12" sm="11" >
+      <v-row justify="center" class="mt-10">
+        <v-col cols="12" sm="11">
           <v-card flat height="100px">
             <h1 class="display-1 font-weight-light" id="top">
               <i>
@@ -30,18 +28,16 @@
       <v-row justify="center">
         <v-col cols="11">
           <v-card flat>
-           <h5 class="font-weight-light mb-4">
-            <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
-          </h5>
+            <h5 class="font-weight-light mb-4">
+              <i>Capitulo {{ capitulo.numero }} - {{ capitulo.nome }}</i>
+            </h5>
           </v-card>
-
         </v-col>
       </v-row>
-      <v-row justify="center" >
-        
-       <v-col class="d-flex align-center flex-column" cols="11">
+      <v-row justify="center">
+        <v-col class="d-flex align-center flex-column" cols="11">
           <v-card class="pa-5" width="21cm" outlined flat>
-            <div class="ql-editor text-justify" v-html="capitulo.conteudo"></div>
+            <div class="ql-editor text-justify conteudo" v-html="capitulo.conteudo"></div>
           </v-card>
         </v-col>
       </v-row>
@@ -56,8 +52,6 @@
           </v-card>
         </v-col>
       </v-row>
-    
-      
 
       <v-row justify="center">
         <v-col cols="12" sm="5">
@@ -90,12 +84,10 @@
         </v-col>
         <v-col v-show="testeStatus != null" cols="12" sm="10">
           <v-card flat outlined color="deep-purple lighten-5">
-            <v-card-text class="text--primary text-justify " c>
+            <v-card-text class="text--primary text-justify" c>
               <!-- Obra lida até o capitulo {{ estante.ultimoCapituloId }} -->
               <v-icon color="deep-purple darken-4">mdi-check-bold</v-icon>
               {{ testeStatus }}
-
-        
             </v-card-text>
           </v-card>
         </v-col>
@@ -169,7 +161,7 @@
         </v-dialog>
       </v-row>
     </v-container>
-
+  </div>
 </template>
 
 <script>
@@ -321,15 +313,16 @@ export default {
         .catch(showError)
     },
 
-     views() {
-      
-      axios.post(`${baseApiUrl}/views `, {
-        obraId: this.capitulo.obraId,
-        capituloId: this.capitulo.id,
-        usuarioId:this.$store.state.usuario.id
-      }).then().catch()
-    }
-
+    views() {
+      axios
+        .post(`${baseApiUrl}/views `, {
+          obraId: this.capitulo.obraId,
+          capituloId: this.capitulo.id,
+          usuarioId: this.$store.state.usuario.id,
+        })
+        .then()
+        .catch()
+    },
   },
 
   watch: {
@@ -356,14 +349,19 @@ export default {
     this.ultimoCapitulo()
     this.getAvisos()
     this.getEstante()
-    
   },
 }
 </script>
 
 
-<style>
+<style >
 .botao {
   margin-top: 200px;
+}
+
+.conteudo {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
 }
 </style>

@@ -80,12 +80,16 @@ module.exports = (app) => {
   };
 
   const activeRegister = async (req, res) => {
-    const { token } = req.body;
+    let { token } = { ...req.body }
+    if (req.params.token) token = req.params.token;
     const usuario = await app
       .db("usuarios")
-      .where({ activeToken: req.body.token })
+      .where({ activeToken: token })
       .first();
+
     try {
+
+      if (usuario.verificado === 1) return res.status(400).send("Essa conta já está verificada")
       if (token !== usuario.activeToken)
         return res.status(400).send("Token Inválido");
 
@@ -97,12 +101,68 @@ module.exports = (app) => {
       res.status(400).send({ error: "Erro ativar cadastro" });
     }
 
-    await app
+
+
+    app
       .db("usuarios")
       .update({ verificado: 1 })
       .where({ id: usuario.id })
       .then((_) => res.status(204).send())
       .catch((err) => res.status(500).send(err));
+  };
+
+  const getUserByTokenActived = async (req, res) => {
+
+    const usuario = await app
+      .db("usuarios")
+      .where({ activeToken: req.params.token })
+      .first();
+
+    if (!usuario) return res.status(400).send("Usuário não encontrado!")
+
+    app
+      .db("usuarios")
+      .select("nome", "activeTokenExpires", "email")
+      .where({ activeToken: req.params.token })
+      .first()
+      .then((usuario) => res.json(usuario))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const resendToken = async (req, res) => {
+    const { email } = req.body;
+    const usuario = await app
+      .db("usuarios")
+      .where({ activeToken: req.params.token })
+      .first();
+
+    try {
+
+      if (!email) return res.status(400).send("O e-mail deve ser preenchido");
+      if (!usuario) return res.status(400).send("Usuário não encontrado!")
+
+    } catch (err) {
+      res.status(400).send({ error: "Erro ao reenviar o token" });
+    }
+    const token = crypto.randomBytes(20).toString("hex");
+    const name = usuario.nome;
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    await app
+      .db("usuarios")
+      .update({ activeToken: token, activeTokenExpires: now })
+      .where({ id: usuario.id })
+
+      .then((_) => res.status(204).send())
+      .catch((err) => res.status(500).send(err));
+
+    mailer.sendMail({
+      to: email,
+      from: "no-reply@liberfans.com",
+      subject: "Ativar Registro",
+      template: "auth/activeRegister",
+      context: { token, name },
+    });
   };
 
   const forgotPassword = async (req, res) => {
@@ -139,19 +199,20 @@ module.exports = (app) => {
       from: "no-reply@liberfans.com",
       subject: "Redefinir Senha",
       template: "auth/forgotPassword",
+      layout: false,
       context: { token, name },
     });
   };
 
   const resetPassword = async (req, res) => {
-    const { email, token, password } = req.body;
+    const { password } = req.body;
 
-    const usuario = await app.db("usuarios").where({ email: email }).first();
+    const usuario = await app.db("usuarios").where({ passwordResetToken: req.params.token }).first();
 
     try {
       if (!usuario) return res.status(400).send("Usuário não encontrado!");
 
-      if (token !== usuario.passwordResetToken)
+      if (req.params.token !== usuario.passwordResetToken)
         return res.status(400).send("Token Inválido");
 
       const now = new Date();
@@ -162,7 +223,7 @@ module.exports = (app) => {
       res.status(400).send({ error: "Erro ao resetar a senha" });
     }
 
-    usuario.password = encryptPassword(password);
+    usuario.password = encryptPassword(password)
 
     await app
       .db("usuarios")
@@ -178,5 +239,7 @@ module.exports = (app) => {
     forgotPassword,
     resetPassword,
     activeRegister,
+    resendToken,
+    getUserByTokenActived
   };
 };

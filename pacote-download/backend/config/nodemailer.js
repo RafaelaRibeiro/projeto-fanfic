@@ -23,10 +23,16 @@ const transport = nodemailer.createTransport({
 transport.use(
   "compile",
   hbs({
-    viewEngine: "handlebars",
+    viewEngine: {
+      extName: ".hbs",
+      layoutsDir: path.resolve("./mail/"),
+      defaultLayout: null,
+    },
     viewPath: path.resolve("./mail/"),
-    extName: ".html",
-    defaultLayout: "",
+    extName: ".hbs",
+    defaultLayout: false,
+
+
   })
 );
 module.exports = transport;

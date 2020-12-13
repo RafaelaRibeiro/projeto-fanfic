@@ -15,6 +15,8 @@ import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Auth from '@/components/auth/Auth'
 import RedefinirSenha from '@/components/auth/RedefinirSenha'
+import AtivarCadastro from '@/components/auth/AtivarCadastro'
+import ReenviarAtivacao from '@/components/auth/ReenviarAtivacao'
 
 import Configuracoes from '../components/configuracoes/Configuracoes'
 import CadastroDados from '../components/baseDados/CadastroDados'
@@ -92,7 +94,7 @@ const routes = [
 
   {
     name: 'EditarObra',
-    path: '/mesa/:id/editarobra',
+    path: '/mesa/:obraId/editarobra',
     component: EditarObra,
     meta: { requiresAuth: true },
   },
@@ -135,6 +137,26 @@ const routes = [
     name: 'RedefinirSenha',
     path: '/redefinirsenha/:token',
     component: RedefinirSenha,
+    meta: {
+      requireLogin: true,
+    },
+  },
+
+  {
+    name: 'AtivarCadastro',
+    path: '/ativarcadastro/:token',
+    component: AtivarCadastro,
+    meta: {
+      requireLogin: true,
+    },
+  },
+  {
+    name: 'ReenviarAtivacao',
+    path: '/reenviartoken/:token',
+    component: ReenviarAtivacao,
+    meta: {
+      requireLogin: true,
+    },
   },
 ]
 
