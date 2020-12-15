@@ -20,8 +20,25 @@
               value
               label="Título"
             ></v-text-field>
+            <v-card class="ma-1" flat v-if="imagemObra.path">
+              <v-img contain aspect-ratio="2" v-if="urlObra" :src="urlObra"></v-img>
+              <v-img contain aspect-ratio="2" v-else :src="imagemObra.path"></v-img>
 
-            <v-file-input
+              <v-card flat class="d-flex">
+                <v-btn class="my-10 mr-4" color="primary" @click.native="openFileDialogObra">Alterar</v-btn>
+                <v-btn dark class="my-10" color="red darken-1" @click="imagemObra = []">Remover </v-btn>
+              </v-card>
+            </v-card>
+
+            <b-form-file
+              v-model="imagemUpload"
+              id="file-upload-obra"
+              accept="image/jpeg, image/png, image/bmp"
+              style="display: none"
+              @change="onFileChangeObra"
+            ></b-form-file>
+
+            <!-- <v-file-input
               small-chips
               v-model="imagemUpload"
               color="deep-purple darken-4"
@@ -30,8 +47,9 @@
               outlined
               prepend-icon="mdi-camera"
               show-size
+              @click.native="openFileDialogObra"
               accept="image/png, image/jpeg, image/bmp"
-            ></v-file-input>
+            ></v-file-input> -->
 
             <v-textarea
               v-model="obra.sinopse"
@@ -200,7 +218,7 @@
 
         <v-row>
           <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Prosseguir</v-btn>
+            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Salvar</v-btn>
             <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
           </v-col>
         </v-row>
@@ -242,7 +260,7 @@ export default {
         size: 0,
       },
 
-      imagemUpload: {},
+      imagemUpload: [],
       name: 'Midnight Crew',
       shipps: [],
       categorias: [],
@@ -265,6 +283,8 @@ export default {
       searchA: null,
       select: null,
       page: true,
+      urlObra: null,
+      url: `${baseApiUrl}/files/sem_imagem.jpg`,
     }
   },
 
@@ -288,8 +308,6 @@ export default {
           this.imagemObra.path = this.obra.path
           this.imagemObra.key = this.obra.key
           this.imagemObra.obraId = this.obra.obraId
-
-          // this.page = true
         })
         .catch(() => {
           // this.page = false
@@ -313,18 +331,19 @@ export default {
           avisosId: [this.obra.avisosId].join(','),
         })
         .then(() => {
-          if (this.imagemObra.size === 0) {
-            this.$router.push({ path: `/obra/${this.obra.id}/` })
-          } else var fd = new FormData()
-          fd.append('file', this.imagemUpload)
+          this.semImagem()
+        })
+        .catch(showError)
+    },
 
-          axios
-            .post(`${baseApiUrl}/mesa/${this.obra.id}/upload`, fd)
-            .then(() => {
-              this.$toast.success('Obra alterada com sucesso')
-              this.$router.push({ path: `/obra/${this.obra.id}/` })
-            })
-            .catch(showError)
+    semImagem() {
+      axios
+        .post(`${baseApiUrl}/mesa/${this.$route.params.obraId}/semimagem`, {
+          url: this.url,
+        })
+        .then(() => {
+          this.$toast.success('Obra alterada com sucesso')
+          this.$router.push({ path: `/obra/${this.obra.id}/` })
         })
         .catch(showError)
     },
@@ -359,6 +378,15 @@ export default {
       axios(url).then((res) => {
         this.avisos = res.data
       })
+    },
+
+    onFileChangeObra(e) {
+      const file = e.target.files[0]
+      this.urlObra = URL.createObjectURL(file)
+    },
+
+    openFileDialogObra() {
+      document.getElementById('file-upload-obra').click()
     },
   },
 

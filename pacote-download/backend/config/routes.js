@@ -29,6 +29,7 @@ module.exports = (app) => {
   app.route("/usuario/:token/resetPassword").put(app.api.auth.resetPassword);
   app.route("/token/:token/").get(app.api.usuario.getUserByToken);
 
+
   app.post(
     "/perfil/:usuarioId/upload",
     multer(multerConfig).single("file"),
@@ -104,6 +105,7 @@ module.exports = (app) => {
   app.route("/mesa/:usuarioId/adicionarobra").post(app.api.mesa.save);
   app.route("/mesa/:obraId/editarobra").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
+  app.route("/mesa/:obraId/semimagem").post(app.api.mesa.uploadSemImagem)
 
   app.post(
     "/mesa/:obraId/upload",

@@ -13,7 +13,7 @@
               v-if="item.path"
               :src="item.path"
             ></v-img>
-            <v-img
+            <!-- <v-img
               max-height="125"
               max-width="125"
               contain
@@ -21,7 +21,7 @@
               min-width="45"
               v-else
               src="@/assets/sem_imagem.jpg"
-            ></v-img>
+            ></v-img> -->
           </v-card>
         </v-col>
         <v-col cols="9" sm="9">

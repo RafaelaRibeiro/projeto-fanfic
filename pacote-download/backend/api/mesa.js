@@ -337,6 +337,43 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
+  const uploadSemImagem = async (req, res) => {
+    const image = { ...req.body };
+    if (req.params.obraId) image.obraId = req.params.obraId;
+    var getImage = await app
+      .db("imagensObra")
+      .select("id", "key", "obraId")
+      .where({ obraId: req.params.obraId })
+      .first();
+
+    if (getImage && getImage.key !== image.key) {
+      app
+        .db("imagensObra")
+        .update({
+          name: 'sem_imagem.jpg',
+          path: image.url,
+          key: 'sem_imagem.jpg',
+          size: 7750
+        })
+        .where({ id: getImage.id })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } else {
+      app
+        .db("imagensObra")
+        .insert({
+          name: 'sem_imagem.jpg',
+          size: 7750,
+          path: req.body.url,
+          key: 'sem_imagem.jpg',
+          obraId: req.params.obraId,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+
+    }
+  }
+
   const uploadObra = async (req, res) => {
     const image = { ...req.body };
     if (req.params.obraId) image.obraId = req.params.obraId;
@@ -400,5 +437,6 @@ module.exports = (app) => {
     getObraPublicasStatus,
     getObraPrivadasStatus,
     contadorViews,
+    uploadSemImagem
   };
 };

@@ -82,7 +82,7 @@ export default {
         .then((res) => {
           this.usuario = res.data
         })
-        .catch(showError, this.$router.push({ path: `/login/` }))
+        .catch(showError)
     },
 
     resetPassword() {
