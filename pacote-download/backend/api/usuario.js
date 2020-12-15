@@ -70,7 +70,7 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     } else {
-      await app
+      app
         .db("usuarios")
         .insert({
           nome: usuario.nome,
@@ -79,6 +79,23 @@ module.exports = (app) => {
           password: usuario.password,
           activeToken: token,
           activeTokenExpires: now,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+
+      const user = await app
+        .db("usuarios")
+        .where({ email: usuario.email })
+        .first();
+
+      app
+        .db("imagensPerfil")
+        .insert({
+          name: user.nome,
+          size: 0,
+          path: `https://robohash.org/${user.id}?set=set4`,
+          key: `${user.user}-${user.id}`,
+          usuarioId: user.id,
         })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
@@ -93,8 +110,6 @@ module.exports = (app) => {
       });
     }
   };
-
-
 
   //*****************************************GET***************************************************** */
 
@@ -121,12 +136,8 @@ module.exports = (app) => {
       .db("usuarios")
       .select("id", "nome", "email", "perfil", "autor")
       .then((usuarios) => res.json(usuarios))
-      .catch((err) => res.status(500).send(err))
-
-
+      .catch((err) => res.status(500).send(err));
   };
-
-
 
   const getUser = (req, res) => {
     app
@@ -149,8 +160,10 @@ module.exports = (app) => {
   };
 
   const getUserByToken = async (req, res) => {
-
-    const usuario = await app.db("usuarios").where({ passwordResetToken: req.params.token }).first()
+    const usuario = await app
+      .db("usuarios")
+      .where({ passwordResetToken: req.params.token })
+      .first();
 
     if (!usuario) return res.status(400).send("Usuário não encontrado!");
 
@@ -265,8 +278,6 @@ module.exports = (app) => {
     }
   };
 
-
-
   const uploadBanner = async (req, res) => {
     const image = { ...req.body };
     if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
@@ -308,8 +319,6 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
-
-
   };
 
   return {
@@ -323,6 +332,5 @@ module.exports = (app) => {
     getUserByToken,
     getUser,
     getEmail,
-
   };
 };
