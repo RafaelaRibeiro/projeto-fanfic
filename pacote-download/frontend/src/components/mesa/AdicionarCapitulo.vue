@@ -238,7 +238,7 @@ export default {
       ],
 
       vizualizar: true,
-      terminada: false,
+
       publica: false,
       desabilitado: false,
       capitulo: {

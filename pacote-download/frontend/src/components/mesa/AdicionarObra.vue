@@ -280,7 +280,7 @@ export default {
         { text: 'Grape', value: 'grape' },
       ],
       editarObs: false,
-      terminada: false,
+
       publica: false,
       model: null,
       desabilitado: false,
@@ -326,7 +326,7 @@ export default {
           shippPrincipal: this.obra.shippPrincipal,
           shippSecundario: [this.obra.shippSecundario].join(','),
           classificacao: this.obra.classificacao,
-          terminada: this.obra.terminada,
+          prateleiraId: this.obra.prateleiraId,
           sinopse: this.obra.sinopse,
           caracteristicasId: [this.obra.caracteristicasId].join(','),
           avisosId: [this.obra.avisosId].join(','),
@@ -364,12 +364,10 @@ export default {
     uploadImagem() {
       const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra/${this.obra.nome}`
       axios(url)
-        .then((res) => {
-          this.ultimaObra = res.data
-          if (this.imagemObra.size === 0 || this.imagemObra == null) {
-            this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
-          } else var fd = new FormData()
+        .then(() => {
+          var fd = new FormData()
           fd.append('file', this.imagemObra)
+
           axios
             .post(`${baseApiUrl}/mesa/${this.ultimaObra.id}/upload`, fd)
             .then(() => {

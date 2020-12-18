@@ -1,21 +1,25 @@
 <template>
-    <div class="loading">
-        <img src="@/assets/loading.gif" alt="Loading">
-    </div>
+  <div class="loader" :class="{ 'loader--visible': visible }">Loading</div>
 </template>
-
 <script>
 export default {
-    name: 'Loading'
+  name: 'loader',
+  props: ['visible'],
 }
 </script>
-
-<style>
-    .loading {
-        grid-area: content;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
+<style lang="scss">
+.loader {
+  background: rgba(255, 255, 255, 0.8);
+  transition: 0.15s ease-in opacity;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  &--visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
 </style>

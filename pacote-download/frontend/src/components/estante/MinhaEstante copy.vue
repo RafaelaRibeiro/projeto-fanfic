@@ -88,13 +88,6 @@ export default {
       seletor: true,
       lista: [],
 
-      // prateleiras: [
-      //   { id: 1, texto: "Acompanhando", path: "acompanhando" },
-      //   { id: 2, texto: "Próximas Leituras", path: "proximasLeituras" },
-      //   { id: 3, texto: "Prediletos" },
-      //   { id: 4, texto: "Arquivadas", path: "terminada" }
-      // ],
-
       headers: [
         { text: '', value: 'capa' },
         { text: 'História', align: 'left', value: 'name' },

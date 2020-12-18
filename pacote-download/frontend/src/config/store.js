@@ -7,15 +7,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isMenuVisible: false,
-    usuario:{
-     
+    usuario: {
+
     },
     obra: [],
     drawer: false,
     expandir: false,
     checkTodos: false,
     intermediario: false,
-    cadastro:false
+    cadastro: false
   },
 
   mutations: {
@@ -36,7 +36,7 @@ export default new Vuex.Store({
       state.obra = obra
     },
 
-    setCadastro(state,payload) {
+    setCadastro(state, payload) {
       state.cadastro = payload
     },
 
@@ -63,7 +63,7 @@ export default new Vuex.Store({
     cadastro(state) {
       return state.cadastro
     },
-    
+
     check(state) {
       return state.checkTodos
     },

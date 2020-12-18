@@ -1,5 +1,10 @@
-<template>
+<template id="axiosForm">
   <v-container v-if="page">
+    <div class="loader" v-if="loading">
+      <span class="helper"></span>
+      <img class="loaderImg" src="@/assets/ajax-loader.gif" />
+    </div>
+
     <v-row>
       <v-col>
         <h1 class="display-1 font-weight-light mb-4">
@@ -20,6 +25,7 @@
               value
               label="Título"
             ></v-text-field>
+
             <v-card class="ma-1" flat v-if="imagemObra.path">
               <v-img contain aspect-ratio="2" v-if="urlObra" :src="urlObra"></v-img>
               <v-img contain aspect-ratio="2" v-else :src="imagemObra.path"></v-img>
@@ -161,7 +167,18 @@
           </v-col>
           <v-col>
             <v-checkbox
-              v-for="c in caracteristicas.slice(5, 9)"
+              v-for="c in caracteristicas.slice(4, 8)"
+              :key="c.id"
+              v-model="obra.caracteristicasId"
+              dense
+              class="ma-0"
+              :label="c.nome"
+              :value="c.id"
+            ></v-checkbox>
+          </v-col>
+          <v-col>
+            <v-checkbox
+              v-for="c in caracteristicas.slice(8, 12)"
               :key="c.id"
               v-model="obra.caracteristicasId"
               dense
@@ -251,7 +268,7 @@ export default {
         { text: 'Grape', value: 'grape' },
       ],
       editarObs: false,
-      terminada: false,
+
       publica: false,
       model: null,
       desabilitado: false,
@@ -315,6 +332,7 @@ export default {
     },
 
     salvarObra() {
+      this.loading = true
       axios
         .put(`${baseApiUrl}/mesa/${this.$route.params.obraId}/editarobra`, {
           nome: this.obra.nome,
@@ -325,13 +343,20 @@ export default {
           shippPrincipal: this.obra.shippPrincipal,
           shippSecundario: [this.obra.shippSecundario].join(','),
           classificacao: this.obra.classificacao,
-          terminada: this.obra.terminada,
+          prateleiraId: this.obra.prateleiraId,
           sinopse: this.obra.sinopse,
           caracteristicasId: [this.obra.caracteristicasId].join(','),
           avisosId: [this.obra.avisosId].join(','),
         })
         .then(() => {
-          this.semImagem()
+          if (this.imagemObra.key == null) {
+            this.semImagem()
+          } else {
+            this.uploadImagem()
+          }
+        })
+        .finally(() => {
+          this.loading = false
         })
         .catch(showError)
     },
@@ -341,6 +366,19 @@ export default {
         .post(`${baseApiUrl}/mesa/${this.$route.params.obraId}/semimagem`, {
           url: this.url,
         })
+        .then(() => {
+          this.$toast.success('Obra alterada com sucesso')
+          this.$router.push({ path: `/obra/${this.obra.id}/` })
+        })
+        .catch(showError)
+    },
+
+    uploadImagem() {
+      var fd = new FormData()
+      fd.append('file', this.imagemUpload)
+
+      axios
+        .post(`${baseApiUrl}/mesa/${this.obra.id}/upload`, fd)
         .then(() => {
           this.$toast.success('Obra alterada com sucesso')
           this.$router.push({ path: `/obra/${this.obra.id}/` })
@@ -433,5 +471,39 @@ export default {
 .theme--light.v-label {
   color: #000;
   margin-bottom: 0;
+}
+
+.loader {
+  /* Loader Div Class */
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #eceaea;
+  background-image: url('~@/assets/ajax-loader.gif');
+  background-size: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 10000000;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+.helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.loaderImg {
+  vertical-align: middle;
+  max-height: 100px;
+  max-width: 160px;
+}
+
+#axiosForm {
+  /* Components Root Element ID */
+  position: relative;
 }
 </style>

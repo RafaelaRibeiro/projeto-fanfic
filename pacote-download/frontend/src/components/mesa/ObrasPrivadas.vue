@@ -12,7 +12,7 @@
         <v-col cols="12" md="9">
           <v-card flat color="deep-purple darken-4" dark>
             <v-card-title>
-              <i v-for="(item, index) in filteredItems" :key="index">{{ item.status }}</i>
+              <i v-for="(item, index) in filteredItems" :key="index">{{ item.nome }}</i>
             </v-card-title>
           </v-card>
         </v-col>
@@ -25,7 +25,7 @@
       <!-- conteudos -->
       <v-row>
         <v-col cols="12" md="9">
-          <v-row>
+          <v-row v-if="obras">
             <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
               <ItemObras :item="item"></ItemObras>
             </v-col>
@@ -37,8 +37,8 @@
               <v-card outlined>
                 <md-list>
                   <md-list-item v-for="s in status" :key="s.id" @click="search = s.id">
-                    {{ s.status }}
-                    <md-badge class="md-primary" :md-content="s.count" />
+                    {{ s.nome }}
+                    <md-badge class="md-primary" :md-content="s.total" />
                   </md-list-item>
                 </md-list>
                 <!-- <v-list>
@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       obras: [],
-      search: 'A',
+      search: 5,
       status: [],
     }
   },
@@ -87,7 +87,7 @@ export default {
     },
     filtershelves() {
       const a = this.obras.filter((e) => {
-        return e.terminada === this.search
+        return e.prateleiraId === this.search
       })
       return a
     },

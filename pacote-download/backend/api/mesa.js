@@ -195,19 +195,12 @@ module.exports = (app) => {
   const limit = 10; // usado para paginação
 
   const getObraPublicasStatus = (req, res) => {
-    app
-      .db("obras")
-      .select(
-        { id: "obras.terminada" },
-        app.db.raw(
-          "case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"
-        )
-      )
-      .count({ count: "obras.terminada" })
-      .groupBy("obras.terminada")
-      .where({ autor: req.params.usuarioId, "obras.publica": true })
-      .then((status) => res.json(status))
-      .catch((err) => res.status(500).send(err));
+    app.db.queryBuilder()
+      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "M" })
+      .leftJoin({ e: app.db("obras").select("obras.prateleiraId").count({ total: "obras.id" }).where({ "obras.autor": req.params.usuarioId, "obras.publica": true }).groupBy("obras.prateleiraId") }, "p.id", "e.prateleiraId")
+      .then((estante) => res.json(estante))
+      .catch((err) => res.status(500).send(err))
   };
 
   const getObrasPublicas = (req, res) => {
@@ -230,19 +223,12 @@ module.exports = (app) => {
   };
 
   const getObraPrivadasStatus = (req, res) => {
-    app
-      .db("obras")
-      .select(
-        { id: "obras.terminada" },
-        app.db.raw(
-          "case terminada when 'A' then 'Em Andamento' when 'S' then 'Suspensa' when 'T' then 'Terminada' ELSE '' END as status"
-        )
-      )
-      .count({ count: "obras.terminada" })
-      .groupBy("obras.terminada")
-      .where({ autor: req.params.usuarioId, "obras.publica": false })
-      .then((status) => res.json(status))
-      .catch((err) => res.status(500).send(err));
+    app.db.queryBuilder()
+      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "M" })
+      .leftJoin({ e: app.db("obras").select("obras.prateleiraId").count({ total: "obras.id" }).where({ "obras.autor": req.params.usuarioId, "obras.publica": false }).groupBy("obras.prateleiraId") }, "p.id", "e.prateleiraId")
+      .then((estante) => res.json(estante))
+      .catch((err) => res.status(500).send(err))
   };
   const getObrasPrivadas = (req, res) => {
     app
@@ -288,7 +274,7 @@ module.exports = (app) => {
   const remove = async (req, res) => {
     const rowsUpdate = await app
       .db("obras")
-      .update({ deletado: new Date(), terminada: "S" })
+      .update({ deletado: new Date(), prateleiraId: 7 })
       .where({ id: req.params.id });
   };
 
@@ -352,7 +338,7 @@ module.exports = (app) => {
         .update({
           name: 'sem_imagem.jpg',
           path: image.url,
-          key: 'sem_imagem.jpg',
+          key: `${req.params.obraId}-sem_imagem.jpg`,
           size: 7750
         })
         .where({ id: getImage.id })
@@ -365,7 +351,7 @@ module.exports = (app) => {
           name: 'sem_imagem.jpg',
           size: 7750,
           path: req.body.url,
-          key: 'sem_imagem.jpg',
+          key: `${req.params.obraId}-sem_imagem.jpg`,
           obraId: req.params.obraId,
         })
         .then((_) => res.status(204).send())

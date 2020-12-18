@@ -50,7 +50,7 @@
 
             <span>
               <span class="subtitle-2 font-weight-medium">Terminada:</span>
-              {{ item.terminada }}
+              {{ item.prateleiraId }}
             </span>
           </v-card>
         </v-col>

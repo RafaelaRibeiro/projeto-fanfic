@@ -36,7 +36,7 @@ module.exports = (app) => {
       .join("capitulos", "estante.obraId", "capitulos.obraId")
       .leftJoin({ u: "capitulos" }, "estante.ultimoCapituloId", "u.id")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
-      .select("estante.id", "estante.obraId", "obras.nome", "prateleiraId", "imagensObra.path", app.db.raw("case obras.terminada when 'T' then 'Sim' else 'Não' end as terminada, count(capitulos.id) as countCap, u.numero as uNumero, u.id as uId "))
+      .select("estante.id", "estante.obraId", "obras.nome", "estante.prateleiraId", "imagensObra.path", app.db.raw("case obras.prateleiraId when 7 then 'Sim' else 'Não' end as terminada, count(capitulos.id) as countCap, u.numero as uNumero, u.id as uId "))
       .where({ "estante.usuarioId": req.params.usuarioId })
       .groupBy("estante.obraId", "estante.prateleiraId")
       .orderBy("obras.id", "desc")
@@ -116,8 +116,8 @@ module.exports = (app) => {
 
   const getEstantePrateleira = (req, res) => {
     app.db.queryBuilder()
-      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
-      .from({ p: app.db("prateleiras").select("id", "nome") })
+      .select(app.db.raw('p.id,p.nome, p.tipo, ifnull(e.total,0) as total '))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "E" })
       .leftJoin({ e: app.db("estante").select("estante.prateleiraId").count({ total: "estante.id" }).where({ "estante.usuarioId": req.params.usuarioId }).groupBy("estante.prateleiraId") }, "p.id", "e.prateleiraId")
       .then((estante) => res.json(estante))
       .catch((err) => res.status(500).send(err))
