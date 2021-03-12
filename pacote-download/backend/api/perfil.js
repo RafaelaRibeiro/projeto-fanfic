@@ -91,14 +91,16 @@ module.exports = (app) => {
       .join("obras", "estante.obraId", "=", "obras.id")
       .join("usuarios", "estante.usuarioId", "=", "usuarios.id")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
-      .select({
-        estanteId: "estante.id",
-        nome: "obras.nome",
-        obraId: "obras.id",
-
-      }, "imagensObra.path")
+      .select(
+        {
+          estanteId: "estante.id",
+          nome: "obras.nome",
+          obraId: "obras.id",
+        },
+        "imagensObra.path"
+      )
       .where({ user: req.params.user })
-      .whereNot({ prateleiraId: 4 })
+      .whereNot({ "estante.prateleiraId": 4 })
       .orderBy("estante.id", "desc")
       .then((estante) => res.json(estante))
       .catch((err) => res.status(500).send(err));
@@ -116,70 +118,154 @@ module.exports = (app) => {
       .catch((err) => res.status(500).send(err));
   };
 
-  // const uploadPerfil = (req, res) => {
-  //   app
-  //     .db("imagensPerfil")
-  //     .insert({
-  //       name: req.file.originalname,
-  //       size: req.file.size,
-  //       path: req.file.location,
-  //       key: req.file.key,
-  //       usuarioId: req.params.usuarioId,
+  const getSeguindoPerfil = (req, res) => {
+    app
+      .db("conexoes")
+      .join("usuarios", "conexoes.followingId", "usuarios.Id")
+      .join({ u: "usuarios" }, "conexoes.usuarioId", "u.id")
+      .leftJoin("imagensBanner", "usuarios.id", "imagensBanner.usuarioId")
+      .leftJoin("imagensPerfil", "usuarios.id", "imagensPerfil.usuarioId")
+      .select(
+        "usuarios.id",
+        "usuarios.nome",
+        "usuarios.user",
+        { banner: "imagensBanner.path" },
+        { perfil: "imagensPerfil.path" }
+      )
+      .where({ "u.user": req.params.user })
+      .orderBy("nome", "asc")
+      .then((following) => res.json(following))
+      .catch((err) => res.status(500).send(err));
+  };
 
-  //     })
-  //     .then((_) => res.status(204).send())
-  //     .catch((err) => res.status(500).send(err));
-  // };
+  const getCountSeguindo = (req, res) => {
+    app
+      .db("conexoes")
+      .join("usuarios", "conexoes.usuarioId", "usuarios.Id")
+      .count({ total: "conexoes.usuarioId" })
+      .where({ "usuarios.user": req.params.user })
+      .first()
+      .then((contFollower) => res.json(contFollower))
+      .catch((err) => res.status(500).send(err));
+  };
 
-  // const uploadPerfil = async (req, res) => {
-  //   const image = { ...req.body };
-  //   if (req.params.usuarioId) image.usuarioId = req.params.usuarioId;
+  const getSeguidoresPerfil = (req, res) => {
+    app
+      .db("conexoes")
+      .join("usuarios", "conexoes.followingId", "usuarios.Id")
+      .join({ u: "usuarios" }, "conexoes.usuarioId", "u.id")
+      .leftJoin("imagensBanner", "u.id", "imagensBanner.usuarioId")
+      .leftJoin("imagensPerfil", "u.id", "imagensPerfil.usuarioId")
+      .select(
+        "u.id",
+        "u.nome",
+        "u.user",
+        { banner: "imagensBanner.path" },
+        { perfil: "imagensPerfil.path" }
+      )
+      .where({ "usuarios.user": req.params.user })
+      .orderBy("nome", "asc")
+      .then((following) => res.json(following))
+      .catch((err) => res.status(500).send(err));
+  };
 
-  //   var getImage = await app
-  //     .db("imagensPerfil")
-  //     .select("id", "key", "usuarioId")
-  //     .where({ usuarioId: req.params.usuarioId })
-  //     .first();
+  const getCountSeguidores = (req, res) => {
+    app
+      .db("conexoes")
+      .join("usuarios", "conexoes.followingId", "usuarios.Id")
+      .count({ total: "conexoes.usuarioId" })
+      .where({ "usuarios.user": req.params.user })
+      .first()
+      .then((contFollower) => res.json(contFollower))
+      .catch((err) => res.status(500).send(err));
+  };
 
-  //   if (getImage) {
-  //     await s3
-  //       .deleteObject({
-  //         Bucket: "upload.fanbase",
-  //         Key: getImage.key
+  const getConexaoByUser = (req, res) => {
+    app.db
+      .queryBuilder()
+      .select(app.db.raw("a.aUId, a.aFId, b.bUId, b.bFId"))
+      .from({
+        a: app
+          .db("conexoes")
+          .join("usuarios", "conexoes.followingId", "usuarios.id")
+          .select({
+            aUId: "conexoes.usuarioId",
+            aFId: "conexoes.followingid",
+          })
+          .where({
+            "conexoes.usuarioId": req.params.usuarioId,
+            "usuarios.user": req.params.user,
+          }),
+      })
 
-  //       })
-  //       .promise();
-  //     app
-  //       .db("imagensPerfil")
-  //       .update({
-  //         name: req.file.originalname,
-  //         size: req.file.size,
-  //         path: req.file.location,
-  //         key: req.file.key,
-  //       })
-  //       .where({ usuarioId: getImage.usuarioId })
-  //       .then((_) => res.status(204).send())
-  //       .catch((err) => res.status(500).send(err));
-  //   } else {
-  //     app
-  //       .db("imagensPerfil")
-  //       .insert({
-  //         name: req.file.originalname,
-  //         size: req.file.size,
-  //         path: req.file.location,
-  //         key: req.file.key,
-  //         usuarioId: req.params.usuarioId,
-  //       })
-  //       .then((_) => res.status(204).send())
-  //       .catch((err) => res.status(500).send(err));
-  //   }
-  // };
+      .leftJoin(
+        {
+          b: app
+            .db("conexoes")
+            .join("usuarios", "conexoes.usuarioId", "usuarios.id")
+            .select({
+              bUId: "conexoes.usuarioId",
+              bFId: "conexoes.followingid",
+            })
+            .where({
+              "usuarios.user": req.params.user,
+              "conexoes.followingid": req.params.usuarioId,
+            }),
+        },
+        "a.aUId",
+        "b.bFId"
+      )
+      .first()
+      .union([
+        app.db
+          .queryBuilder()
+          .select(app.db.raw("a.aUId, a.aFId, b.bUId, b.bFId"))
+          .from({
+            a: app
+              .db("conexoes")
+              .join("usuarios", "conexoes.followingId", "usuarios.id")
+              .select({
+                aUId: "conexoes.usuarioId",
+                aFId: "conexoes.followingid",
+              })
+              .where({
+                "conexoes.usuarioId": req.params.usuarioId,
+                "usuarios.user": req.params.user,
+              }),
+          })
+
+          .rightJoin(
+            {
+              b: app
+                .db("conexoes")
+                .join("usuarios", "conexoes.usuarioId", "usuarios.id")
+                .select({
+                  bUId: "conexoes.usuarioId",
+                  bFId: "conexoes.followingid",
+                })
+                .where({
+                  "usuarios.user": req.params.user,
+                  "conexoes.followingid": req.params.usuarioId,
+                }),
+            },
+            "a.aUId",
+            "b.bFId"
+          ),
+      ])
+      .then((following) => res.json(following))
+      .catch((err) => res.status(500).send(err));
+  };
 
   return {
     getObrasPerfil,
     getEstantePerfil,
     getSugestoesPerfil,
     getObrasPerfilShipp,
+    getSeguindoPerfil,
+    getCountSeguindo,
+    getSeguidoresPerfil,
+    getCountSeguidores,
+    getConexaoByUser,
     getPerfil,
     savePerfil,
     updateUser,

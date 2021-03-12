@@ -1,5 +1,8 @@
 <template>
-  <v-card flat>
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <v-card flat v-else>
     <v-container fluid>
       <v-row>
         <v-col>
@@ -23,7 +26,7 @@
         </v-col>
       </v-row>
       <!-- conteudos -->
-      <v-row>
+      <v-row class="mb-5">
         <v-col cols="12" md="9">
           <v-row>
             <v-col class="mb-n3" cols="12" v-for="item in filtershelves" :key="item.id">
@@ -61,12 +64,13 @@
 
 <script>
 import ItemObras from './ItemObras'
+import Loading from '../template/Loading'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import { baseApiUrl } from '../../global'
 export default {
   name: 'obrasPublicas',
-  components: { ItemObras },
+  components: { ItemObras, Loading },
   data() {
     return {
       obras: [],
@@ -76,6 +80,7 @@ export default {
       count: 0,
       totalPage: 0,
       status: [],
+      visible: true,
     }
   },
 
@@ -104,6 +109,7 @@ export default {
       const url = ` ${baseApiUrl}/mesa/${this.$store.state.usuario.id}/obraspublicas`
       axios(url).then((res) => {
         this.obras = res.data
+        this.visible = false
       })
     },
 

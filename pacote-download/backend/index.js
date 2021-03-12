@@ -4,9 +4,18 @@ const express = require("express");
 const consign = require("consign");
 const db = require("./config/db");
 const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 const path = require("path");
+const { Socket } = require("dgram");
 
 app.db = db;
+
+io.on("connection", (socket) => {
+  socket.on("disconnect", () => {
+    console.log("Usuário desconectado" + socket.id);
+  });
+});
 
 app.use(express.json());
 
@@ -29,6 +38,6 @@ consign()
 
   .into(app);
 
-app.listen(3000, () => {
+http.listen(3000, () => {
   console.log("Backend executando...");
 });

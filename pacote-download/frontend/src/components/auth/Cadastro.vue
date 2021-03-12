@@ -25,12 +25,14 @@
           dense
           outlined
         ></v-text-field>
+
         <v-text-field
           v-model="usuario.user"
           color="deep-purple darken-4"
           name="Usuario"
           label="Usuario"
           class="ml-2 mr-2"
+          prefix="@"
           :rules="[checkUser]"
           @blur="getUser"
           dense
@@ -102,6 +104,7 @@
 
 <script>
 import { baseApiUrl, showError } from '../../global'
+
 import axios from 'axios'
 export default {
   name: 'Cadastro',
@@ -158,14 +161,14 @@ export default {
     },
     checkUser() {
       if (this.usuario.user) {
-        return this.usuario.user !== this.user.user || 'Usuário já está sendo utilizado'
+        return this.usuario.user.toLowerCase() !== this.user.user.toLowerCase() || 'Usuário já está sendo utilizado'
       } else {
         return 'Digite um usuário'
       }
     },
     checkEmail() {
       if (this.usuario.email) {
-        return this.usuario.email !== this.user.email || 'Este e-mail já está cadastrado'
+        return this.usuario.email.toLowerCase() !== this.user.email.toLowerCase() || 'Este e-mail já está cadastrado'
       } else {
         return 'Digite seu e-mail'
       }

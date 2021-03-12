@@ -1,6 +1,6 @@
 <template>
   <div class="item-estante">
-    <v-card outlined class="d-flex align-center mb-4">
+    <v-card height="130" outlined class="d-flex align-center mb-4 py-3">
       <!-- <v-expand-x-transition>
         <v-checkbox
           v-show="(expand = expNovo)"
@@ -16,7 +16,7 @@
             <v-img
               max-height="125"
               max-width="125"
-              in-height="45"
+              min-height="45"
               min-width="45"
               contain
               v-if="item.path"
@@ -36,21 +36,25 @@
         <v-col cols="9" sm="9">
           <v-card class="d-flex flex-column" flat>
             <router-link class="mb-3" :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
-              <span class="mb-2 subtitle-2 font-weight-medium">Título: </span>
+              <span class="mb-2 font-weight-medium">Título: </span>
               {{ item.nome }}
             </router-link>
-            <span>
-              <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
+            <span class="mb-1">
+              <span class="mb-2 font-weight-medium">Total de Capitulos:</span>
               {{ item.countCap }}
             </span>
-            <span v-if="item.prateleiraId === 1">
-              <span class="subtitle-2 font-weight-medium">Ultimo Capitulo Lido:</span>
+            <span class="mb-1" v-if="item.prateleiraId === 1">
+              <span class="font-weight-medium">Ultimo Capitulo Lido:</span>
+
               {{ item.uNumero }}
             </span>
 
             <span>
-              <span class="subtitle-2 font-weight-medium">Terminada:</span>
-              {{ item.prateleiraId }}
+              <span class="font-weight-medium">Terminada: </span>
+
+              <v-chip small dark :color="colorStatus">
+                {{ item.status }}
+              </v-chip>
             </span>
           </v-card>
         </v-col>
@@ -144,6 +148,18 @@ export default {
   },
 
   computed: {
+    colorStatus() {
+      let cores = ''
+      if (this.item.status === 'Em andamento') {
+        return (cores = 'orange lighten-1')
+      } else if (this.item.status === 'Suspensa') {
+        return (cores = 'red lighten-1')
+      } else {
+        cores = 'green darken-1'
+      }
+
+      return cores
+    },
     // expNovo() {
     //   return this.$store.state.expandir
     // },

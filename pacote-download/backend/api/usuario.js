@@ -1,4 +1,4 @@
-const { authSecret } = require("../e/.env");
+const { authSecret } = require("../.env");
 const jwt = require("jwt-simple");
 const bcrypt = require("bcrypt-nodejs");
 const crypto = require("crypto");
@@ -60,6 +60,7 @@ module.exports = (app) => {
     const token = crypto.randomBytes(20).toString("hex");
     const name = usuario.nome;
     const now = new Date();
+    const nowRegistro = new Date();
     now.setHours(now.getHours() + 1);
 
     if (usuario.id) {
@@ -78,6 +79,7 @@ module.exports = (app) => {
           user: usuario.user,
           password: usuario.password,
           activeToken: token,
+          dataRegistro: nowRegistro,
           activeTokenExpires: now,
         })
         .then((_) => res.status(204).send())
@@ -100,9 +102,22 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
 
+      const bannerRandom = Math.floor(Math.random() * (22 - 1)) + 1;
+      app
+        .db("imagensBanner")
+        .insert({
+          name: `banner-${bannerRandom}.jpg`,
+          size: 0,
+          path: `https://s3.amazonaws.com/banner.fanbase/banner-${bannerRandom}.jpg`,
+          key: `${user.id}-banner-${bannerRandom}.jpg`,
+          usuarioId: user.id,
+        })
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+
       mailer.sendMail({
         to: usuario.email,
-        from: "no-reply@liberfans.com",
+        from: "noreply@liberfans.com",
         subject: "Ativar Cadastro",
         template: "auth/activeRegister",
         defaultLayout: false,

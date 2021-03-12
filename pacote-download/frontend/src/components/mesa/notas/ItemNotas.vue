@@ -86,11 +86,11 @@ export default {
       edit: false,
     }
   },
-  watch: {
-    notas() {
-      this.getNotas()
-    },
-  },
+  // watch: {
+  //   notas() {
+  //     this.getNotas()
+  //   },
+  // },
   methods: {
     save() {
       this.nota.usuarioId = this.usuarioId

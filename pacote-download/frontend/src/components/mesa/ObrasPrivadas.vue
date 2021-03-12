@@ -1,5 +1,8 @@
 <template>
-  <v-card flat>
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <v-card flat v-else>
     <v-container fluid>
       <!-- titulos -->
       <v-row>
@@ -62,17 +65,19 @@
 
 <script>
 import ItemObras from './ItemObras'
+import Loading from '../template/Loading'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import { baseApiUrl } from '../../global'
 export default {
   name: 'obrasPrivadas',
-  components: { ItemObras },
+  components: { ItemObras, Loading },
   data() {
     return {
       obras: [],
       search: 5,
       status: [],
+      visible: true,
     }
   },
 
@@ -99,6 +104,7 @@ export default {
       const url = ` ${baseApiUrl}/mesa/${this.$store.state.usuario.id}/obrasprivadas`
       axios(url).then((res) => {
         this.obras = this.obras.concat(res.data)
+        this.visible = false
       })
     },
 

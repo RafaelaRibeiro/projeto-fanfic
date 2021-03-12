@@ -36,7 +36,16 @@ module.exports = (app) => {
       .join("capitulos", "estante.obraId", "capitulos.obraId")
       .leftJoin({ u: "capitulos" }, "estante.ultimoCapituloId", "u.id")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
-      .select("estante.id", "estante.obraId", "obras.nome", "estante.prateleiraId", "imagensObra.path", app.db.raw("case obras.prateleiraId when 7 then 'Sim' else 'Não' end as terminada, count(capitulos.id) as countCap, u.numero as uNumero, u.id as uId "))
+      .select(
+        "estante.id",
+        "estante.obraId",
+        "obras.nome",
+        "estante.prateleiraId",
+        "imagensObra.path",
+        app.db.raw(
+          "case obras.prateleiraId when 5 then 'Em andamento' when 6 then 'Suspensa' when 7 then 'Terminada' else '' end as status, count(capitulos.id) as countCap, u.numero as uNumero, u.id as uId "
+        )
+      )
       .where({ "estante.usuarioId": req.params.usuarioId })
       .groupBy("estante.obraId", "estante.prateleiraId")
       .orderBy("obras.id", "desc")
@@ -64,7 +73,10 @@ module.exports = (app) => {
       .join("usuarios", "estante.usuarioId", "usuarios.id")
       .leftJoin("capitulos", "estante.ultimoCapituloId", "capitulos.id")
       .select("estante.*", "capitulos.numero")
-      .where({ "usuarios.id": req.params.id, "estante.obraId": req.params.obraId })
+      .where({
+        "usuarios.id": req.params.id,
+        "estante.obraId": req.params.obraId,
+      })
       .andWhere("estante.prateleiraId", "<>", 3)
       .first()
       .then((estante) => res.json(estante))
@@ -115,22 +127,34 @@ module.exports = (app) => {
   };
 
   const getEstantePrateleira = (req, res) => {
-    app.db.queryBuilder()
-      .select(app.db.raw('p.id,p.nome, p.tipo, ifnull(e.total,0) as total '))
-      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "E" })
-      .leftJoin({ e: app.db("estante").select("estante.prateleiraId").count({ total: "estante.id" }).where({ "estante.usuarioId": req.params.usuarioId }).groupBy("estante.prateleiraId") }, "p.id", "e.prateleiraId")
+    app.db
+      .queryBuilder()
+      .select(app.db.raw("p.id,p.nome, p.tipo, ifnull(e.total,0) as total "))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") })
+      .where({ "p.tipo": "E" })
+      .leftJoin(
+        {
+          e: app
+            .db("estante")
+            .select("estante.prateleiraId")
+            .count({ total: "estante.id" })
+            .where({ "estante.usuarioId": req.params.usuarioId })
+            .groupBy("estante.prateleiraId"),
+        },
+        "p.id",
+        "e.prateleiraId"
+      )
       .then((estante) => res.json(estante))
-      .catch((err) => res.status(500).send(err))
-  }
+      .catch((err) => res.status(500).send(err));
+  };
 
   const removeEstante = async (req, res) => {
-
     try {
       const login = await app
         .db("estante")
         .select("id", "usuarioId")
         .where({ id: req.params.id })
-        .first()
+        .first();
 
       try {
         existsOrError(login, "Obra não está na estante.");
@@ -139,9 +163,10 @@ module.exports = (app) => {
       }
 
       if (login.usuarioId !== parseInt(req.params.usuarioId))
-        return res.status(403).send("Você não tem permissão")
+        return res.status(403).send("Você não tem permissão");
 
-      app.db("estante")
+      app
+        .db("estante")
         .where({ id: req.params.id })
         .del()
         .then((_) => res.status(204).send())
@@ -149,7 +174,7 @@ module.exports = (app) => {
     } catch (msg) {
       res.status(500).send(msg);
     }
-  }
+  };
 
   const arquivarObra = async (req, res) => {
     try {
@@ -157,7 +182,7 @@ module.exports = (app) => {
         .db("estante")
         .select("id", "usuarioId")
         .where({ id: req.params.id })
-        .first()
+        .first();
 
       try {
         existsOrError(estante, "Obra não está na estante.");
@@ -166,9 +191,10 @@ module.exports = (app) => {
       }
 
       if (estante.usuarioId !== parseInt(req.params.usuarioId))
-        return res.status(403).send("Você não tem permissão")
+        return res.status(403).send("Você não tem permissão");
 
-      app.db("estante")
+      app
+        .db("estante")
         .where({ id: req.params.id })
         .update({ prateleiraId: 4 })
         .then((_) => res.status(204).send())
@@ -176,12 +202,7 @@ module.exports = (app) => {
     } catch (msg) {
       res.status(500).send(msg);
     }
-  }
-
-
-
-
-
+  };
 
   return {
     get,
@@ -192,7 +213,6 @@ module.exports = (app) => {
     updateEstante,
     getEstantePrateleira,
     removeEstante,
-    arquivarObra
-
+    arquivarObra,
   };
 };

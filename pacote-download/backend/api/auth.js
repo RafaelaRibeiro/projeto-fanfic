@@ -1,4 +1,4 @@
-const { authSecret } = require("../e/.env");
+const { authSecret } = require("../.env");
 const jwt = require("jwt-simple");
 const bcrypt = require("bcrypt-nodejs");
 const crypto = require("crypto");
@@ -19,9 +19,14 @@ module.exports = (app) => {
 
     const usuario = await app
       .db("usuarios")
-      .select("usuarios.*", app.db.raw("imagensPerfil.path as imagemPerfil, imagensBanner.path as imagemBanner"))
-      .leftJoin("imagensPerfil", 'usuarios.id', "imagensPerfil.usuarioId")
-      .leftJoin("imagensBanner", 'usuarios.id', "imagensBanner.usuarioId")
+      .select(
+        "usuarios.*",
+        app.db.raw(
+          "imagensPerfil.path as imagemPerfil, imagensBanner.path as imagemBanner"
+        )
+      )
+      .leftJoin("imagensPerfil", "usuarios.id", "imagensPerfil.usuarioId")
+      .leftJoin("imagensBanner", "usuarios.id", "imagensBanner.usuarioId")
       .where({ email: req.body.email })
       .first();
 
@@ -80,7 +85,7 @@ module.exports = (app) => {
   };
 
   const activeRegister = async (req, res) => {
-    let { token } = { ...req.body }
+    let { token } = { ...req.body };
     if (req.params.token) token = req.params.token;
     const usuario = await app
       .db("usuarios")
@@ -88,8 +93,8 @@ module.exports = (app) => {
       .first();
 
     try {
-
-      if (usuario.verificado === 1) return res.status(400).send("Essa conta já está verificada")
+      if (usuario.verificado === 1)
+        return res.status(400).send("Essa conta já está verificada");
       if (token !== usuario.activeToken)
         return res.status(400).send("Token Inválido");
 
@@ -101,8 +106,6 @@ module.exports = (app) => {
       res.status(400).send({ error: "Erro ativar cadastro" });
     }
 
-
-
     app
       .db("usuarios")
       .update({ verificado: 1 })
@@ -112,13 +115,12 @@ module.exports = (app) => {
   };
 
   const getUserByTokenActived = async (req, res) => {
-
     const usuario = await app
       .db("usuarios")
       .where({ activeToken: req.params.token })
       .first();
 
-    if (!usuario) return res.status(400).send("Usuário não encontrado!")
+    if (!usuario) return res.status(400).send("Usuário não encontrado!");
 
     app
       .db("usuarios")
@@ -137,10 +139,8 @@ module.exports = (app) => {
       .first();
 
     try {
-
       if (!email) return res.status(400).send("O e-mail deve ser preenchido");
-      if (!usuario) return res.status(400).send("Usuário não encontrado!")
-
+      if (!usuario) return res.status(400).send("Usuário não encontrado!");
     } catch (err) {
       res.status(400).send({ error: "Erro ao reenviar o token" });
     }
@@ -158,7 +158,7 @@ module.exports = (app) => {
 
     mailer.sendMail({
       to: email,
-      from: "no-reply@liberfans.com",
+      from: "noreply@liberfans.com",
       subject: "Ativar Registro",
       template: "auth/activeRegister",
       context: { token, name },
@@ -196,7 +196,7 @@ module.exports = (app) => {
 
     mailer.sendMail({
       to: email,
-      from: "no-reply@liberfans.com",
+      from: "noreply@liberfans.com",
       subject: "Redefinir Senha",
       template: "auth/forgotPassword",
       layout: false,
@@ -207,7 +207,10 @@ module.exports = (app) => {
   const resetPassword = async (req, res) => {
     const { password } = req.body;
 
-    const usuario = await app.db("usuarios").where({ passwordResetToken: req.params.token }).first();
+    const usuario = await app
+      .db("usuarios")
+      .where({ passwordResetToken: req.params.token })
+      .first();
 
     try {
       if (!usuario) return res.status(400).send("Usuário não encontrado!");
@@ -223,7 +226,7 @@ module.exports = (app) => {
       res.status(400).send({ error: "Erro ao resetar a senha" });
     }
 
-    usuario.password = encryptPassword(password)
+    usuario.password = encryptPassword(password);
 
     await app
       .db("usuarios")
@@ -240,6 +243,6 @@ module.exports = (app) => {
     resetPassword,
     activeRegister,
     resendToken,
-    getUserByTokenActived
+    getUserByTokenActived,
   };
 };

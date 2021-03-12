@@ -1,5 +1,8 @@
 <template>
-  <v-card flat>
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <v-card flat v-else>
     <v-container fluid>
       <!-- titulos -->
       <v-row>
@@ -70,12 +73,13 @@
 
 <script>
 import ItemEstante from './ItemEstante'
+import Loading from '../template/Loading'
 import { mapState } from 'vuex'
 import axios from 'axios'
 import { baseApiUrl } from '../../global'
 export default {
   name: 'ListaFanfic',
-  components: { ItemEstante },
+  components: { ItemEstante, Loading },
 
   data() {
     return {
@@ -85,6 +89,7 @@ export default {
       seletor: true,
       lista: [],
       estante: [],
+      visible: true,
     }
   },
   methods: {
@@ -99,6 +104,7 @@ export default {
       const url = ` ${baseApiUrl}/estante/${this.usuario.id}`
       axios(url).then((res) => {
         this.estante = res.data
+        this.visible = false
       })
     },
   },

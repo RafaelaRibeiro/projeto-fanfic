@@ -13,28 +13,19 @@
               v-if="item.path"
               :src="item.path"
             ></v-img>
-            <!-- <v-img
-              max-height="125"
-              max-width="125"
-              contain
-              min-height="45"
-              min-width="45"
-              v-else
-              src="@/assets/sem_imagem.jpg"
-            ></v-img> -->
           </v-card>
         </v-col>
         <v-col cols="9" sm="9">
-          <v-card class="d-flex flex-column" flat>
-            <router-link :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
-              <span class="mb-2 subtitle-2 font-weight-medium">{{ item.nome }}</span>
+          <v-card class="d-flex flex-column ma-2" flat>
+            <router-link class="mb-2" :to="{ name: 'ObraById', params: { obraId: item.obraId } }">
+              <span class="md-subheading font-weight-medium">{{ item.nome }}</span>
             </router-link>
             <span>
-              <span class="subtitle-2 font-weight-medium">Total de Capitulos:</span>
+              <span class="Subheading font-weight-medium">Total de Capitulos:</span>
               {{ item.countCap }}
             </span>
             <span>
-              <span class="subtitle-2 font-weight-medium">Adicionado em:</span>
+              <span class="Subheading font-weight-medium">Adicionado em:</span>
               {{ item.dataAdicionado }}
             </span>
 
@@ -42,11 +33,11 @@
               <!-- <b-btn size="sm" variant="light" disabled>|</b-btn> -->
 
               <b-btn size="sm" variant="light" v-b-tooltip.hover title="Comentários">
-                <v-icon color="deep-purple darken-4" small left>mdi-comment-multiple</v-icon>58
+                <v-icon color="deep-purple darken-4" small left>mdi-comment-multiple</v-icon>{{ item.comentarios }}
               </b-btn>
 
               <b-btn size="sm" variant="light" v-b-tooltip.hover title="Estantes">
-                <v-icon left color="deep-purple darken-4" small>mdi-bookshelf</v-icon>45
+                <v-icon left color="deep-purple darken-4" small>mdi-bookshelf</v-icon>{{ item.estantes }}
               </b-btn>
             </v-card>
           </v-card>
@@ -64,7 +55,7 @@
                 <v-icon small left>mdi-view-list</v-icon>
                 <span class="md-list-item-text">Lista de Capitulos</span>
               </md-list-item>
-              <md-list-item :to="{ name: 'adicionarCapitulo', params: { id: item.id } }">
+              <md-list-item v-if="item.prateleiraId === 5" :to="{ name: 'adicionarCapitulo', params: { id: item.id } }">
                 <v-icon small left>mdi-plus-thick</v-icon>
                 <span class="md-list-item-text">Adicionar Capítulos</span>
               </md-list-item>

@@ -1,4 +1,4 @@
-const { db } = require("./e/.env");
+const { db } = require("./.env");
 
 module.exports = {
   client: "mysql",

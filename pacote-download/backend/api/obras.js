@@ -36,7 +36,11 @@ module.exports = (app) => {
       .db("comentarios")
       .join("capitulos", "comentarios.capituloId", "capitulos.id")
       .join("usuarios", "comentarios.usuarioId", "usuarios.id")
-      .leftJoin("imagensPerfil", "comentarios.usuarioId", "imagensPerfil.usuarioId")
+      .leftJoin(
+        "imagensPerfil",
+        "comentarios.usuarioId",
+        "imagensPerfil.usuarioId"
+      )
       .select(
         app.db.raw(
           "comentarios.id, comentarios.usuarioId, usuarios.nome, imagensPerfil.path, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
@@ -46,12 +50,55 @@ module.exports = (app) => {
         "comentarios.obraId": req.params.obraId,
         numero: req.params.numero,
       })
+      .whereNull("comentarios.comentarioId")
       .limit(limit)
       .offset(page * limit - limit)
       .orderBy("comentarios.id", "desc")
       .then((comentarios) =>
         res.json({ data: comentarios, count, limit, totalPage })
       )
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const getComentariosNew = (req, res) => {
+    app.db
+      .withRecursive("resposta", (qb) => {
+        qb.select(
+          "id",
+          "comentarioId",
+          "usuarioId",
+          "conteudo",
+          "dataComentario"
+        )
+          .from("comentarios")
+          .where({ "comentarios.id": req.params.comentarioId })
+          .unionAll((qb) => {
+            qb.select(
+              "comentarios.id",
+              "comentarios.comentarioId",
+              "comentarios.usuarioId",
+              " comentarios.conteudo",
+              "comentarios.dataComentario"
+            )
+              .from("comentarios")
+              .join("resposta", "comentarios.comentarioId", "resposta.id");
+          });
+      })
+      .leftJoin(
+        "imagensPerfil",
+        "resposta.usuarioId",
+        "imagensPerfil.usuarioId"
+      )
+      .join("usuarios", "resposta.usuarioId", "usuarios.id")
+      .select(
+        app.db.raw(
+          "resposta.id, comentarioId, imagensPerfil.path, resposta.usuarioId, usuarios.nome, CONVERT(resposta.conteudo USING utf8) as conteudo, date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
+        )
+      )
+      .from("resposta")
+      .whereNotNull("comentarioId")
+      .orderBy("resposta.id")
+      .then((comentario) => res.json(comentario))
       .catch((err) => res.status(500).send(err));
   };
 
@@ -97,7 +144,10 @@ module.exports = (app) => {
       .db("capitulos")
       .join("obras", "capitulos.obraId", "obras.id")
       .leftJoin("contador", function () {
-        this.on("capitulos.obraId", "contador.obraId").andOn("capitulos.id", "contador.capituloId")
+        this.on("capitulos.obraId", "contador.obraId").andOn(
+          "capitulos.id",
+          "contador.capituloId"
+        );
       })
       .select(
         app.db.raw(
@@ -167,6 +217,7 @@ module.exports = (app) => {
     getByIdCapitulo,
     saveComentario,
     getComentarios,
+    getComentariosNew,
     getByObraId,
     getCapitulosByObra,
     getUniversosByObra,

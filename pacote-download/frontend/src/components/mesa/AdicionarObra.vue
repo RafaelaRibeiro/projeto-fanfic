@@ -310,6 +310,7 @@ export default {
       buscar: null,
       select: null,
       tab: null,
+      url: `${baseApiUrl}/files/sem_imagem.jpg`,
     }
   },
 
@@ -326,13 +327,18 @@ export default {
           shippPrincipal: this.obra.shippPrincipal,
           shippSecundario: [this.obra.shippSecundario].join(','),
           classificacao: this.obra.classificacao,
-          prateleiraId: this.obra.prateleiraId,
+          prateleiraId: 5,
           sinopse: this.obra.sinopse,
           caracteristicasId: [this.obra.caracteristicasId].join(','),
           avisosId: [this.obra.avisosId].join(','),
           dataAdicionado: this.now,
         })
         .then(() => {
+          if (this.imagemObra === null) {
+            this.semImagem()
+          } else {
+            this.uploadImagem()
+          }
           this.postarCapitulo()
         })
         .catch(showError)
@@ -376,6 +382,17 @@ export default {
             .catch()
         })
         .catch()
+    },
+
+    semImagem() {
+      axios
+        .post(`${baseApiUrl}/mesa/${this.ultimaObra.id}/semimagem`, {
+          url: this.url,
+        })
+        .then(() => {
+          this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+        })
+        .catch(showError)
     },
 
     getCategorias() {

@@ -1,40 +1,68 @@
 <template>
   <div class="conteiner">
-    <v-row>
-      <v-col>
-        <v-card class="perfil-banner">
-          <v-img v-if="usuario.imageBanner" height="300px" :src="usuario.imageBanner"></v-img>
+    <v-container v-if="visible" fluid class="mt-1">
+      <Loading />
+    </v-container>
 
-          <v-img v-else height="300px" src="@/assets/banner-teste.png"></v-img>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-container class="pa-0" v-else>
+      <v-row>
+        <v-col>
+          <v-card class="perfil-banner">
+            <v-img v-if="usuario.imageBanner" height="300px" :src="usuario.imageBanner"></v-img>
 
-    <v-row class="sub-banner">
-      <v-col class="avatar" cols="3">
-        <v-avatar class="profile" color="white" size="150">
-          <!-- <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img> -->
-          <v-img :src="usuario.imagePerfil"></v-img>
-        </v-avatar>
-      </v-col>
-      <v-col>
-        <div>
-          <strong>Nome: </strong>
-          {{ usuario.nome }}
-        </div>
-        <div>
-          <strong>Usuario: </strong>
-          {{ usuario.user }}
-        </div>
-      </v-col>
-      <v-col>
-        <v-app-bar flat color="#fff">
-          <v-spacer></v-spacer>
-          <!-- <v-btn depressed small>
+            <v-img v-else height="300px" src="@/assets/banner-teste.png"></v-img>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row class="sub-banner">
+        <v-col class="avatar" cols="3">
+          <v-avatar class="profile" color="white" size="150">
+            <!-- <v-img v-if="usuario.imagePerfil" :src="url + '/' + usuario.imagePerfil"></v-img> -->
+            <v-img :src="usuario.imagePerfil"></v-img>
+          </v-avatar>
+        </v-col>
+        <v-col cols="12" md="5">
+          <div>
+            <strong>Nome: </strong>
+            {{ usuario.nome }}
+
+            <v-chip x-small v-if="conexao.bFId">Segue Você </v-chip>
+          </div>
+          <div>
+            <strong>Usuario: </strong>
+            {{ usuario.user }}
+          </div>
+        </v-col>
+        <v-col cols="12" md="4" v-if="$store.state.usuario.id !== usuario.id">
+          <v-btn v-if="!conexao.aFId" dark color="deep-purple darken-4" small class="mx-4" @click="follow">
+            <v-icon small left>mdi-account-plus</v-icon>
+            Seguir
+          </v-btn>
+
+          <v-hover v-else v-slot="{ hover }">
+            <v-card flat>
+              <v-btn v-if="!hover" dark color="teal darken-4" small width="170" class="mx-4" @click="follow">
+                <v-icon small left>mdi-account-check</v-icon>
+                Seguindo
+              </v-btn>
+              <v-btn v-if="hover" dark color="red darken-4" width="170" small class="mx-4" @click="follow">
+                <v-icon small left>mdi-account-remove</v-icon>
+                Deixar de seguir
+              </v-btn>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+
+      <v-app-bar flat color="#fff">
+        <v-spacer></v-spacer>
+        <!-- <v-btn depressed small>
               <v-icon>mdi-account-multiple-plus</v-icon>
               <span>Seguir</span>
           </v-btn>-->
 
+        <!-- <v-btn dark small color="deep-purple darken-4">
           <v-menu top offset-y>
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">
@@ -49,59 +77,59 @@
                 <v-list-item-title>{{ item.text }}</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-menu>
-        </v-app-bar>
-      </v-col>
-    </v-row>
+          </v-menu> -->
+      </v-app-bar>
 
-    <v-divider></v-divider>
+      <v-divider></v-divider>
 
-    <v-row>
-      <v-col>
-        <template>
-          <v-tabs
-            background-color="deep-purple lighten-5"
-            v-model="tab"
-            fixed-tabs
-            active-class=" primary font-weight-bold text-white shadow p-3 mb-2 rounded "
-          >
-            <v-tabs-slider color="white"></v-tabs-slider>
-            <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>
-          </v-tabs>
+      <v-row>
+        <v-col>
+          <template>
+            <v-tabs
+              background-color="deep-purple lighten-5"
+              v-model="tab"
+              fixed-tabs
+              active-class=" primary font-weight-bold text-white shadow p-3 mb-2 rounded "
+            >
+              <v-tabs-slider color="white"></v-tabs-slider>
+              <v-tab v-for="titulo in titulos" :key="titulo.id">{{ titulo.text }}</v-tab>
+            </v-tabs>
 
-          <v-tabs-items v-model="tab">
-            <v-tab-item :transition="false" :reverse-transition="false">
-              <div>
-                <Sobre :usuario="usuario"></Sobre>
-              </div>
-            </v-tab-item>
-            <v-tab-item :transition="false" :reverse-transition="false">
-              <EstantePerfil />
-            </v-tab-item>
-            <v-tab-item :transition="false" :reverse-transition="false">
-              <ObrasPerfil />
-            </v-tab-item>
-            <v-tab-item :transition="false" :reverse-transition="false">
-              <Sugestoes />
-            </v-tab-item>
-            <v-tab-item :transition="false" :reverse-transition="false">
-              <Conexoes />
-            </v-tab-item>
-          </v-tabs-items>
-        </template>
-      </v-col>
-    </v-row>
+            <v-tabs-items v-model="tab">
+              <v-tab-item :transition="false" :reverse-transition="false">
+                <div>
+                  <Sobre :usuario="usuario"></Sobre>
+                </div>
+              </v-tab-item>
+              <v-tab-item :transition="false" :reverse-transition="false">
+                <EstantePerfil />
+              </v-tab-item>
+              <v-tab-item :transition="false" :reverse-transition="false">
+                <ObrasPerfil />
+              </v-tab-item>
+              <v-tab-item :transition="false" :reverse-transition="false">
+                <Sugestoes />
+              </v-tab-item>
+              <v-tab-item :transition="false" :reverse-transition="false">
+                <Conexoes />
+              </v-tab-item>
+            </v-tabs-items>
+          </template>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-import { baseApiUrl } from '@/global'
+import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import ObrasPerfil from './ObrasPerfil'
 import EstantePerfil from './EstantePerfil'
 import Sugestoes from './Sugestoes'
 import Sobre from './Sobre'
 import Conexoes from './Conexoes'
+import Loading from '../template/Loading'
 
 export default {
   name: 'Perfil',
@@ -112,6 +140,7 @@ export default {
     Sobre,
     Sugestoes,
     Conexoes,
+    Loading,
   },
 
   data() {
@@ -124,8 +153,9 @@ export default {
       overlay: false,
       file2: null,
       editar: true,
+      conexao: {},
       url: baseApiUrl,
-
+      visible: true,
       items: [
         { id: 1, icon: 'mdi-book', text: 'Bloquear' },
         { id: 2, icon: 'mdi-alert-circle', text: 'Denunciar Usuário' },
@@ -143,7 +173,10 @@ export default {
   methods: {
     getUsuarios() {
       const url = `${baseApiUrl}/perfil/${this.usuario.user}`
-      axios(url).then((res) => (this.usuario = res.data))
+      axios(url).then((res) => {
+        this.usuario = res.data
+        this.visible = false
+      })
     },
 
     editarPerfil() {
@@ -158,12 +191,32 @@ export default {
         return ['bg-light', 'h6 font-weight-bold shadow p-3 mb-5 bg-white rounded ']
       }
     },
+
+    follow() {
+      const url = `${baseApiUrl}/${this.$store.state.usuario.id}/following`
+      axios
+        .post(url, {
+          followingId: this.usuario.id,
+        })
+        .then(() => {
+          // this.$toast.success('Dados do perfil atualizados')
+        })
+        .catch(showError)
+    },
+
+    getFollow() {
+      const url = `${baseApiUrl}/perfil/${this.$store.state.usuario.id}/conexao/${this.$route.params.user}`
+      axios.get(url).then((res) => {
+        this.conexao = res.data
+      })
+    },
   },
 
   watch: {
     $route(to) {
       this.usuario.user = to.params.user
       this.getUsuarios()
+      this.getFollow()
     },
   },
 
@@ -171,6 +224,7 @@ export default {
     this.usuario.user = this.$route.params.user
 
     this.getUsuarios()
+    this.getFollow()
   },
 }
 </script>
@@ -187,7 +241,6 @@ export default {
 }
 
 .profile {
-  margin-top: -7rem;
   border: 2px solid #fff;
   margin-left: 50px;
   /* border-radius: 0%; */

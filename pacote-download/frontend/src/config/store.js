@@ -7,15 +7,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isMenuVisible: false,
-    usuario: {
-
-    },
+    usuario: {},
+    user: {},
     obra: [],
     drawer: false,
     expandir: false,
     checkTodos: false,
     intermediario: false,
-    cadastro: false
+    cadastro: false,
   },
 
   mutations: {

@@ -1,4 +1,10 @@
 const nodemailer = require("nodemailer");
+const {
+  SES_ACCESS_KEY_ID,
+  SES_SECRET_ACCESS_KEY,
+  HOST,
+  PORT,
+} = require("../.env");
 const path = require("path");
 const hbs = require("nodemailer-express-handlebars");
 
@@ -12,11 +18,11 @@ const hbs = require("nodemailer-express-handlebars");
 // });
 
 const transport = nodemailer.createTransport({
-  host: process.env.HOST,
-  port: process.env.HOST,
+  host: HOST,
+  port: PORT,
   auth: {
-    user: process.env.SES_ACCESS_KEY_ID,
-    pass: process.env.SES_SECRET_ACCESS_KEY,
+    user: SES_ACCESS_KEY_ID,
+    pass: SES_SECRET_ACCESS_KEY,
   },
 });
 
@@ -31,8 +37,6 @@ transport.use(
     viewPath: path.resolve("./mail/"),
     extName: ".hbs",
     defaultLayout: false,
-
-
   })
 );
 module.exports = transport;

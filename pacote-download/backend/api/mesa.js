@@ -110,26 +110,6 @@ module.exports = (app) => {
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
     }
-
-    // if (cont.id) {
-    //   app
-    //     .db("contador")
-    //     .update({ views: cont.views })
-    //     .where({ id: cont.id })
-    //     .then((_) => res.status(204).send())
-    //     .catch((err) => res.status(500).send(err));
-    // } else {
-    //   app
-    //     .db("contador")
-    //     .insert({
-    //       views: 1,
-    //       obraId: contador.obraId,
-    //       capituloId: contador.capituloId,
-    //       usuarioId: contador.usuarioId,
-    //     })
-    //     .then((_) => res.status(204).send())
-    //     .catch((err) => res.status(500).send(err));
-    // }
   };
 
   const capituloById = (req, res) => {
@@ -195,12 +175,28 @@ module.exports = (app) => {
   const limit = 10; // usado para paginação
 
   const getObraPublicasStatus = (req, res) => {
-    app.db.queryBuilder()
-      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
-      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "M" })
-      .leftJoin({ e: app.db("obras").select("obras.prateleiraId").count({ total: "obras.id" }).where({ "obras.autor": req.params.usuarioId, "obras.publica": true }).groupBy("obras.prateleiraId") }, "p.id", "e.prateleiraId")
+    app.db
+      .queryBuilder()
+      .select(app.db.raw("p.id,p.nome, ifnull(e.total,0) as total "))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") })
+      .where({ "p.tipo": "M" })
+      .leftJoin(
+        {
+          e: app
+            .db("obras")
+            .select("obras.prateleiraId")
+            .count({ total: "obras.id" })
+            .where({
+              "obras.autor": req.params.usuarioId,
+              "obras.publica": true,
+            })
+            .groupBy("obras.prateleiraId"),
+        },
+        "p.id",
+        "e.prateleiraId"
+      )
       .then((estante) => res.json(estante))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => res.status(500).send(err));
   };
 
   const getObrasPublicas = (req, res) => {
@@ -208,10 +204,17 @@ module.exports = (app) => {
       .db("obras")
       .leftJoin("capitulos", "obras.id", "capitulos.obraId")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
+      .leftJoin("estante", "obras.id", "estante.obraId")
+      .leftJoin("comentarios", function () {
+        this.on("obras.id", "comentarios.obraId").andOn(
+          "capitulos.id",
+          "comentarios.capituloId"
+        );
+      })
       .select(
         "obras.*",
         app.db.raw(
-          "obras.id as obraId, COUNT(capitulos.id) as countCap, imagensObra.path, date_format(obras.dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado"
+          "obras.id as obraId, COUNT(DISTINCT capitulos.id) as countCap, imagensObra.path, date_format(obras.dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado, COUNT(distinct estante.id) AS estantes, COUNT(DISTINCT comentarios.id) AS comentarios"
         )
       )
 
@@ -223,12 +226,28 @@ module.exports = (app) => {
   };
 
   const getObraPrivadasStatus = (req, res) => {
-    app.db.queryBuilder()
-      .select(app.db.raw('p.id,p.nome, ifnull(e.total,0) as total '))
-      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") }).where({ "p.tipo": "M" })
-      .leftJoin({ e: app.db("obras").select("obras.prateleiraId").count({ total: "obras.id" }).where({ "obras.autor": req.params.usuarioId, "obras.publica": false }).groupBy("obras.prateleiraId") }, "p.id", "e.prateleiraId")
+    app.db
+      .queryBuilder()
+      .select(app.db.raw("p.id,p.nome, ifnull(e.total,0) as total "))
+      .from({ p: app.db("prateleiras").select("id", "nome", "tipo") })
+      .where({ "p.tipo": "M" })
+      .leftJoin(
+        {
+          e: app
+            .db("obras")
+            .select("obras.prateleiraId")
+            .count({ total: "obras.id" })
+            .where({
+              "obras.autor": req.params.usuarioId,
+              "obras.publica": false,
+            })
+            .groupBy("obras.prateleiraId"),
+        },
+        "p.id",
+        "e.prateleiraId"
+      )
       .then((estante) => res.json(estante))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => res.status(500).send(err));
   };
   const getObrasPrivadas = (req, res) => {
     app
@@ -336,10 +355,10 @@ module.exports = (app) => {
       app
         .db("imagensObra")
         .update({
-          name: 'sem_imagem.jpg',
+          name: "sem_imagem.jpg",
           path: image.url,
           key: `${req.params.obraId}-sem_imagem.jpg`,
-          size: 7750
+          size: 7750,
         })
         .where({ id: getImage.id })
         .then((_) => res.status(204).send())
@@ -348,17 +367,16 @@ module.exports = (app) => {
       app
         .db("imagensObra")
         .insert({
-          name: 'sem_imagem.jpg',
+          name: "sem_imagem.jpg",
           size: 7750,
-          path: req.body.url,
+          path: req.body.path,
           key: `${req.params.obraId}-sem_imagem.jpg`,
           obraId: req.params.obraId,
         })
         .then((_) => res.status(204).send())
         .catch((err) => res.status(500).send(err));
-
     }
-  }
+  };
 
   const uploadObra = async (req, res) => {
     const image = { ...req.body };
@@ -369,8 +387,6 @@ module.exports = (app) => {
       .select("id", "key", "obraId")
       .where({ obraId: req.params.obraId })
       .first();
-
-
 
     if (getImage && getImage.key !== image.key) {
       await s3
@@ -423,6 +439,6 @@ module.exports = (app) => {
     getObraPublicasStatus,
     getObraPrivadasStatus,
     contadorViews,
-    uploadSemImagem
+    uploadSemImagem,
   };
 };

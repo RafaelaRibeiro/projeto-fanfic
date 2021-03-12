@@ -24,11 +24,13 @@ module.exports = (app) => {
   app.route("/usuario/:id").put(app.api.usuario.updateUsuario);
   app.route("/usuario/:id/changepassword").put(app.api.usuario.updatePassword);
   app.route("/forgotPassword").put(app.api.auth.forgotPassword);
-  app.route("/resendToken/:token").put(app.api.auth.resendToken).get(app.api.auth.getUserByTokenActived)
-  app.route("/activeRegister/:token").put(app.api.auth.activeRegister)
+  app
+    .route("/resendToken/:token")
+    .put(app.api.auth.resendToken)
+    .get(app.api.auth.getUserByTokenActived);
+  app.route("/activeRegister/:token").put(app.api.auth.activeRegister);
   app.route("/usuario/:token/resetPassword").put(app.api.auth.resetPassword);
   app.route("/token/:token/").get(app.api.usuario.getUserByToken);
-
 
   app.post(
     "/perfil/:usuarioId/upload",
@@ -80,6 +82,10 @@ module.exports = (app) => {
     .route("/obra/:obraId/capitulo/:numero/comentarios")
     .get(app.api.obras.getComentarios);
 
+  app
+    .route("/obra/:obraId/capitulo/:numero/comentario/:comentarioId")
+    .get(app.api.obras.getComentariosNew);
+
   //**************************************Perfil*****************************************************
 
   app.route("/perfil/:user").put(app.api.perfil.updateUser);
@@ -95,6 +101,17 @@ module.exports = (app) => {
   app.route("/perfil/:user/sugestoes").get(app.api.perfil.getSugestoesPerfil);
 
   app.route("/perfil/:user/obras").get(app.api.perfil.getObrasPerfil);
+  app.route("/perfil/:user/seguindo").get(app.api.perfil.getSeguindoPerfil);
+  app
+    .route("/perfil/:user/seguindo/total")
+    .get(app.api.perfil.getCountSeguindo);
+  app.route("/perfil/:user/seguidores").get(app.api.perfil.getSeguidoresPerfil);
+  app
+    .route("/perfil/:user/seguidores/total")
+    .get(app.api.perfil.getCountSeguidores);
+  app
+    .route("/perfil/:usuarioId/conexao/:user")
+    .get(app.api.perfil.getConexaoByUser);
 
   app
     .route("/perfil/:autor/obras/shipp")
@@ -105,7 +122,7 @@ module.exports = (app) => {
   app.route("/mesa/:usuarioId/adicionarobra").post(app.api.mesa.save);
   app.route("/mesa/:obraId/editarobra").put(app.api.mesa.save);
   app.route("/mesa/:obraId/avisos").get(app.api.mesa.getAvisosByObra);
-  app.route("/mesa/:obraId/semimagem").post(app.api.mesa.uploadSemImagem)
+  app.route("/mesa/:obraId/semimagem").post(app.api.mesa.uploadSemImagem);
 
   app.post(
     "/mesa/:obraId/upload",
@@ -162,10 +179,13 @@ module.exports = (app) => {
     .put(app.api.notas.save)
     .get(app.api.notas.getById)
     .delete(app.api.notas.remove);
-};
 
-// (req, res) => {
-//   console.log(req.file);
-//   return res.json({ hello: "Teste" });
-// }
-// app.api.perfil.upload
+  //**************************************notificacoes*****************************************************
+  app
+    .route("/notificacoes/:obraId/atualizacao")
+    .post(app.api.notificacoes.atualizacao);
+
+  app
+    .route("/notificacoes/:obraId/comentario")
+    .post(app.api.notificacoes.comentario);
+};

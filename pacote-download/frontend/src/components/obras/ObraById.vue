@@ -1,5 +1,8 @@
 <template>
-  <v-card flat :style="{ padding: '50px' }">
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <v-card v-else flat :style="{ padding: '50px' }">
     <v-row>
       <v-col cols="12" md="10">
         <v-card flat>
@@ -47,8 +50,10 @@
           <v-card-title>Informações</v-card-title>
           <v-card-text>
             <p class="text--primary text-justify">
-              <strong>Status:</strong>
-              {{ obras.status }}
+              <strong class="mr-2">Status:</strong>
+              <v-chip small dark :color="colorStatus">
+                {{ obras.status }}
+              </v-chip>
             </p>
             <p class="text--primary text-justify">
               <strong>Início:</strong>
@@ -132,9 +137,11 @@
 <script>
 import { baseApiUrl } from '@/global'
 import axios from 'axios'
+import Loading from '../template/Loading'
 
 export default {
   name: 'ObraById',
+  components: { Loading },
   data() {
     return {
       obras: {},
@@ -142,13 +149,17 @@ export default {
       universos: {},
       avisos: [],
       caracteristicas: {},
+      visible: true,
     }
   },
 
   methods: {
     getObras() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}`
-      axios.get(url).then((res) => (this.obras = res.data))
+      axios.get(url).then((res) => {
+        this.obras = res.data
+        this.visible = false
+      })
     },
 
     getUniversos() {
@@ -183,6 +194,19 @@ export default {
       if (this.obras.classificacao === '18+') return (imagemClass = require('@/assets/18-anos.png'))
 
       return imagemClass
+    },
+
+    colorStatus() {
+      let cores = ''
+      if (this.obras.status === 'Em andamento' || this.obras.status === 'Em Andamento') {
+        return (cores = 'orange lighten-1')
+      } else if (this.obras.status === 'Suspensa') {
+        return (cores = 'red lighten-1')
+      } else {
+        cores = 'green darken-1'
+      }
+
+      return cores
     },
   },
 

@@ -1,5 +1,8 @@
 <template >
-  <div oncontextmenu="return false">
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <div v-else oncontextmenu="return false">
     <v-container>
       <v-row justify="center" class="mt-10">
         <v-col cols="12" sm="11">
@@ -118,6 +121,7 @@
           <ItemComentarios :comentario="comentario" />
         </v-col>
       </v-row>
+
       <v-container>
         <v-row justify="center">
           <v-col cols="12" sm="11">
@@ -167,7 +171,7 @@
 <script>
 import moment from 'moment'
 import ItemComentarios from './ItemComentarios'
-
+import Loading from '../template/Loading'
 import { baseApiUrl, showError } from '@/global'
 import { mapState } from 'vuex'
 import axios from 'axios'
@@ -175,7 +179,7 @@ import axios from 'axios'
 // import 'highlight.js/styles/monokai-sublime.css'
 export default {
   name: 'CapituloById',
-  components: { ItemComentarios },
+  components: { ItemComentarios, Loading },
 
   data() {
     return {
@@ -195,6 +199,7 @@ export default {
       ultimo: {},
       estante: {},
       lido: false,
+      visible: true,
     }
   },
 
@@ -285,6 +290,7 @@ export default {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
       axios.get(url).then((res) => {
         this.capitulo = res.data
+        this.visible = false
         if (this.capitulo.avisosId) this.dialog = true
         this.views()
       })

@@ -1,50 +1,54 @@
 <template id="axiosForm">
-  <v-container v-if="page">
-    <div class="loader" v-if="loading">
-      <span class="helper"></span>
-      <img class="loaderImg" src="@/assets/ajax-loader.gif" />
-    </div>
+  <v-container v-if="visible" fluid class="mt-1">
+    <Loading />
+  </v-container>
+  <v-card v-else>
+    <v-container v-if="page">
+      <div class="loader" v-if="loading">
+        <span class="helper"></span>
+        <img class="loaderImg" src="@/assets/ajax-loader.gif" />
+      </div>
 
-    <v-row>
-      <v-col>
-        <h1 class="display-1 font-weight-light mb-4">
-          <i> <v-icon x-large class="pa-3">mdi-notebook</v-icon>Editar Obra </i>
-        </h1>
-      </v-col>
-    </v-row>
+      <v-row>
+        <v-col>
+          <h1 class="display-1 font-weight-light mb-4">
+            <i> <v-icon x-large class="pa-3">mdi-notebook</v-icon>Editar Obra </i>
+          </h1>
+        </v-col>
+      </v-row>
 
-    <v-row justify="center">
-      <v-col cols="10">
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="obra.nome"
-              color="deep-purple darken-4"
-              dense
-              outlined
-              value
-              label="Título"
-            ></v-text-field>
+      <v-row justify="center">
+        <v-col cols="10">
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="obra.nome"
+                color="deep-purple darken-4"
+                dense
+                outlined
+                value
+                label="Título"
+              ></v-text-field>
 
-            <v-card class="ma-1" flat v-if="imagemObra.path">
-              <v-img contain aspect-ratio="2" v-if="urlObra" :src="urlObra"></v-img>
-              <v-img contain aspect-ratio="2" v-else :src="imagemObra.path"></v-img>
+              <v-card class="ma-1" flat v-if="imagemObra.path">
+                <v-img contain aspect-ratio="2" v-if="urlObra" :src="urlObra"></v-img>
+                <v-img contain aspect-ratio="2" v-else :src="imagemObra.path"></v-img>
 
-              <v-card flat class="d-flex">
-                <v-btn class="my-10 mr-4" color="primary" @click.native="openFileDialogObra">Alterar</v-btn>
-                <v-btn dark class="my-10" color="red darken-1" @click="imagemObra = []">Remover </v-btn>
+                <v-card flat class="d-flex">
+                  <v-btn class="my-10 mr-4" color="primary" @click.native="openFileDialogObra">Alterar</v-btn>
+                  <v-btn dark class="my-10" color="red darken-1" @click="removeImage">Remover </v-btn>
+                </v-card>
               </v-card>
-            </v-card>
 
-            <b-form-file
-              v-model="imagemUpload"
-              id="file-upload-obra"
-              accept="image/jpeg, image/png, image/bmp"
-              style="display: none"
-              @change="onFileChangeObra"
-            ></b-form-file>
+              <b-form-file
+                v-model="imagemUpload"
+                id="file-upload-obra"
+                accept="image/jpeg, image/png, image/bmp"
+                style="display: none"
+                @change="onFileChangeObra"
+              ></b-form-file>
 
-            <!-- <v-file-input
+              <!-- <v-file-input
               small-chips
               v-model="imagemUpload"
               color="deep-purple darken-4"
@@ -57,194 +61,195 @@
               accept="image/png, image/jpeg, image/bmp"
             ></v-file-input> -->
 
-            <v-textarea
-              v-model="obra.sinopse"
-              color="deep-purple darken-4"
-              dense
-              outlined
-              auto-grow
-              label="Sinopse"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="6">
-            <v-autocomplete
-              v-model="select"
-              :loading="loading"
-              :items="items"
-              :search-input.sync="searchA"
-              cache-items
-              outlined
-              dense
-              label="Co-Autor"
-            ></v-autocomplete>
-            <v-select
-              v-model="obra.categoriaId"
-              :items="categorias"
-              label="Categoria"
-              item-text="nome"
-              item-value="id"
-              outlined
-              dense
-            ></v-select>
+              <v-textarea
+                v-model="obra.sinopse"
+                color="deep-purple darken-4"
+                dense
+                outlined
+                auto-grow
+                label="Sinopse"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="6">
+              <v-autocomplete
+                v-model="select"
+                :loading="loading"
+                :items="items"
+                :search-input.sync="searchA"
+                cache-items
+                outlined
+                dense
+                label="Co-Autor"
+              ></v-autocomplete>
+              <v-select
+                v-model="obra.categoriaId"
+                :items="categorias"
+                label="Categoria"
+                item-text="nome"
+                item-value="id"
+                outlined
+                dense
+              ></v-select>
 
-            <v-autocomplete
-              v-model="obra.shippPrincipal"
-              :items="shippLista"
-              label="Shipp Principal"
-              item-text="nome"
-              item-value="id"
-              v-show="!disabled"
-              :disabled="disabled"
-              dense
-              small
-              outlined
-              color="deep-purple darken-4"
-            ></v-autocomplete>
-          </v-col>
+              <v-autocomplete
+                v-model="obra.shippPrincipal"
+                :items="shippLista"
+                label="Shipp Principal"
+                item-text="nome"
+                item-value="id"
+                v-show="!disabled"
+                :disabled="disabled"
+                dense
+                small
+                outlined
+                color="deep-purple darken-4"
+              ></v-autocomplete>
+            </v-col>
 
-          <v-col cols="6">
-            <v-select
-              v-model="obra.classificacao"
-              :items="classificacao"
-              label="Classificação"
-              item-text="nome"
-              item-value="cod"
-              dense
-              outlined
-              color="deep-purple darken-4"
-            ></v-select>
-            <v-autocomplete
-              v-model="obra.fandonsId"
-              cache-items
-              :items="list"
-              outlined
-              dense
-              v-show="!disabled"
-              :disabled="disabled"
-              multiple
-              item-text="nome"
-              item-value="id"
-              label="Universo"
-            ></v-autocomplete>
+            <v-col cols="6">
+              <v-select
+                v-model="obra.classificacao"
+                :items="classificacao"
+                label="Classificação"
+                item-text="nome"
+                item-value="cod"
+                dense
+                outlined
+                color="deep-purple darken-4"
+              ></v-select>
+              <v-autocomplete
+                v-model="obra.fandonsId"
+                cache-items
+                :items="list"
+                outlined
+                dense
+                v-show="!disabled"
+                :disabled="disabled"
+                multiple
+                item-text="nome"
+                item-value="id"
+                label="Universo"
+              ></v-autocomplete>
 
-            <v-autocomplete
-              v-model="obra.shippSecundario"
-              cache-items
-              :items="shippLista"
-              multiple
-              outlined
-              v-show="!disabled"
-              :disabled="disabled"
-              dense
-              item-text="nome"
-              item-value="id"
-              label="Shipp Secundário"
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
+              <v-autocomplete
+                v-model="obra.shippSecundario"
+                cache-items
+                :items="shippLista"
+                multiple
+                outlined
+                v-show="!disabled"
+                :disabled="disabled"
+                dense
+                item-text="nome"
+                item-value="id"
+                label="Shipp Secundário"
+              ></v-autocomplete>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col>
-            <h5>
-              <i>Características da Obra</i>
-            </h5>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col>
+              <h5>
+                <i>Características da Obra</i>
+              </h5>
+            </v-col>
+          </v-row>
 
-        <v-row justify="center">
-          <v-col>
-            <v-checkbox
-              v-for="c in caracteristicas.slice(0, 4)"
-              :key="c.id"
-              v-model="obra.caracteristicasId"
-              dense
-              class="ma-0"
-              :label="c.nome"
-              :value="c.id"
-            ></v-checkbox>
-          </v-col>
-          <v-col>
-            <v-checkbox
-              v-for="c in caracteristicas.slice(4, 8)"
-              :key="c.id"
-              v-model="obra.caracteristicasId"
-              dense
-              class="ma-0"
-              :label="c.nome"
-              :value="c.id"
-            ></v-checkbox>
-          </v-col>
-          <v-col>
-            <v-checkbox
-              v-for="c in caracteristicas.slice(8, 12)"
-              :key="c.id"
-              v-model="obra.caracteristicasId"
-              dense
-              class="ma-0"
-              :label="c.nome"
-              :value="c.id"
-            ></v-checkbox>
-          </v-col>
-        </v-row>
+          <v-row justify="center">
+            <v-col>
+              <v-checkbox
+                v-for="c in caracteristicas.slice(0, 4)"
+                :key="c.id"
+                v-model="obra.caracteristicasId"
+                dense
+                class="ma-0"
+                :label="c.nome"
+                :value="c.id"
+              ></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-checkbox
+                v-for="c in caracteristicas.slice(4, 8)"
+                :key="c.id"
+                v-model="obra.caracteristicasId"
+                dense
+                class="ma-0"
+                :label="c.nome"
+                :value="c.id"
+              ></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-checkbox
+                v-for="c in caracteristicas.slice(8, 12)"
+                :key="c.id"
+                v-model="obra.caracteristicasId"
+                dense
+                class="ma-0"
+                :label="c.nome"
+                :value="c.id"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col>
-            <h5>
-              <i>Avisos Importantes</i>
-            </h5>
-          </v-col>
-        </v-row>
+          <v-row>
+            <v-col>
+              <h5>
+                <i>Avisos Importantes</i>
+              </h5>
+            </v-col>
+          </v-row>
 
-        <v-row justify="center">
-          <v-col>
-            <v-checkbox
-              v-for="aviso in avisos.slice(0, 4)"
-              :key="aviso.id"
-              v-model="obra.avisosId"
-              dense
-              class="ma-0"
-              :label="aviso.nome"
-              :value="aviso.id"
-            ></v-checkbox>
-          </v-col>
-          <v-col>
-            <v-checkbox
-              v-for="aviso in avisos.slice(4, 8)"
-              :key="aviso.id"
-              v-model="obra.avisosId"
-              dense
-              class="ma-0"
-              :label="aviso.nome"
-              :value="aviso.id"
-            ></v-checkbox>
-          </v-col>
-          <v-col>
-            <v-checkbox
-              v-for="aviso in avisos.slice(8, 12)"
-              :key="aviso.id"
-              v-model="obra.avisosId"
-              dense
-              class="ma-0"
-              :label="aviso.nome"
-              :value="aviso.id"
-            ></v-checkbox>
-          </v-col>
-        </v-row>
+          <v-row justify="center">
+            <v-col>
+              <v-checkbox
+                v-for="aviso in avisos.slice(0, 4)"
+                :key="aviso.id"
+                v-model="obra.avisosId"
+                dense
+                class="ma-0"
+                :label="aviso.nome"
+                :value="aviso.id"
+              ></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-checkbox
+                v-for="aviso in avisos.slice(4, 8)"
+                :key="aviso.id"
+                v-model="obra.avisosId"
+                dense
+                class="ma-0"
+                :label="aviso.nome"
+                :value="aviso.id"
+              ></v-checkbox>
+            </v-col>
+            <v-col>
+              <v-checkbox
+                v-for="aviso in avisos.slice(8, 12)"
+                :key="aviso.id"
+                v-model="obra.avisosId"
+                dense
+                class="ma-0"
+                :label="aviso.nome"
+                :value="aviso.id"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
 
-        <v-row>
-          <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Salvar</v-btn>
-            <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
-  <v-container v-else>
-    <error403 />
-  </v-container>
+          <v-row>
+            <v-col cols="12" class="text-center">
+              <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Salvar</v-btn>
+              <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container v-else>
+      <error403 />
+    </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -253,11 +258,13 @@ import { baseApiUrl, showError } from '@/global'
 import axios from 'axios'
 import moment from 'moment'
 import error403 from '../template/error403'
+import Loading from '../template/Loading'
 export default {
   name: 'EditarObra',
-  components: { error403 },
+  components: { error403, Loading },
   data() {
     return {
+      alterImage: false,
       selectedCateg: [],
       search: [],
       selected: [],
@@ -302,6 +309,7 @@ export default {
       page: true,
       urlObra: null,
       url: `${baseApiUrl}/files/sem_imagem.jpg`,
+      visible: true,
     }
   },
 
@@ -325,14 +333,13 @@ export default {
           this.imagemObra.path = this.obra.path
           this.imagemObra.key = this.obra.key
           this.imagemObra.obraId = this.obra.obraId
+          this.visible = false
         })
-        .catch(() => {
-          // this.page = false
-        })
+        .catch(showError)
     },
 
     salvarObra() {
-      this.loading = true
+      this.visible = true
       axios
         .put(`${baseApiUrl}/mesa/${this.$route.params.obraId}/editarobra`, {
           nome: this.obra.nome,
@@ -349,15 +356,18 @@ export default {
           avisosId: [this.obra.avisosId].join(','),
         })
         .then(() => {
-          if (this.imagemObra.key == null) {
-            this.semImagem()
-          } else {
-            this.uploadImagem()
+          if (this.alterImage === true) {
+            if (this.imagemObra.key == null) {
+              this.semImagem()
+            } else {
+              this.uploadImagem()
+            }
           }
+
+          this.visible = false
+          this.$toast.success('Obra alterada com sucesso')
         })
-        .finally(() => {
-          this.loading = false
-        })
+
         .catch(showError)
     },
 
@@ -367,7 +377,6 @@ export default {
           url: this.url,
         })
         .then(() => {
-          this.$toast.success('Obra alterada com sucesso')
           this.$router.push({ path: `/obra/${this.obra.id}/` })
         })
         .catch(showError)
@@ -380,10 +389,14 @@ export default {
       axios
         .post(`${baseApiUrl}/mesa/${this.obra.id}/upload`, fd)
         .then(() => {
-          this.$toast.success('Obra alterada com sucesso')
           this.$router.push({ path: `/obra/${this.obra.id}/` })
         })
         .catch(showError)
+    },
+
+    removeImage() {
+      this.alterImage = true
+      this.imagemObra = []
     },
 
     getCategorias() {
@@ -425,6 +438,7 @@ export default {
 
     openFileDialogObra() {
       document.getElementById('file-upload-obra').click()
+      this.alterImage = true
     },
   },
 
