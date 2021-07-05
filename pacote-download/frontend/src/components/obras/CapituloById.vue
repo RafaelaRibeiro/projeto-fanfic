@@ -78,7 +78,7 @@
       <v-row justify="center">
         <v-col cols="12" sm="10">
           <v-btn v-show="botaoLido" dark color="deep-purple darken-4" @click="checkRead">
-            <v-icon left>mdi-check-bold</v-icon>MARCAR COMO LIDO
+            <v-icon left>mdi-check-bold</v-icon>CAPÍTULO LIDO
           </v-btn>
 
           <v-btn v-show="!estante" color="deep-purple darken-4" dark @click="saveEstante">

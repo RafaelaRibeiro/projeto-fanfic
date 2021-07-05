@@ -119,7 +119,7 @@ export default {
       {
         icon: 'mdi-desk',
         'icon-alt': 'mdi-chevron-down',
-        text: 'Minha Mesa',
+        text: 'Mesa do Autor',
         notificacao: 0,
         acao: '',
         model: false,

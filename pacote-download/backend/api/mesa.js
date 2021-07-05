@@ -10,6 +10,7 @@ module.exports = (app) => {
 
     try {
       existsOrError(obra.nome, "Título não informado");
+      existsOrError(obra.modadelidadeId, "Modalidade não informada");
       existsOrError(obra.categoriaId, "Categoria não Informada");
       existsOrError(obra.classificacao, "Classificação não informada");
       existsOrError(obra.sinopse), "Sinopse não Informada";

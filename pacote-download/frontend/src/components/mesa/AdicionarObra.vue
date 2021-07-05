@@ -53,8 +53,21 @@
             ></v-textarea>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="6">
+        <v-row class="mb-n9">
+          <v-col>
+            <v-select
+              v-model="obra.modalidadeId"
+              :items="modalidades"
+              label="Modalidade"
+              item-text="nome"
+              item-value="id"
+              outlined
+              dense
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row class="mb-n9">
+          <v-col>
             <v-autocomplete
               v-model="model"
               :items="items"
@@ -72,6 +85,9 @@
               dense
               label="Co-Autor"
               placeholder="Digite o usuário..."
+              @change="buscar = ''"
+              :disabled="!tipoAu"
+              v-show="tipoAu"
             >
               <template v-slot:selection="data">
                 <v-chip
@@ -94,32 +110,9 @@
                 </v-list>
               </template>
             </v-autocomplete>
-
-            <v-select
-              v-model="obra.categoriaId"
-              :items="categorias"
-              label="Categoria"
-              item-text="nome"
-              item-value="id"
-              outlined
-              dense
-            ></v-select>
-
-            <v-autocomplete
-              v-model="obra.shippPrincipal"
-              :items="shippLista"
-              label="Shipp Principal"
-              item-text="nome"
-              item-value="id"
-              dense
-              small
-              outlined
-              v-show="!disabled"
-              :disabled="disabled"
-              color="deep-purple darken-4"
-            ></v-autocomplete>
           </v-col>
-
+        </v-row>
+        <v-row class="mb-n9">
           <v-col cols="6">
             <v-select
               v-model="obra.classificacao"
@@ -131,35 +124,174 @@
               outlined
               color="deep-purple darken-4"
             ></v-select>
+          </v-col>
+          <v-col cols="6">
+            <v-select
+              v-model="obra.categoriaId"
+              :items="categorias"
+              label="Categoria"
+              item-text="nome"
+              item-value="id"
+              outlined
+              dense
+            ></v-select>
+          </v-col>
+        </v-row>
+
+        <v-row class="mb-n9">
+          <v-col>
             <v-autocomplete
               v-model="obra.fandonsId"
-              cache-items
               :items="list"
+              :search-input.sync="searchUniverso"
               outlined
               small-chips
               clearable
+              hide-selected
               dense
               v-show="!disabled"
               :disabled="disabled"
               multiple
+              deletable-chips
               item-text="nome"
               item-value="id"
               label="Universo"
-            ></v-autocomplete>
+              @change="searchUniverso = ''"
+              :menu-props="{
+                maxHeight: 270,
+                closeOnContentClick: true,
+              }"
+            >
+              <template v-if="obra.categoriaId" v-slot:no-data>
+                <v-dialog v-model="dialog" max-width="800px">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span>
+                      Universo <strong>{{ searchUniverso }}</strong> não encontrado. Clique
+                      <v-btn small text v-bind="attrs" v-on="on"><strong>aqui</strong></v-btn> para incluir
+                    </span>
+                  </template>
+                  <v-card>
+                    <v-card-title color="white" class="deep-purple darken-4 font-weight-light">
+                      <i class="white--text">Incluir Universo</i>
+                    </v-card-title>
+                    <v-container>
+                      <v-row class="ma-2">
+                        <v-col cols="8">
+                          <v-text-field
+                            v-model="obra.nome"
+                            color="deep-purple darken-4"
+                            dense
+                            outlined
+                            value
+                            label="Universo"
+                            placeholder="Digite o nome do universo"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col>
+                          <v-select
+                            v-model="obra.categoriaId"
+                            :items="categorias"
+                            label="Categoria"
+                            item-text="nome"
+                            item-value="id"
+                            outlined
+                            dense
+                          ></v-select>
+                        </v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col cols="12" class="text-center">
+                          <v-btn dark class="mr-3" color="purple darken-4">Salvar</v-btn>
+                          <v-btn dark class="ml-3" color="red darken-4" @click="reset">Cancelar</v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card>
+                </v-dialog>
+              </template>
+              <template v-else v-slot:no-data>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title> Selecione uma categoria </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-autocomplete>
+          </v-col>
+        </v-row>
 
+        <v-row>
+          <v-col cols="6">
+            <v-combobox
+              v-model="obra.shippPrincipal"
+              :items="shippLista"
+              :search-input.sync="searchShipp"
+              item-text="nome"
+              item-value="id"
+              hide-selected
+              dense
+              small
+              outlined
+              clearable
+              deletable-chips
+              label="Shipp Principal"
+              color="deep-purple darken-4"
+              small-chips
+              v-show="!disabled"
+              :disabled="disabled"
+            >
+              <template v-if="obra.fandonsId.length" v-slot:no-data>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      No results matching "<strong>{{ searchShipp }}</strong
+                      >". Press <kbd>enter</kbd> to create a new one
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+              <template v-else v-slot:no-data>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title> Selecione um universo </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-combobox>
+          </v-col>
+          <v-col>
             <v-autocomplete
               v-model="obra.shippSecundario"
-              cache-items
               :items="shippLista"
+              :search-input.sync="searchShippSec"
+              hide-selected
               multiple
               outlined
               dense
+              small-chips
+              deletable-chips
+              clearable
               v-show="!disabled"
               :disabled="disabled"
               item-text="nome"
               item-value="id"
               label="Shipp Secundário"
+              @change="searchShippSec = ''"
             ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="obra.nome"
+              color="deep-purple darken-4"
+              dense
+              outlined
+              value
+              label="Insira o link do twitter"
+              :disabled="tipoAu"
+              v-show="!tipoAu"
+            ></v-text-field>
           </v-col>
         </v-row>
 
@@ -253,7 +385,10 @@
 
         <v-row>
           <v-col cols="12" class="text-center">
-            <v-btn dark class="ma-3" color="purple darken-4" @click="salvarObra">Avançar</v-btn>
+            <v-btn v-if="obra.modalidadeId === 4" dark class="ma-3" color="purple darken-4" @click="salvarObra"
+              >Gravar</v-btn
+            >
+            <v-btn v-else dark class="ma-3" color="purple darken-4" @click="salvarObra">Avançar</v-btn>
             <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
           </v-col>
         </v-row>
@@ -272,7 +407,11 @@ export default {
     return {
       selectedCateg: [],
       search: [],
+      searchShipp: null,
+      searchShippSec: null,
+      searchUniverso: null,
       selected: [],
+      dialog: false,
       options: [
         { text: 'Orange', value: 'orange' },
         { text: 'Apple', value: 'apple' },
@@ -288,6 +427,7 @@ export default {
       name: 'Midnight Crew',
       shipps: [],
       categorias: [],
+      modalidades: [],
       obra: { fandonsId: [], caracteristicasId: [], avisosId: [] },
       ultimaObra: null,
       universos: [],
@@ -323,6 +463,7 @@ export default {
           autor: this.usuario.id,
           publica: this.obra.publica,
           categoriaId: this.obra.categoriaId,
+          modalidadadeId: this.obra.modalidadeId,
           fandonsId: [this.obra.fandonsId].join(','),
           shippPrincipal: this.obra.shippPrincipal,
           shippSecundario: [this.obra.shippSecundario].join(','),
@@ -401,10 +542,17 @@ export default {
         this.categorias = res.data
       })
     },
+
+    getModalidades() {
+      const url = ` ${baseApiUrl}/modalidades`
+      axios(url).then((res) => {
+        this.modalidades = res.data
+      })
+    },
     getUniversos() {
       const url = ` ${baseApiUrl}/universos`
       axios(url).then((res) => {
-        this.universos = res.data.concat(this.universos)
+        this.universos = res.data
       })
     },
     getShipps() {
@@ -432,6 +580,11 @@ export default {
       axios(url).then((res) => {
         this.coautor = res.data
       })
+    },
+
+    reset() {
+      this.nota = {}
+      this.dialog = false
     },
   },
 
@@ -488,11 +641,20 @@ export default {
       }
       return disabled
     },
+
+    tipoAu() {
+      let disabled = false
+      if (this.obra.modalidadeId !== 4) {
+        disabled = true
+      }
+      return disabled
+    },
   },
 
   mounted() {
     this.getCategorias()
     this.getUniversos()
+    this.getModalidades()
     this.getShipps()
     this.getCaracteristicas()
     this.getAvisos()
@@ -505,5 +667,9 @@ export default {
 .theme--light.v-label {
   color: #000;
   margin-bottom: 0;
+}
+
+.v-select__selections {
+  margin-top: 5px;
 }
 </style>

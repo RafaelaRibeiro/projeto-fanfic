@@ -9,10 +9,9 @@ module.exports = (app) => {
   app.route("/usuarios").post(app.api.usuario.save).get(app.api.usuario.get);
   app.route("/categorias").get(app.api.categorias.getCategoria);
   app.route("/universos").get(app.api.universo.getUniverso);
+  app.route("/modalidades").get(app.api.modalidades.getModalidade);
   app.route("/avisos").get(app.api.avisos.getAvisos);
   app.route("/caracteristicas").get(app.api.caracteristicas.getCaracteristicas);
-
-  app.route("/shipp").get(app.api.shipps.getShipp);
 
   app.route("/prateleiras").get(app.api.prateleiras.get);
 
@@ -179,6 +178,10 @@ module.exports = (app) => {
     .put(app.api.notas.save)
     .get(app.api.notas.getById)
     .delete(app.api.notas.remove);
+
+  //***************************************Shipp**********************************************************
+
+  app.route("/shipp").get(app.api.shipps.getShipp).post(app.api.shipps.save);
 
   //**************************************notificacoes*****************************************************
   app

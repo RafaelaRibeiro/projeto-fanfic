@@ -1,11 +1,12 @@
-module.exports = app => {
+module.exports = (app) => {
+  const getUniverso = (req, res) => {
+    app
+      .db("fandons")
+      .orderBy("nome")
 
-    const getUniverso = (req,res) => {
-        app.db('fandons')
-            
-            .then(universo => res.json(universo))
-            .catch(err => res.status(500). send())
-    }
+      .then((universo) => res.json(universo))
+      .catch((err) => res.status(500).send());
+  };
 
-    return { getUniverso}
-}
+  return { getUniverso };
+};
