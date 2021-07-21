@@ -1,30 +1,31 @@
-<template >
+<template>
   <v-container v-if="visible" fluid class="mt-1">
     <Loading />
   </v-container>
-  <div v-else oncontextmenu="return false">
-    <v-container>
-      <v-row justify="center" class="mt-10">
-        <v-col cols="12" sm="11">
-          <v-card flat height="100px">
-            <h1 class="display-1 font-weight-light" id="top">
-              <i>
-                Obra -
-                <router-link :to="{ name: 'ObraById', params: { obraId: capitulo.obraId } }">{{
-                  capitulo.obraNome
-                }}</router-link>
-              </i>
-            </h1>
-          </v-card>
-        </v-col>
-      </v-row>
+
+  <v-container v-else>
+    <v-row justify="center" class="mt-10">
+      <v-col cols="12" sm="11">
+        <v-card flat height="100px">
+          <h1 class="display-1 font-weight-light" id="top">
+            <i>
+              Obra -
+              <router-link :to="{ name: 'ObraById', params: { obraId: capitulo.obraId } }">{{
+                capitulo.obraNome
+              }}</router-link>
+            </i>
+          </h1>
+        </v-card>
+      </v-col>
+    </v-row>
+    <div oncontextmenu="return false">
       <v-row justify="center">
         <v-col cols="12" sm="11">
           <v-card v-show="capitulo.notasIniciais" flat outlined color="deep-purple lighten-5">
             <v-card-title>Notas Iniciais</v-card-title>
-            <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
-              capitulo.notasIniciais
-            }}</v-card-text>
+            <v-card-text style="white-space: pre-line" class="text--primary text-justify">
+              <div class="conteudo">{{ capitulo.notasIniciais }}</div>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -49,9 +50,9 @@
         <v-col cols="12" sm="10">
           <v-card flat outlined color="deep-purple lighten-5">
             <v-card-title>Notas Finais</v-card-title>
-            <v-card-text style="white-space: pre-line" class="text--primary text-justify">{{
-              capitulo.notasFinais
-            }}</v-card-text>
+            <v-card-text style="white-space: pre-line" class="text--primary text-justify">
+              <div class="conteudo">{{ capitulo.notasFinais }}</div></v-card-text
+            >
           </v-card>
         </v-col>
       </v-row>
@@ -95,77 +96,75 @@
           </v-card>
         </v-col>
       </v-row>
+    </div>
 
+    <v-row justify="center">
+      <v-col cols="12" sm="10">
+        <v-textarea
+          v-model="comentar"
+          color="deep-purple darken-4"
+          class="text-justfy"
+          outlined
+          auto-grow
+          clearable
+          label="Deixe seu Comentário"
+          clear-icon="cancel"
+        ></v-textarea>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12" sm="10" class="d-flex justify-end">
+        <v-btn dark color="deep-purple darken-4" @click="salvarComentario">Salvar</v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row justify="center">
+      <v-col cols="12" sm="10" v-for="comentario in comentarios" :key="comentario.id">
+        <ItemComentarios :comentario="comentario" />
+      </v-col>
+    </v-row>
+
+    <v-container>
       <v-row justify="center">
-        <v-col cols="12" sm="10">
-          <v-textarea
-            v-model="comentar"
+        <v-col cols="12" sm="11">
+          <v-pagination
             color="deep-purple darken-4"
-            class="text-justfy"
-            outlined
-            auto-grow
-            clearable
-            label="Deixe seu Comentário"
-            clear-icon="cancel"
-          ></v-textarea>
+            v-model="page"
+            :total-visible="7"
+            :length="totalPage"
+          ></v-pagination>
         </v-col>
-      </v-row>
-      <v-row justify="center">
-        <v-col cols="12" sm="10" class="d-flex justify-end">
-          <v-btn dark color="deep-purple darken-4" @click="salvarComentario">Salvar</v-btn>
-        </v-col>
-      </v-row>
-
-      <v-row justify="center">
-        <v-col cols="12" sm="10" v-for="comentario in comentarios" :key="comentario.id">
-          <ItemComentarios :comentario="comentario" />
-        </v-col>
-      </v-row>
-
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12" sm="11">
-            <v-pagination
-              color="deep-purple darken-4"
-              v-model="page"
-              :total-visible="7"
-              :length="totalPage"
-            ></v-pagination>
-          </v-col>
-        </v-row>
-      </v-container>
-
-      <v-row align="center" justify="center">
-        <v-dialog v-model="dialog" max-width="500" height="500px">
-          <v-card align="center">
-            <v-row align="center" justify="center" no-gutters>
-              <v-avatar class="ma-10" size="90">
-                <v-img src="@/assets/alert-circle.png"></v-img>
-              </v-avatar>
-            </v-row>
-            <span class="md-headline d-flex justify-center mb-5">Esse capítulo contém avisos:</span>
-
-            <span v-for="aviso in avisos" :key="aviso.nome" class="md-title d-flex justify-center mb-5">{{
-              aviso.nome
-            }}</span>
-
-            <v-card-actions class="justify-center">
-              <router-link
-                :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
-              >
-                <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false"
-                  >Próximo Capítulo</v-btn
-                >
-              </router-link>
-              <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false"
-                >Continuar</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-row>
     </v-container>
-  </div>
+
+    <v-row align="center" justify="center">
+      <v-dialog v-model="dialog" max-width="500" height="500px">
+        <v-card align="center">
+          <v-row align="center" justify="center" no-gutters>
+            <v-avatar class="ma-10" size="90">
+              <v-img src="@/assets/alert-circle.png"></v-img>
+            </v-avatar>
+          </v-row>
+          <span class="md-headline d-flex justify-center mb-5">Esse capítulo contém avisos:</span>
+
+          <span v-for="aviso in avisos" :key="aviso.nome" class="md-title d-flex justify-center mb-5">{{
+            aviso.nome
+          }}</span>
+
+          <v-card-actions class="justify-center">
+            <router-link
+              :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero + 1 } }"
+            >
+              <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false"
+                >Próximo Capítulo</v-btn
+              >
+            </router-link>
+            <v-btn color="deep-purple darken-4" class="font-weight-bold" text @click="dialog = false">Continuar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -272,15 +271,16 @@ export default {
 
     getEstante() {
       const url = `${baseApiUrl}/${this.$store.state.usuario.id}/estante/${this.$route.params.obraId} `
-      axios.get(url).then((res) => {
+      axios.get(url).then(res => {
         this.estante = res.data
       })
     },
 
     loadComentarios() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/comentarios?page=${this.page}`
-      axios.get(url).then((res) => {
+      axios.get(url).then(res => {
         this.comentarios = res.data.data
+
         this.count = res.data.count
         this.limit = res.data.limit
         this.totalPage = res.data.totalPage
@@ -288,7 +288,7 @@ export default {
     },
     getCapitulo() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}`
-      axios.get(url).then((res) => {
+      axios.get(url).then(res => {
         this.capitulo = res.data
         this.visible = false
         if (this.capitulo.avisosId) this.dialog = true
@@ -298,11 +298,11 @@ export default {
 
     ultimoCapitulo() {
       const url = ` ${baseApiUrl}/mesa/${this.$route.params.obraId}/ultimocapitulo/`
-      axios.get(url).then((res) => (this.ultimo = res.data))
+      axios.get(url).then(res => (this.ultimo = res.data))
     },
     getAvisos() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulo/${this.$route.params.numero}/avisos`
-      axios.get(url).then((res) => (this.avisos = res.data))
+      axios.get(url).then(res => (this.avisos = res.data))
     },
 
     checkRead() {
@@ -359,8 +359,7 @@ export default {
 }
 </script>
 
-
-<style >
+<style>
 .botao {
   margin-top: 200px;
 }

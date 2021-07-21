@@ -10,27 +10,30 @@ module.exports = (app) => {
 
     try {
       existsOrError(obra.nome, "Título não informado");
-      existsOrError(obra.modadelidadeId, "Modalidade não informada");
+      existsOrError(obra.modalidadeId, "Modalidade não informada");
       existsOrError(obra.categoriaId, "Categoria não Informada");
       existsOrError(obra.classificacao, "Classificação não informada");
-      existsOrError(obra.sinopse), "Sinopse não Informada";
+      existsOrError(obra.sinopse, "Sinopse não Informada");
+      if (obra.modalidadeId == 4) {
+        existsOrError(obra.linkTwitter, "Link do Twitter não informado");
+      }
+
+      if (obra.id) {
+        await app
+          .db("obras")
+          .update(obra)
+          .where({ id: obra.id })
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      } else {
+        await app
+          .db("obras")
+          .insert(obra)
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      }
     } catch (msg) {
       res.status(400).send(msg);
-    }
-
-    if (obra.id) {
-      await app
-        .db("obras")
-        .update(obra)
-        .where({ id: obra.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      await app
-        .db("obras")
-        .insert(obra)
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
     }
   };
 
@@ -78,38 +81,38 @@ module.exports = (app) => {
       existsOrError(contador.obraId, "Obra não informada");
       existsOrError(contador.capituloId, "Capitulo não informado");
       existsOrError(contador.usuarioId, "Usuario não informado");
-    } catch (msg) {
-      res.status(400).send(msg);
-    }
 
-    const cont = await app
-      .db("contador")
-      .select("id", "views")
-      .where({
-        obraId: contador.obraId,
-        capituloId: contador.capituloId,
-        usuarioId: contador.usuarioId,
-      })
-      .first();
-
-    if (cont) {
-      app
+      const cont = await app
         .db("contador")
-        .update({ views: cont.views })
-        .where({ id: cont.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      app
-        .db("contador")
-        .insert({
-          views: 1,
+        .select("id", "views")
+        .where({
           obraId: contador.obraId,
           capituloId: contador.capituloId,
           usuarioId: contador.usuarioId,
         })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
+        .first();
+
+      if (cont) {
+        app
+          .db("contador")
+          .update({ views: cont.views })
+          .where({ id: cont.id })
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      } else {
+        app
+          .db("contador")
+          .insert({
+            views: 1,
+            obraId: contador.obraId,
+            capituloId: contador.capituloId,
+            usuarioId: contador.usuarioId,
+          })
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      }
+    } catch (msg) {
+      res.status(400).send(msg);
     }
   };
 
@@ -306,23 +309,22 @@ module.exports = (app) => {
 
     try {
       existsOrError(capitulo.conteudo, "Conteudo não Informada");
+      if (capitulo.id) {
+        app
+          .db("capitulos")
+          .update(capitulo)
+          .where({ id: capitulo.id })
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      } else {
+        app
+          .db("capitulos")
+          .insert(capitulo)
+          .then((_) => res.status(240).send())
+          .catch((err) => res.status(500).send());
+      }
     } catch (msg) {
       res.status(400).send(msg);
-    }
-
-    if (capitulo.id) {
-      app
-        .db("capitulos")
-        .update(capitulo)
-        .where({ id: capitulo.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      app
-        .db("capitulos")
-        .insert(capitulo)
-        .then((_) => res.status(240).send())
-        .catch((err) => res.status(500).send());
     }
   };
 

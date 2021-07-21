@@ -7,16 +7,34 @@ module.exports = (app) => {
 
     try {
       existsOrError(comentario.conteudo, "Comentário não informado");
+
+      app
+        .db("comentarios")
+        .insert(comentario)
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
     } catch (msg) {
       res.status(400).send(msg);
     }
-
-    app
-      .db("comentarios")
-      .insert(comentario)
-      .then((_) => res.status(204).send())
-      .catch((err) => res.status(500).send(err));
   };
+
+  const saveResposta = (req, res) => {
+    const resposta = { ...req.body };
+    if (req.params.id) resposta.id = req.params.id;
+
+    try {
+      existsOrError(resposta.conteudo, "Resposta não informada");
+
+      app
+        .db("comentarios")
+        .insert(resposta)
+        .then((_) => res.status(204).send())
+        .catch((err) => res.status(500).send(err));
+    } catch (msg) {
+      res.status(400).send(msg);
+    }
+  };
+
   const limit = 5; // usado para paginação
   const getComentarios = async (req, res) => {
     const page = req.query.page || 1;
@@ -43,7 +61,7 @@ module.exports = (app) => {
       )
       .select(
         app.db.raw(
-          "comentarios.id, comentarios.usuarioId, usuarios.nome, imagensPerfil.path, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
+          "comentarios.id, comentarios.usuarioId, usuarios.nome, imagensPerfil.path, CONVERT(comentarios.conteudo USING utf8) as conteudo , date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario, comentarios.obraId, comentarios.capituloId"
         )
       )
       .where({
@@ -68,7 +86,9 @@ module.exports = (app) => {
           "comentarioId",
           "usuarioId",
           "conteudo",
-          "dataComentario"
+          "dataComentario",
+          "obraId",
+          "capituloId"
         )
           .from("comentarios")
           .where({ "comentarios.id": req.params.comentarioId })
@@ -78,7 +98,9 @@ module.exports = (app) => {
               "comentarios.comentarioId",
               "comentarios.usuarioId",
               " comentarios.conteudo",
-              "comentarios.dataComentario"
+              "comentarios.dataComentario",
+              "comentarios.obraId",
+              "comentarios.capituloId"
             )
               .from("comentarios")
               .join("resposta", "comentarios.comentarioId", "resposta.id");
@@ -92,7 +114,7 @@ module.exports = (app) => {
       .join("usuarios", "resposta.usuarioId", "usuarios.id")
       .select(
         app.db.raw(
-          "resposta.id, comentarioId, imagensPerfil.path, resposta.usuarioId, usuarios.nome, CONVERT(resposta.conteudo USING utf8) as conteudo, date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario"
+          "resposta.id, comentarioId, imagensPerfil.path, resposta.usuarioId, usuarios.nome, CONVERT(resposta.conteudo USING utf8) as conteudo, date_format(dataComentario, '%d/%m/%Y %H:%i:%s')as dataComentario, resposta.obraId, resposta.capituloId"
         )
       )
       .from("resposta")
@@ -121,20 +143,22 @@ module.exports = (app) => {
     app
       .db("obras")
       .join("usuarios", "obras.autor", "usuarios.id")
-      .join("capitulos", "obras.id", "capitulos.obraId")
-      .join("categorias", "obras.categoriaId", "categorias.id")
+      .join("modalidades", "obras.modalidadeId", "modalidades.id")
+      .leftJoin("capitulos", "obras.id", "capitulos.obraId")
       .join("prateleiras", "obras.prateleiraId", "prateleiras.id")
       .leftJoin("imagensObra", "obras.id", "imagensObra.obraId")
       .leftJoin("contador", "obras.id", "contador.obraId")
+
       .select(
         app.db.raw(
-          "obras.id, obras.nome, obras.autor, categorias.nome as categoriaId, obras.classificacao, prateleiras.nome as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user, max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s'))as ultimaPostagem, imagensObra.path, COUNT(DISTINCT contador.id) as views"
+          "obras.id, obras.nome, obras.autor, obras.modalidadeId, modalidades.nome as modalidade, obras.classificacao, prateleiras.nome as status, obras.sinopse, date_format(dataAdicionado, '%d/%m/%Y %H:%i:%s') as dataAdicionado,  usuarios.user,max(date_format(dataPostagem, '%d/%m/%Y %H:%i:%s')) as ultimaPostagem,imagensObra.path,  COUNT(DISTINCT contador.id) as views, obras.linkTwitter"
         )
       )
-
+      .whereRaw("(capitulos.id IS NOT NULL OR obras.modalidadeId = 4)")
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
       .first()
       .groupBy("obras.id")
+
       .then((obras) => res.json(obras))
       .catch((err) => res.status(500).send(err));
   };
@@ -164,13 +188,27 @@ module.exports = (app) => {
   const getUniversosByObra = (req, res) => {
     app
       .db("fandons")
-      .join("obras", "fandons.categoriaId", "obras.categoriaId")
+      .join("obras")
       .select("fandons.id", "fandons.nome")
 
-      .whereRaw("FIND_IN_SET(fandons.id, obras.fandonsId)")
+      .whereRaw(
+        "FIND_IN_SET(fandons.id, obras.fandonsId) and FIND_IN_SET(fandons.categoriaId, obras.categoriaId)"
+      )
       .where({ "obras.id": req.params.obraId, "obras.publica": true })
       .orderBy("fandons.nome", "asc")
       .then((universo) => res.json(universo))
+      .catch((err) => res.status(500).send(err));
+  };
+
+  const getCategoriasByObra = (req, res) => {
+    app
+      .db("categorias")
+      .join("obras")
+      .select("categorias.id", "categorias.nome")
+      .whereRaw("FIND_IN_SET(categorias.id, obras.categoriaId)")
+      .where({ "obras.id": req.params.obraId, "obras.publica": true })
+      .orderBy("categorias.nome", "asc")
+      .then((categoria) => res.json(categoria))
       .catch((err) => res.status(500).send(err));
   };
 
@@ -224,5 +262,7 @@ module.exports = (app) => {
     getAvisosByObra,
     getCaracteristicasByObra,
     getAvisosByCapitulo,
+    getCategoriasByObra,
+    saveResposta,
   };
 };

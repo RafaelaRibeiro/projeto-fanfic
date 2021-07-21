@@ -2,7 +2,7 @@
   <v-container v-if="visible" fluid class="mt-1">
     <Loading />
   </v-container>
-  <v-card v-else flat :style="{ padding: '50px' }">
+  <v-card v-else-if="obras" flat :style="{ padding: '50px' }">
     <v-row>
       <v-col cols="12" md="10">
         <v-card flat>
@@ -59,20 +59,28 @@
               <strong>Início:</strong>
               {{ obras.dataAdicionado }}
             </p>
-            <p class="text--primary text-justify">
+            <p v-if="obras.modalidadeId != 4" class="text--primary text-justify">
               <strong>Atualizado:</strong>
               {{ obras.ultimaPostagem }}
             </p>
-            <p class="text--primary text-justify">
+            <p v-if="obras.modalidadeId != 4" class="text--primary text-justify">
               <strong>Visualizações:</strong>
               {{ obras.views }}
             </p>
             <p class="text--primary text-justify">
+              <strong>Modalidade:</strong>
+              {{ obras.modalidade }}
+            </p>
+            <p class="text--primary text-justify">
               <strong>Categoria:</strong>
-              {{ obras.categoriaId }}
+              <span class="text--primary text-justify px-1" v-for="categoria in categorias" :key="categoria.id">
+                <v-chip small>
+                  <a>{{ categoria.nome }}</a>
+                </v-chip>
+              </span>
             </p>
 
-            <p>
+            <p v-if="universos.length != 0">
               <strong class="text--primary text-justify">Universos:</strong>
               <span class="text--primary text-justify px-1" v-for="universo in universos" :key="universo.id">
                 <v-chip small>
@@ -102,20 +110,8 @@
 
     <v-row>
       <v-col cols="12" md="10">
-        <v-card flat>
+        <v-card v-if="obras.modalidadeId != 4" flat>
           <v-card-title>Índice</v-card-title>
-          <!-- <v-list class="mb-n2" v-for="capitulo in capitulos" :key="capitulo.numero">
-            <v-list-item color="#EEEEEE" link>
-              <v-list-item-content>
-                <v-list-item-title >
-                  <router-link
-                    :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }"
-                    >{{ capitulo.numero }} - {{ capitulo.nome }}</router-link
-                  >
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list> -->
 
           <md-list v-for="capitulo in capitulos" :key="capitulo.numero" class="md-dense pa-0 mb-2 ma-n1">
             <md-list-item :to="{ name: 'CapituloById', params: { obraId: capitulo.obraId, numero: capitulo.numero } }">
@@ -129,8 +125,14 @@
             </md-list-item>
           </md-list>
         </v-card>
+        <v-card v-else flat>
+          <v-card-title> <a :href="obras.linkTwitter" target="_blank">Link para a obra</a></v-card-title>
+        </v-card>
       </v-col>
     </v-row>
+  </v-card>
+  <v-card v-else flat :style="{ padding: '50px' }">
+    <error-403 />
   </v-card>
 </template>
 
@@ -138,14 +140,16 @@
 import { baseApiUrl } from '@/global'
 import axios from 'axios'
 import Loading from '../template/Loading'
+import error403 from '../template/error403.vue'
 
 export default {
   name: 'ObraById',
-  components: { Loading },
+  components: { Loading, error403 },
   data() {
     return {
       obras: {},
       capitulos: [],
+      categorias: {},
       universos: {},
       avisos: [],
       caracteristicas: {},
@@ -156,7 +160,7 @@ export default {
   methods: {
     getObras() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}`
-      axios.get(url).then((res) => {
+      axios.get(url).then(res => {
         this.obras = res.data
         this.visible = false
       })
@@ -164,22 +168,27 @@ export default {
 
     getUniversos() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/universos`
-      axios.get(url).then((res) => (this.universos = res.data))
+      axios.get(url).then(res => (this.universos = res.data))
+    },
+
+    getCatergorias() {
+      const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/categorias`
+      axios.get(url).then(res => (this.categorias = res.data))
     },
 
     getAvisos() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/avisos`
-      axios.get(url).then((res) => (this.avisos = res.data))
+      axios.get(url).then(res => (this.avisos = res.data))
     },
 
     getCaracteristicas() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/caracteristicas`
-      axios.get(url).then((res) => (this.caracteristicas = res.data))
+      axios.get(url).then(res => (this.caracteristicas = res.data))
     },
 
     getCapitulosByObra() {
       const url = ` ${baseApiUrl}/obra/${this.$route.params.obraId}/capitulos`
-      axios.get(url).then((res) => (this.capitulos = res.data))
+      axios.get(url).then(res => (this.capitulos = res.data))
     },
   },
 
@@ -214,12 +223,12 @@ export default {
     this.getObras()
     this.getCapitulosByObra()
     this.getUniversos()
+    this.getCatergorias()
     this.getAvisos()
     this.getCaracteristicas()
   },
 }
 </script>
-
 
 <style>
 [dir]

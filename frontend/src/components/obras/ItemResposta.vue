@@ -25,9 +25,6 @@
             <v-row>
               <v-col cols="12" md="9" class="d-flex flex-column">
                 <span class="mb-4">{{ resposta.conteudo }}</span>
-                <span>
-                  <v-btn color="deep-purple darken-4" outlined text small> Responder </v-btn>
-                </span>
               </v-col>
               <v-col cols="12" md="3" class="d-flex justify-end">
                 <v-btn v-show="edit" icon @click="edicao = !edicao">
@@ -70,5 +67,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -69,6 +69,7 @@ module.exports = (app) => {
   app.route("/obra/:obraId").get(app.api.obras.getByObraId);
   app.route("/obra/:obraId/capitulos").get(app.api.obras.getCapitulosByObra);
   app.route("/obra/:obraId/universos").get(app.api.obras.getUniversosByObra);
+  app.route("/obra/:obraId/categorias").get(app.api.obras.getCategoriasByObra);
   app.route("/obra/:obraId/avisos").get(app.api.obras.getAvisosByObra);
   app
     .route("/obra/:obraId/capitulo/:numero/avisos")
@@ -83,7 +84,8 @@ module.exports = (app) => {
 
   app
     .route("/obra/:obraId/capitulo/:numero/comentario/:comentarioId")
-    .get(app.api.obras.getComentariosNew);
+    .get(app.api.obras.getComentariosNew)
+    .post(app.api.obras.saveResposta);
 
   //**************************************Perfil*****************************************************
 
@@ -185,8 +187,12 @@ module.exports = (app) => {
 
   //**************************************notificacoes*****************************************************
   app
-    .route("/notificacoes/:obraId/atualizacao")
+    .route("/notificacoes/:obraId/capitulo/:capituloId/atualizacao")
     .post(app.api.notificacoes.atualizacao);
+
+  app
+    .route("/notificacoes/:usuarioId/atualizacao")
+    .get(app.api.notificacoes.getAtulizacao);
 
   app
     .route("/notificacoes/:obraId/comentario")
