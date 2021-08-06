@@ -13,6 +13,7 @@ import AdicionarCapitulo from '../components/mesa/AdicionarCapitulo'
 import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
+import Mensagens from '../components/mensagens/Mensagens'
 import Auth from '@/components/auth/Auth'
 import RedefinirSenha from '@/components/auth/RedefinirSenha'
 import AtivarCadastro from '@/components/auth/AtivarCadastro'
@@ -123,6 +124,13 @@ const routes = [
     name: 'ObraById',
     path: '/obra/:obraId',
     component: ObraById,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    name: 'Mensagens',
+    path: '/mensagens',
+    component: Mensagens,
     meta: { requiresAuth: true },
   },
 

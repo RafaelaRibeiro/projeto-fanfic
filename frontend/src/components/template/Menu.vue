@@ -1,4 +1,4 @@
-<template >
+<template>
   <div v-if="isMenuVisible" class="menu">
     <v-navigation-drawer
       v-model="drawer"
@@ -12,9 +12,6 @@
         <v-list-item-avatar> <v-img :src="usuario.imagemPerfil"></v-img> </v-list-item-avatar>
 
         <v-list-item-title>{{ usuario.nome }}</v-list-item-title>
-        <!-- <v-btn icon @click="fechar">
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn> -->
       </v-list-item>
 
       <v-divider class="ma-0"></v-divider>
@@ -38,7 +35,16 @@
         </md-list-item>
 
         <md-list-item v-else :to="{ name: item.path, params: { user: usuario.user } }">
-          <v-icon class="pr-6">{{ item.icon }}</v-icon>
+          <v-badge
+            v-if="item.notificacao"
+            overlap
+            color="deep-purple darken-4"
+            :content="item.notificacao"
+            class="mr-6"
+          >
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-badge>
+          <v-icon v-else>{{ item.icon }}</v-icon>
 
           <span color="red" class="md-list-item-text">{{ item.text }}</span>
         </md-list-item>
@@ -112,7 +118,7 @@ export default {
         icon: 'mdi-bookshelf',
         text: 'Minha Estante',
         path: 'minhaEstante',
-        notificacao: 3,
+        notificacao: 4,
         acao: '',
       },
 
@@ -139,7 +145,7 @@ export default {
         ],
       },
       { icon: 'mdi-comment', text: 'Comentários', notificacao: 3, acao: '' },
-      { icon: 'mdi-send', text: 'Mensagens', notificacao: 10, acao: '' },
+      { icon: 'mdi-send', text: 'Mensagens', path: 'Mensagens', notificacao: 10, acao: '' },
       { icon: 'mdi-help-circle', text: 'Help', notificacao: 0, acao: '' },
       { icon: 'mdi-cog', text: 'Configurações', path: 'Configuracoes', notificacao: 0, acao: '' },
     ],
@@ -159,7 +165,6 @@ export default {
   },
 }
 </script>
-
 
 <style lang="scss" scoped>
 $list-width: 320px;

@@ -1,7 +1,7 @@
 <template>
   <v-main v-if="isMenuVisible" class="deep-purple lighten-5">
     <v-row justify="center" class="mx-3">
-      <v-col cols="12" md="10">
+      <v-col cols="12" md="11">
         <v-card elevation="7">
           <router-view></router-view>
         </v-card>
@@ -76,5 +76,4 @@ export default {
 }
 </script>
 
-<style >
-</style>
+<style></style>
