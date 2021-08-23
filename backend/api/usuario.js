@@ -149,7 +149,8 @@ module.exports = (app) => {
   const get = async (req, res) => {
     app
       .db("usuarios")
-      .select("id", "nome", "email", "perfil", "autor")
+      .select("id", "nome", "email", "perfil", "autor", "user")
+      .orderBy("user", "asc")
       .then((usuarios) => res.json(usuarios))
       .catch((err) => res.status(500).send(err));
   };

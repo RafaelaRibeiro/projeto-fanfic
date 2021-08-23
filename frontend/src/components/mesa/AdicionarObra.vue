@@ -4,7 +4,9 @@
       <v-row>
         <v-col>
           <h1 class="display-1 font-weight-light mb-4">
-            <i> <v-icon x-large class="pa-3">mdi-plus-box</v-icon>Adicionar Obra </i>
+            <i>
+              <v-icon x-large class="pa-3">mdi-plus-box</v-icon>Adicionar Obra
+            </i>
           </h1>
         </v-col>
       </v-row>
@@ -34,11 +36,20 @@
                 accept="image/png, image/jpeg, image/bmp"
               >
                 <template v-slot:selection="{ index, text }">
-                  <v-chip v-if="index < 2" color="deep-purple accent-4" dark label small>
+                  <v-chip
+                    v-if="index < 2"
+                    color="deep-purple accent-4"
+                    dark
+                    label
+                    small
+                  >
                     {{ text }}
                   </v-chip>
 
-                  <span v-else-if="index === 2" class="overline grey--text text--darken-3 mx-2">
+                  <span
+                    v-else-if="index === 2"
+                    class="overline grey--text text--darken-3 mx-2"
+                  >
                     +{{ files.length - 2 }} File(s)
                   </span>
                 </template>
@@ -176,12 +187,19 @@
                   <v-dialog v-model="dialog" max-width="800px">
                     <template v-slot:activator="{ on, attrs }">
                       <span>
-                        Universo <strong>{{ searchUniverso }}</strong> não encontrado. Clique
-                        <v-btn small text v-bind="attrs" v-on="on"><strong>aqui</strong></v-btn> para incluir
+                        Universo <strong>{{ searchUniverso }}</strong> não
+                        encontrado. Clique
+                        <v-btn small text v-bind="attrs" v-on="on"
+                          ><strong>aqui</strong></v-btn
+                        >
+                        para incluir
                       </span>
                     </template>
                     <v-card>
-                      <v-card-title color="white" class="deep-purple darken-4 font-weight-light">
+                      <v-card-title
+                        color="white"
+                        class="deep-purple darken-4 font-weight-light"
+                      >
                         <i class="white--text">Incluir Universo</i>
                       </v-card-title>
                       <v-container>
@@ -211,8 +229,16 @@
                         </v-row>
                         <v-row>
                           <v-col cols="12" class="text-center">
-                            <v-btn dark class="mr-3" color="purple darken-4">Salvar</v-btn>
-                            <v-btn dark class="ml-3" color="red darken-4" @click="reset">Cancelar</v-btn>
+                            <v-btn dark class="mr-3" color="purple darken-4"
+                              >Salvar</v-btn
+                            >
+                            <v-btn
+                              dark
+                              class="ml-3"
+                              color="red darken-4"
+                              @click="reset"
+                              >Cancelar</v-btn
+                            >
                           </v-col>
                         </v-row>
                       </v-container>
@@ -222,7 +248,9 @@
                 <template v-else v-slot:no-data>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title> Selecione uma categoria </v-list-item-title>
+                      <v-list-item-title>
+                        Selecione uma categoria
+                      </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
@@ -263,7 +291,9 @@
                 <template v-else v-slot:no-data>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title> Selecione um universo </v-list-item-title>
+                      <v-list-item-title>
+                        Selecione um universo
+                      </v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </template>
@@ -395,10 +425,22 @@
 
           <v-row>
             <v-col cols="12" class="text-center">
-              <v-btn v-if="obra.modalidadeId === 4" dark class="ma-3" color="purple darken-4" @click="salvaObraAu"
+              <v-btn
+                v-if="obra.modalidadeId === 4"
+                dark
+                class="ma-3"
+                color="purple darken-4"
+                @click="salvaObraAu"
                 >Gravar</v-btn
               >
-              <v-btn v-else dark class="ma-3" color="purple darken-4" @click="salvarObra">Avançar</v-btn>
+              <v-btn
+                v-else
+                dark
+                class="ma-3"
+                color="purple darken-4"
+                @click="salvarObra"
+                >Avançar</v-btn
+              >
               <v-btn dark class="ma-3" color="red darken-4">Cancelar</v-btn>
             </v-col>
           </v-row>
@@ -444,7 +486,12 @@ export default {
       shipps: [],
       categorias: [],
       modalidades: [],
-      obra: { categoriaId: [], fandonsId: [], caracteristicasId: [], avisosId: [] },
+      obra: {
+        categoriaId: [],
+        fandonsId: [],
+        caracteristicasId: [],
+        avisosId: [],
+      },
       ultimaObra: null,
       universos: [],
       caracteristicas: [],
@@ -553,13 +600,15 @@ export default {
 
     postarCapitulo() {
       const url = ` ${baseApiUrl}/mesa/${this.usuario.id}/ultimaobra/${this.obra.nome}`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.ultimaObra = res.data
 
         if (this.obra.modalidadeId === 4) {
           this.$router.push({ path: `/obra/${this.ultimaObra.id}/` })
         } else {
-          this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+          this.$router.push({
+            path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo`,
+          })
         }
       })
     },
@@ -585,7 +634,9 @@ export default {
             axios
               .post(`${baseApiUrl}/mesa/${this.ultimaObra.id}/upload`, fdu)
               .then(() => {
-                this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+                this.$router.push({
+                  path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo`,
+                })
               })
               .catch()
           }
@@ -602,7 +653,9 @@ export default {
           if (this.obra.modalidadeId === 4) {
             this.$router.push({ path: `/obra/${this.obra.id}/` })
           } else {
-            this.$router.push({ path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo` })
+            this.$router.push({
+              path: `/mesa/${this.ultimaObra.id}/adicionarcapitulo`,
+            })
           }
         })
         .catch(showError)
@@ -610,46 +663,48 @@ export default {
 
     getCategorias() {
       const url = ` ${baseApiUrl}/categorias`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.categorias = res.data
       })
     },
 
     getModalidades() {
       const url = ` ${baseApiUrl}/modalidades`
-      axios(url).then(res => {
+      axios(url).then((res) => {
+
+        
         this.modalidades = res.data
       })
     },
     getUniversos() {
       const url = ` ${baseApiUrl}/universos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.universos = res.data
       })
     },
     getShipps() {
       const url = ` ${baseApiUrl}/shipp`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.shipps = res.data
       })
     },
 
     getCaracteristicas() {
       const url = ` ${baseApiUrl}/caracteristicas`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.caracteristicas = res.data
       })
     },
     getAvisos() {
       const url = ` ${baseApiUrl}/avisos`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.avisos = res.data
       })
     },
 
     getCoautor() {
       const url = ` ${baseApiUrl}/mesa/Coautor`
-      axios(url).then(res => {
+      axios(url).then((res) => {
         this.coautor = res.data
       })
     },
@@ -676,11 +731,11 @@ export default {
       // fetch('https://api.coingecko.com/api/v3/coins/list')
       const url = ` ${baseApiUrl}/mesa/Coautor`
       fetch(url)
-        .then(res => res.clone().json())
-        .then(res => {
+        .then((res) => res.clone().json())
+        .then((res) => {
           this.items = res
         })
-        .catch(err => {
+        .catch((err) => {
           // eslint-disable-next-line no-console
           console.log(err)
         })
@@ -695,7 +750,9 @@ export default {
       // })
       // return a
 
-      const a = this.universos.filter(e => this.obra.categoriaId.includes(e.categoriaId))
+      const a = this.universos.filter((e) =>
+        this.obra.categoriaId.includes(e.categoriaId)
+      )
       return a
     },
 
@@ -704,7 +761,9 @@ export default {
     },
 
     shippLista() {
-      const a = this.shipps.filter(e => this.obra.fandonsId.includes(e.fandonsId))
+      const a = this.shipps.filter((e) =>
+        this.obra.fandonsId.includes(e.fandonsId)
+      )
       return a
     },
     ...mapState(['usuario']),

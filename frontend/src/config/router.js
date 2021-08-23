@@ -14,6 +14,7 @@ import CapituloById from '../components/obras/CapituloById'
 import ObraById from '../components/obras/ObraById'
 import Notas from '../components/mesa/notas/Notas'
 import Mensagens from '../components/mensagens/Mensagens'
+import MessageById from '../components/mensagens/MessageById'
 import Auth from '@/components/auth/Auth'
 import RedefinirSenha from '@/components/auth/RedefinirSenha'
 import AtivarCadastro from '@/components/auth/AtivarCadastro'
@@ -131,6 +132,12 @@ const routes = [
     name: 'Mensagens',
     path: '/mensagens',
     component: Mensagens,
+    meta: { requiresAuth: true },
+  },
+  {
+    name: 'MessageById',
+    path: '/mensagens/:messageId',
+    component: MessageById,
     meta: { requiresAuth: true },
   },
 

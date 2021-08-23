@@ -8,23 +8,23 @@ module.exports = (app) => {
     try {
       existsOrError(note.usuarioId, "Autor não informado");
       existsOrError(note.conteudo, "Conteúdo não informado");
+
+      if (note.id) {
+        app
+          .db("notas")
+          .update(note)
+          .where({ id: note.id })
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      } else {
+        app
+          .db("notas")
+          .insert(note)
+          .then((_) => res.status(204).send())
+          .catch((err) => res.status(500).send(err));
+      }
     } catch (msg) {
       res.status(400).send(msg);
-    }
-
-    if (note.id) {
-      app
-        .db("notas")
-        .update(note)
-        .where({ id: note.id })
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
-    } else {
-      app
-        .db("notas")
-        .insert(note)
-        .then((_) => res.status(204).send())
-        .catch((err) => res.status(500).send(err));
     }
   };
   const getByUser = (req, res) => {

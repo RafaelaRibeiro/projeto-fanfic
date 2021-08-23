@@ -17,16 +17,16 @@ module.exports = (app) => {
         .first();
       if (!shelf.id) {
         notExistsOrError(userFromDB, "Obra já está na estante");
+
+        app
+          .db("estante")
+          .insert(shelf)
+          .then((_) => res.status(240).send())
+          .catch((err) => res.status(500).send());
       }
     } catch (msg) {
       res.status(400).send(msg);
     }
-
-    app
-      .db("estante")
-      .insert(shelf)
-      .then((_) => res.status(240).send())
-      .catch((err) => res.status(500).send());
   };
 
   const get = (req, res) => {
