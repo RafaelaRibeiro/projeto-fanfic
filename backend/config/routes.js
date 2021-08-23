@@ -210,4 +210,8 @@ module.exports = (app) => {
     app.route('/mensagens/:usuarioId/read/:messageId')
         .get(app.api.mensagens.getMessageById)
         .put(app.api.mensagens.updateRead)
+
+    //***************************************Pesquisa*************************************************************
+
+    app.route('/search').get(app.api.search.searchObras)
 }
