@@ -22,7 +22,7 @@
                   <span>Voltar</span>
                 </v-tooltip>
 
-                <v-tooltip top transition="false" size="20">
+                <v-tooltip top transition="false">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn v-bind="attrs" v-on="on" @click="notRead" text>
                       <v-icon color="deep-purple darken-4"

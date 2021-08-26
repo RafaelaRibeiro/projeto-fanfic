@@ -7,18 +7,29 @@
       <!-- titulos -->
       <v-row>
         <v-col>
-          <h4 class="font-weight-light pa-2"><v-icon x-large class="pa-3">mdi-bookshelf</v-icon>Minha Estante</h4>
+          <h4 class="font-weight-light pa-2">
+            <v-icon x-large class="pa-3">mdi-bookshelf</v-icon>Minha Estante
+          </h4>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" md="9">
-          <v-card flat color="deep-purple darken-4" dark class="d-flex justify-space-between mb-3 pr-3">
-            <v-card-title v-for="(item, index) in filteredItems" :key="index">{{ item.nome }}</v-card-title>
+          <v-card
+            flat
+            color="deep-purple darken-4"
+            dark
+            class="d-flex justify-space-between mb-3 pr-3"
+          >
+            <v-card-title v-for="(item, index) in filteredItems" :key="index">{{
+              item.nome
+            }}</v-card-title>
           </v-card>
         </v-col>
         <v-col>
           <v-card flat color="deep-purple darken-4" dark class="mb-3">
-            <v-card-title flat color="deep-purple darken-4">Prateleiras</v-card-title>
+            <v-card-title flat color="deep-purple darken-4"
+              >Prateleiras</v-card-title
+            >
           </v-card>
         </v-col>
       </v-row>
@@ -33,7 +44,10 @@
         <v-col>
           <v-card outlined>
             <md-list>
-              <md-list-item v-for="prateleira in prateleiras" :key="prateleira.id" @click="search = prateleira.id"
+              <md-list-item
+                v-for="prateleira in prateleiras"
+                :key="prateleira.id"
+                @click="search = prateleira.id"
                 >{{ prateleira.nome }}
 
                 <md-badge class="md-primary" :md-content="prateleira.total"
@@ -72,60 +86,60 @@
 </template>
 
 <script>
-import ItemEstante from './ItemEstante'
-import Loading from '../template/Loading'
-import { mapState } from 'vuex'
-import axios from 'axios'
-import { baseApiUrl } from '../../global'
+import ItemEstante from "./ItemEstante";
+import Loading from "../template/Loading";
+import { mapState } from "vuex";
+import axios from "axios";
+import { baseApiUrl } from "../../global";
 export default {
-  name: 'ListaFanfic',
+  name: "ListaFanfic",
   components: { ItemEstante, Loading },
 
   data() {
     return {
       search: 1,
       prateleiras: [],
-      titulo: 'Minha Estante',
+      titulo: "Minha Estante",
       seletor: true,
       lista: [],
       estante: [],
       visible: true,
-    }
+    };
   },
   methods: {
     getPrateleiraEstante() {
-      const url = ` ${baseApiUrl}/estante/${this.usuario.id}/prateleiras`
+      const url = ` ${baseApiUrl}/estante/${this.usuario.id}/prateleiras`;
       axios(url).then((res) => {
-        this.prateleiras = res.data
-      })
+        this.prateleiras = res.data;
+      });
     },
 
     getObrasEstante() {
-      const url = ` ${baseApiUrl}/estante/${this.usuario.id}`
+      const url = ` ${baseApiUrl}/estante/${this.usuario.id}`;
       axios(url).then((res) => {
-        this.estante = res.data
-        this.visible = false
-      })
+        this.estante = res.data;
+        this.visible = false;
+      });
     },
   },
 
   computed: {
     filteredItems() {
-      const id = this.search
+      const id = this.search;
 
       const buscar = this.prateleiras.filter((e) => {
-        return e.id === id
-      })
-      return buscar
+        return e.id === id;
+      });
+      return buscar;
     },
 
     filtershelves() {
       const a = this.estante.filter((e) => {
-        return e.prateleiraId === this.search
-      })
-      return a
+        return e.prateleiraId === this.search;
+      });
+      return a;
     },
-    ...mapState(['usuario']),
+    ...mapState(["usuario"]),
 
     // exp: {
     //   get() {
@@ -146,10 +160,10 @@ export default {
   },
 
   mounted() {
-    this.getObrasEstante()
-    this.getPrateleiraEstante()
+    this.getObrasEstante();
+    this.getPrateleiraEstante();
   },
-}
+};
 </script>
 
 <style>

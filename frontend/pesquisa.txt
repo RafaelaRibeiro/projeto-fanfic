@@ -1,0 +1,281 @@
+<template>
+  <v-card flat>
+    <v-container fluid class="ma-2">
+      <v-row>
+        <v-col>
+          <h4 class="font-weight-light pa-2">
+            <v-icon x-large class="pa-3">mdi-magnify</v-icon>Pesquisar
+          </h4>
+        </v-col>
+      </v-row>
+
+      <v-row class="my-5 ">
+        <v-col>
+          <v-card class="deep-purple lighten-5 ">
+            <v-row>
+              <v-col cols="12">
+                <h5 class="font-weight-light pa-2">Sobre a Obra</h5>
+              </v-col>
+            </v-row>
+            <v-row class="mx-2 mb-n9">
+              <v-col cols="12" md="6">
+                <v-text-field
+                  dense
+                  label="Nome da Obra"
+                  outlined
+                  clearable
+                  background-color="#FFF"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  dense
+                  label="Autor"
+                  outlined
+                  clearable
+                  background-color="#FFF"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="mx-2 mb-n9 ">
+              <v-col cols="12" md="6">
+                <v-autocomplete
+                  outlined
+                  small-chips
+                  clearable
+                  hide-selected
+                  dense
+                  multiple
+                  deletable-chips
+                  label="Categoria"
+                  background-color="#FFF"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-autocomplete
+                  outlined
+                  small-chips
+                  clearable
+                  hide-selected
+                  dense
+                  multiple
+                  deletable-chips
+                  label="Universo"
+                  background-color="#FFF"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row class="mx-2 ">
+              <v-col cols="12" md="4">
+                <v-autocomplete
+                  outlined
+                  small-chips
+                  clearable
+                  hide-selected
+                  dense
+                  multiple
+                  deletable-chips
+                  label="Shipp Principal"
+                  background-color="#FFF"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-autocomplete
+                  outlined
+                  small-chips
+                  clearable
+                  hide-selected
+                  dense
+                  multiple
+                  deletable-chips
+                  label="Shipp Secundario"
+                  background-color="#FFF"
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-autocomplete
+                  outlined
+                  small-chips
+                  clearable
+                  hide-selected
+                  dense
+                  multiple
+                  deletable-chips
+                  label="Não conter"
+                  background-color="#FFF"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row class="my-5">
+        <v-col>
+          <v-card class="deep-purple lighten-5">
+            <v-row>
+              <v-col cols="12" md="7">
+                <h5 class="font-weight-light pa-2">Caracteristicas da Obra</h5>
+              </v-col>
+            </v-row>
+            <v-row class=" mt-n5">
+              <v-col cols="12" md="7">
+                <h6 class="font-weight-light pa-2">Temas</h6>
+              </v-col>
+            </v-row>
+            <v-row class=" mt-n3 mx-3">
+              <v-col>
+                <v-checkbox
+                  v-for="c in caracteristicas.slice(0, 4)"
+                  :key="c.id"
+                  dense
+                  class="ma-0"
+                  :label="c.nome"
+                  :value="c.id"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-checkbox
+                  v-for="c in caracteristicas.slice(4, 8)"
+                  :key="c.id"
+                  dense
+                  class="ma-0"
+                  :label="c.nome"
+                  :value="c.id"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-checkbox
+                  v-for="c in caracteristicas.slice(8, 12)"
+                  :key="c.id"
+                  dense
+                  class="ma-0"
+                  :label="c.nome"
+                  :value="c.id"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="7">
+                <h6 class="font-weight-light pa-2">Modalidades</h6>
+              </v-col>
+            </v-row>
+            <v-row class=" mt-n3 mx-3">
+              <v-col cols="4">
+                <v-checkbox
+                  v-for="m in modalidades.slice(0, 2)"
+                  :key="m.id"
+                  dense
+                  class="ma-0"
+                  :label="m.nome"
+                  :value="m.id"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="4">
+                <v-checkbox
+                  v-for="m in modalidades.slice(2, 4)"
+                  :key="m.id"
+                  dense
+                  class="ma-0"
+                  :label="m.nome"
+                  :value="m.id"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row class="my-5">
+        <v-col>
+          <v-card class="deep-purple lighten-5">
+            <v-row>
+              <v-col cols="12" md="7">
+                <h5 class="font-weight-light pa-2">Avisos</h5>
+              </v-col>
+            </v-row>
+            <v-row class=" mt-n5">
+              <v-col cols="12" md="7">
+                <h6 class="font-weight-light pa-2">Conteúdos Sensíveis</h6>
+              </v-col>
+            </v-row>
+            <v-row class=" mt-n3 mx-3">
+              <v-col cols="4">
+                <v-checkbox
+                  v-for="aviso in avisos.slice(0, 5)"
+                  :key="aviso.id"
+                  dense
+                  class="ma-0"
+                  :label="aviso.nome"
+                  :value="aviso.id"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="4">
+                <v-checkbox
+                  v-for="aviso in avisos.slice(5, 10)"
+                  :key="aviso.id"
+                  dense
+                  class="ma-0"
+                  :label="aviso.nome"
+                  :value="aviso.id"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="4">
+                <v-checkbox
+                  v-for="aviso in avisos.slice(10, 15)"
+                  :key="aviso.id"
+                  dense
+                  class="ma-0"
+                  :label="aviso.nome"
+                  :value="aviso.id"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
+</template>
+
+<script>
+import axios from "axios";
+import { baseApiUrl } from "@/global";
+export default {
+  name: "Search",
+  data() {
+    return {
+      caracteristicas: [],
+      avisos: [],
+      modalidades: [],
+    };
+  },
+
+  methods: {
+    getCaracteristicas() {
+      const url = ` ${baseApiUrl}/caracteristicas`;
+      axios(url).then((res) => {
+        this.caracteristicas = res.data;
+      });
+    },
+    getModalidades() {
+      const url = ` ${baseApiUrl}/modalidades`;
+      axios(url).then((res) => {
+        this.modalidades = res.data;
+      });
+    },
+    getAvisos() {
+      const url = ` ${baseApiUrl}/avisos`;
+      axios(url).then((res) => {
+        this.avisos = res.data;
+      });
+    },
+  },
+
+  mounted() {
+    this.getCaracteristicas();
+    this.getModalidades();
+    this.getAvisos();
+  },
+};
+</script>
+
+<style></style>

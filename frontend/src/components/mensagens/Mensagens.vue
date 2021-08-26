@@ -91,6 +91,7 @@
                   </v-icon>
                 </v-btn>
               </template>
+
               <template v-slot:[`item.nome`]="{ item }">
                 <router-link
                   :to="{ name: 'MessageById', params: { messageId: item.id } }"
@@ -126,12 +127,12 @@
 </template>
 
 <script>
-import Loading from '../template/Loading'
-import axios from 'axios'
-import { baseApiUrl } from '../../global'
-import { mapState } from 'vuex'
+import Loading from "../template/Loading";
+import axios from "axios";
+import { baseApiUrl } from "../../global";
+import { mapState } from "vuex";
 export default {
-  name: 'Mensagens',
+  name: "Mensagens",
   components: { Loading },
 
   data() {
@@ -142,68 +143,68 @@ export default {
       page: 1,
       pageCount: 0,
       itemsPerPage: 10,
-      columnName: 'dtCreateAt',
+      columnName: "dtCreateAt",
       isDescending: true,
       loading: true,
       items: [
         {
-          text: 'Caixa de entrada',
-          icon: 'mdi-email-newsletter',
+          text: "Caixa de entrada",
+          icon: "mdi-email-newsletter",
           action: this.getMensagensRecebidas,
         },
         {
-          text: 'Enviados',
-          icon: 'mdi-send',
+          text: "Enviados",
+          icon: "mdi-send",
           action: this.getMensagensEnviadas,
         },
-        { text: 'Favoritos', icon: 'mdi-star', action: null },
-        { text: 'Spam', icon: 'mdi-alert-octagon', action: '' },
+        { text: "Favoritos", icon: "mdi-star", action: null },
+        { text: "Spam", icon: "mdi-alert-octagon", action: "" },
 
-        { text: 'Lixeira', icon: 'mdi-delete', action: '' },
+        { text: "Lixeira", icon: "mdi-delete", action: "" },
       ],
 
-      search: '',
+      search: "",
       headers: [
         {
-          text: '',
-          align: 'start',
+          text: "",
+          align: "start",
           sortable: false,
-          width: '2%',
-          value: 'favoritos',
+          width: "2%",
+          value: "favoritos",
         },
         {
-          text: 'Nome',
-          align: 'start',
+          text: "Nome",
+          align: "start",
           sortable: false,
-          value: 'nome',
-          width: '15%',
+          value: "nome",
+          width: "15%",
         },
 
-        { text: 'Assunto', align: 'start', value: 'assunto' },
-        { text: 'Data', value: 'createAt', align: 'end', width: '10%' },
+        { text: "Assunto", align: "start", value: "assunto" },
+        { text: "Data", value: "createAt", align: "end", width: "10%" },
       ],
       desserts: [],
-    }
+    };
   },
 
   computed: {
-    ...mapState(['usuario']),
+    ...mapState(["usuario"]),
   },
 
   methods: {
     getMensagensRecebidas() {
-      const url = ` ${baseApiUrl}/mensagens/${this.usuario.id}/recebidas`
+      const url = ` ${baseApiUrl}/mensagens/${this.usuario.id}/recebidas`;
       axios(url).then((res) => {
-        this.desserts = res.data
-        this.loading = false
-      })
+        this.desserts = res.data;
+        this.loading = false;
+      });
     },
     getMensagensEnviadas() {
-      const url = ` ${baseApiUrl}/mensagens/${this.usuario.id}/enviadas`
+      const url = ` ${baseApiUrl}/mensagens/${this.usuario.id}/enviadas`;
       axios(url).then((res) => {
-        this.desserts = res.data
-        this.loading = false
-      })
+        this.desserts = res.data;
+        this.loading = false;
+      });
     },
 
     updateFavorite() {
@@ -217,14 +218,14 @@ export default {
       //   })
       //   .catch(showError)
 
-      this.item.favoritos = !this.item.favoritos
+      this.item.favoritos = !this.item.favoritos;
     },
   },
 
   mounted() {
-    this.getMensagensRecebidas()
+    this.getMensagensRecebidas();
   },
-}
+};
 </script>
 
 <style></style>
